@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added ``unitree_go1_blind_env_cfg`` with actor linear velocity and height scan
+  observations removed, while retaining privileged critic observations, registered
+  as ``Mjlab-Velocity-Blind-Unitree-Go1``.
 - Added ``GridPatternCfg.offset`` to shift the ray grid in frame-local XY.
 - ``GridPatternCfg.resolution`` accepts a per-axis ``(x, y)`` tuple.
 - Added a ``cu126`` extra (``uv sync --extra cu126``) that installs torch built for

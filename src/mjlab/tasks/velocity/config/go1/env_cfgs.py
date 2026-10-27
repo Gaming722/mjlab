@@ -258,6 +258,14 @@ def unitree_go1_rough_env_cfg(
   return cfg
 
 
+def unitree_go1_blind_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Create Go1 rough terrain config with proprioceptive actor observations."""
+  cfg = unitree_go1_rough_env_cfg(play=play)
+  del cfg.observations["actor"].terms["base_lin_vel"]
+  del cfg.observations["actor"].terms["height_scan"]
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

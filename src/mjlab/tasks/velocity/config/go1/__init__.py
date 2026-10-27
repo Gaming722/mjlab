@@ -2,6 +2,7 @@ from mjlab.tasks.registry import register_mjlab_task
 from mjlab.tasks.velocity.rl import VelocityOnPolicyRunner
 
 from .env_cfgs import (
+  unitree_go1_blind_env_cfg,
   unitree_go1_flat_env_cfg,
   unitree_go1_rough_env_cfg,
 )
@@ -11,6 +12,14 @@ register_mjlab_task(
   task_id="Mjlab-Velocity-Rough-Unitree-Go1",
   env_cfg=unitree_go1_rough_env_cfg(),
   play_env_cfg=unitree_go1_rough_env_cfg(play=True),
+  rl_cfg=unitree_go1_ppo_runner_cfg(),
+  runner_cls=VelocityOnPolicyRunner,
+)
+
+register_mjlab_task(
+  task_id="Mjlab-Velocity-Blind-Unitree-Go1",
+  env_cfg=unitree_go1_blind_env_cfg(),
+  play_env_cfg=unitree_go1_blind_env_cfg(play=True),
   rl_cfg=unitree_go1_ppo_runner_cfg(),
   runner_cls=VelocityOnPolicyRunner,
 )
