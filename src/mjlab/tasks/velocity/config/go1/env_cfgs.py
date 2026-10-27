@@ -261,6 +261,9 @@ def unitree_go1_rough_env_cfg(
 def unitree_go1_blind_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Go1 rough terrain config with proprioceptive actor observations."""
   cfg = unitree_go1_rough_env_cfg(play=play)
+  # Allow more solver iterations for rough terrain contacts.
+  cfg.sim.mujoco.iterations = 50
+  cfg.sim.mujoco.ls_iterations = 50
   del cfg.observations["actor"].terms["base_lin_vel"]
   del cfg.observations["actor"].terms["height_scan"]
   return cfg
