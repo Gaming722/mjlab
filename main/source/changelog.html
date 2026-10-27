@@ -58,7 +58,7 @@
     <link rel="prev" title="Research" href="research.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Oct 24, 2026"/>
+    <meta name="docbuild:last-update" content="Oct 27, 2026"/>
   </head>
   
   
@@ -549,6 +549,9 @@ document.write(`
 <section id="added">
 <h3>Added<a class="headerlink" href="#added" title="Link to this heading">#</a></h3>
 <ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">unitree_go1_blind_env_cfg</span></code> with actor linear velocity and height scan
+observations removed, while retaining privileged critic observations, registered
+as <code class="docutils literal notranslate"><span class="pre">Mjlab-Velocity-Blind-Unitree-Go1</span></code>.</p></li>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">GridPatternCfg.offset</span></code> to shift the ray grid in frame-local XY.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GridPatternCfg.resolution</span></code> accepts a per-axis <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code> tuple.</p></li>
 <li><p>Added a <code class="docutils literal notranslate"><span class="pre">cu126</span></code> extra (<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--extra</span> <span class="pre">cu126</span></code>) that installs torch built for
@@ -583,6 +586,8 @@ attribute of the <code class="docutils literal notranslate"><span class="pre">rs
 <section id="fixed">
 <h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">#</a></h3>
 <ul class="simple">
+<li><p>Increased Go1 blind task solver and line search iteration limits to 50 to
+reduce iteration limit warnings on rough terrain.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">posture</span></code> and <code class="docutils literal notranslate"><span class="pre">variable_posture</span></code> now pair each joint with its own <code class="docutils literal notranslate"><span class="pre">std</span></code> when
 <code class="docutils literal notranslate"><span class="pre">asset_cfg.preserve_order=True</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">apply_body_impulse</span></code> now applies <code class="docutils literal notranslate"><span class="pre">body_point_offset</span></code> in the body frame, as
@@ -1835,7 +1840,7 @@ By The mjlab Developers
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Oct 24, 2026.
+  Last updated on Oct 27, 2026.
   <br/>
 </p>
   </div>
