@@ -44,3 +44,28 @@ def unitree_go1_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
     num_steps_per_env=24,
     max_iterations=10_000,
   )
+
+
+def unitree_go1_perceptive_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Create asymmetric PPO config for D435 depth plus proprioception."""
+  cfg = unitree_go1_ppo_runner_cfg()
+  cfg.actor.class_name = "mjlab.rl.spatial_softmax:SpatialSoftmaxCNNModel"
+  cfg.actor.hidden_dims = (256, 256, 128)
+  cfg.actor.cnn_cfg = {
+    "output_channels": [16, 32],
+    "kernel_size": [5, 3],
+    "stride": [2, 2],
+    "padding": "zeros",
+    "activation": "elu",
+    "max_pool": False,
+    "global_pool": "none",
+    "spatial_softmax": True,
+    "spatial_softmax_temperature": 1.0,
+  }
+  cfg.algorithm.share_cnn_encoders = False
+  cfg.obs_groups = {
+    "actor": ("actor", "depth"),
+    "critic": ("critic",),
+  }
+  cfg.experiment_name = "go1_perceptive_velocity"
+  return cfg

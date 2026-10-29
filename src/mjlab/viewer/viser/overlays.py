@@ -11,9 +11,10 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 import mujoco
+import numpy as np
 import viser
 
-from mjlab.sensor import CameraSensor
+from mjlab.sensor import CameraSensor, PinholeCameraPatternCfg, RayCastSensor
 from mjlab.viewer.viser.camera_viewer import ViserCameraViewer
 from mjlab.viewer.viser.reward_bar_panel import RewardBarPanel
 from mjlab.viewer.viser.term_plotter import ViserTermPlotter
@@ -138,16 +139,34 @@ class ViserCameraOverlays:
   env: _EnvProtocol
   mj_model: mujoco.MjModel
   camera_viewers: list[ViserCameraViewer] | None = None
+  depth_handles: dict[str, Any] | None = None
 
   @property
   def has_cameras(self) -> bool:
     """Whether the environment has any camera sensors."""
     return any(
-      isinstance(s, CameraSensor) for s in self.env.unwrapped.scene.sensors.values()
+      isinstance(s, CameraSensor)
+      or (
+        isinstance(s, RayCastSensor)
+        and isinstance(s.cfg.pattern, PinholeCameraPatternCfg)
+      )
+      for s in self.env.unwrapped.scene.sensors.values()
     )
 
   def setup_controls(self) -> None:
     """Create camera feed controls under the active GUI folder."""
+    self.depth_handles = {}
+    for name, sensor in self.env.unwrapped.scene.sensors.items():
+      if isinstance(sensor, RayCastSensor) and isinstance(
+        sensor.cfg.pattern, PinholeCameraPatternCfg
+      ):
+        pattern = sensor.cfg.pattern
+        self.depth_handles[name] = self.server.gui.add_image(
+          np.zeros((pattern.height * 4, pattern.width * 4, 3), dtype=np.uint8),
+          label=f"{name}: optical-Z depth (near white, far black)",
+          format="png",
+        )
+
     camera_sensors = [
       sensor
       for sensor in self.env.unwrapped.scene.sensors.values()
@@ -163,6 +182,17 @@ class ViserCameraOverlays:
 
   def update(self, sim_data: Any, env_idx: int, scene_offset: Any) -> None:
     """Push latest camera images/frustums to GUI."""
+    for name, handle in (self.depth_handles or {}).items():
+      sensor = self.env.unwrapped.scene.sensors[name]
+      pattern = sensor.cfg.pattern
+      _, rays = pattern.generate_rays(self.mj_model, "cpu")
+      ranges = sensor.data.distances[env_idx].detach().cpu()
+      z = (ranges * -rays[:, 2]).numpy()
+      far = 2.0
+      z = np.where(ranges.numpy() >= 0, z, far)
+      image = ((1.0 - np.clip(z, 0.1, far) / far) * 255).astype(np.uint8)
+      rgb = np.repeat(image.reshape(pattern.height, pattern.width, 1), 3, axis=2)
+      handle.image = np.repeat(np.repeat(rgb, 4, axis=0), 4, axis=1)
     if not self.camera_viewers:
       return
     for camera_viewer in self.camera_viewers:
@@ -170,6 +200,9 @@ class ViserCameraOverlays:
 
   def cleanup(self) -> None:
     """Cleanup all camera feed widgets."""
+    for handle in (self.depth_handles or {}).values():
+      handle.remove()
+    self.depth_handles = {}
     if not self.camera_viewers:
       return
     for camera_viewer in self.camera_viewers:

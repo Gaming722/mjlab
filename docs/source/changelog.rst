@@ -8,6 +8,10 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added D435-like perceptive locomotion tasks for Go1.  The training task uses a
+  pinhole ``RayCastSensor`` with a 30 Hz cached optical-Z depth observation and an
+  asymmetric CNN actor, while a low-environment ``CameraSensor`` task provides a
+  rendered-depth validation path.
 - Added ``unitree_go1_blind_env_cfg`` with actor linear velocity and height scan
   observations removed, while retaining privileged critic observations, registered
   as ``Mjlab-Velocity-Blind-Unitree-Go1``.
@@ -44,6 +48,10 @@ Changed
 Fixed
 ^^^^^
 
+- Enabled Go1 perceptive depth raycast debug visualization in play mode so it can
+  be toggled from the Viser sensor controls.
+- Go1 perceptive play configurations now default to one environment. Viser displays
+  pinhole raycast optical-Z depth images alongside rendered camera feeds.
 - Increased Go1 blind task solver and line search iteration limits to 50 to
   reduce iteration limit warnings on rough terrain.
 - ``posture`` and ``variable_posture`` now pair each joint with its own ``std`` when

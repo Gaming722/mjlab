@@ -10,14 +10,16 @@ from mjlab.asset_zoo.robots import (
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs import mdp as envs_mdp
 from mjlab.envs.mdp.actions import JointPositionActionCfg
-from mjlab.managers import TerminationTermCfg
+from mjlab.managers import ObservationGroupCfg, ObservationTermCfg, TerminationTermCfg
 from mjlab.managers.event_manager import EventTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import (
+  CameraSensorCfg,
   ContactMatch,
   ContactSensorCfg,
   ObjRef,
+  PinholeCameraPatternCfg,
   RayCastSensorCfg,
   RingPatternCfg,
   TerrainHeightSensorCfg,
@@ -27,6 +29,15 @@ from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
 
 TerrainType = Literal["rough", "obstacles"]
+
+D435_DEPTH_POSITION = (0.27542987, 0.0175, 0.12552532)
+D435_MUJOCO_QUATERNION = (0.612372, 0.353553, -0.353553, -0.612372)
+D435_WIDTH = 80
+D435_HEIGHT = 45
+D435_HFOV = math.radians(87.0)
+D435_FOVY_DEG = math.degrees(
+  2.0 * math.atan(math.tan(D435_HFOV / 2.0) * D435_HEIGHT / D435_WIDTH)
+)
 
 
 def unitree_go1_rough_env_cfg(
@@ -266,6 +277,102 @@ def unitree_go1_blind_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   cfg.sim.mujoco.ls_iterations = 50
   del cfg.observations["actor"].terms["base_lin_vel"]
   del cfg.observations["actor"].terms["height_scan"]
+  return cfg
+
+
+def _d435_observation_cfg(play: bool) -> ObservationGroupCfg:
+  return ObservationGroupCfg(
+    terms={
+      "depth": ObservationTermCfg(
+        func=mdp.depth_camera,
+        params={
+          "sensor_name": "d435_depth",
+          "width": D435_WIDTH,
+          "height": D435_HEIGHT,
+          "fovy": D435_FOVY_DEG,
+          "near": 0.1,
+          "far": 2.0,
+          "policy_hz": 50,
+          "sensor_hz": 30,
+          "noise_std": 0.0 if play else 0.01,
+          "dropout_prob": 0.0 if play else 0.005,
+        },
+        delay_min_lag=0,
+        delay_max_lag=0 if play else 1,
+        delay_hold_prob=0.8,
+      )
+    },
+    concatenate_terms=True,
+    enable_corruption=not play,
+    nan_policy="error",
+  )
+
+
+def unitree_go1_perceptive_env_cfg(
+  play: bool = False,
+  camera_sensor: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Create a Go1 perceptive locomotion task with D435-like depth."""
+  cfg = unitree_go1_blind_env_cfg(play=play)
+  if camera_sensor:
+    depth_sensor = CameraSensorCfg(
+      name="d435_depth",
+      parent_body="robot/trunk",
+      pos=D435_DEPTH_POSITION,
+      quat=D435_MUJOCO_QUATERNION,
+      fovy=D435_FOVY_DEG,
+      width=D435_WIDTH,
+      height=D435_HEIGHT,
+      data_types=("depth",),
+      use_textures=False,
+      use_shadows=False,
+      enabled_geom_groups=(0, 2),
+    )
+    # The rendered camera is intended for low-count validation, not throughput runs.
+    cfg.scene.num_envs = 16
+  else:
+    depth_sensor = RayCastSensorCfg(
+      name="d435_depth",
+      frame=ObjRef(type="site", name="d435_depth", entity="robot"),
+      pattern=PinholeCameraPatternCfg(
+        width=D435_WIDTH,
+        height=D435_HEIGHT,
+        fovy=D435_FOVY_DEG,
+      ),
+      ray_alignment="base",
+      max_distance=2.0,
+      exclude_parent_body=True,
+      include_geom_groups=(0, 2),
+      debug_vis=play,
+    )
+    # Dense pinhole scans allocate several per-ray GPU buffers.  Start from a
+    # conservative count; users can raise it after benchmarking their GPU.
+    cfg.scene.num_envs = 1024
+    if not play:
+      camera_site = SceneEntityCfg("robot", site_names=("d435_depth",))
+      cfg.events["d435_mount_position"] = EventTermCfg(
+        mode="startup",
+        func=envs_mdp.dr.site_pos,
+        params={
+          "asset_cfg": camera_site,
+          "operation": "add",
+          "ranges": (-0.005, 0.005),
+        },
+      )
+      cfg.events["d435_mount_orientation"] = EventTermCfg(
+        mode="startup",
+        func=envs_mdp.dr.site_quat,
+        params={
+          "asset_cfg": camera_site,
+          "roll_range": (-math.radians(2.0), math.radians(2.0)),
+          "pitch_range": (-math.radians(2.0), math.radians(2.0)),
+          "yaw_range": (-math.radians(2.0), math.radians(2.0)),
+        },
+      )
+  cfg.scene.sensors = (cfg.scene.sensors or ()) + (depth_sensor,)
+  cfg.observations["depth"] = _d435_observation_cfg(play)
+  if play:
+    cfg.scene.num_envs = 1
   return cfg
 
 
