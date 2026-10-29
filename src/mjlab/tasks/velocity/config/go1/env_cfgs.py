@@ -340,7 +340,7 @@ def unitree_go1_perceptive_env_cfg(
         fovy=D435_FOVY_DEG,
       ),
       ray_alignment="base",
-      max_distance=2.0,
+      max_distance=3.0,
       exclude_parent_body=True,
       include_geom_groups=(0, 2),
       debug_vis=play,

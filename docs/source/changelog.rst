@@ -48,6 +48,8 @@ Changed
 Fixed
 ^^^^^
 
+- Increased the Go1 D435 raycast range to 3 m before optical-Z clipping at 2 m,
+  avoiding premature saturation of oblique image-edge rays.
 - Enabled Go1 perceptive depth raycast debug visualization in play mode so it can
   be toggled from the Viser sensor controls.
 - Go1 perceptive play configurations now default to one environment. Viser displays
