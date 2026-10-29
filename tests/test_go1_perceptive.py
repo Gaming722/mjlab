@@ -21,11 +21,36 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   D435_WIDTH,
   unitree_go1_blind_env_cfg,
   unitree_go1_perceptive_env_cfg,
+  unitree_go1_stairs_perceptive_env_cfg,
 )
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
   unitree_go1_perceptive_ppo_runner_cfg,
 )
 from mjlab.tasks.velocity.mdp.observations import depth_camera
+from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
+
+
+def test_stairs_task_preserves_checkpoint_contract_and_isolates_terrain():
+  rough = unitree_go1_perceptive_env_cfg()
+  stairs = unitree_go1_stairs_perceptive_env_cfg()
+  play = unitree_go1_stairs_perceptive_env_cfg(play=True)
+  assert stairs.scene.terrain is not None
+  assert play.scene.terrain is not None
+  assert rough.scene.terrain is not None
+  terrain = stairs.scene.terrain.terrain_generator
+  assert terrain is not None
+  assert terrain.curriculum
+  assert stairs.scene.terrain.max_init_terrain_level == 4
+  assert set(stairs.observations) == set(rough.observations)
+  for group in stairs.observations:
+    assert set(stairs.observations[group].terms) == set(rough.observations[group].terms)
+  assert play.scene.terrain.terrain_generator is not None
+  assert not play.scene.terrain.terrain_generator.curriculum
+  assert play.scene.num_envs == 1
+  terrain.sub_terrains["flat"].proportion = 0.9
+  assert GO1_STAIRS_TERRAINS_CFG.sub_terrains["flat"].proportion == 0.1
+  assert rough.scene.terrain.terrain_generator is not None
+  assert rough.scene.terrain.terrain_generator.sub_terrains["flat"].proportion == 0.2
 
 
 def _ray_sensor(distances: torch.Tensor):
@@ -139,7 +164,7 @@ def test_perceptive_configs_keep_blind_actor_and_privileged_critic_contract():
   assert isinstance(sensor.pattern, PinholeCameraPatternCfg)
   assert (sensor.pattern.width, sensor.pattern.height) == (D435_WIDTH, D435_HEIGHT)
   assert sensor.pattern.fovy == pytest.approx(D435_FOVY_DEG)
-  assert cfg.scene.num_envs == 1024
+  assert cfg.scene.num_envs == 2048
 
 
 def test_camera_validation_config_and_asymmetric_runner():

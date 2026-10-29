@@ -23,9 +23,10 @@ a substitute for calibration.
 Training
 --------
 
-The main task uses a BVH-accelerated pinhole ``RayCastSensor``.  Its default is
-conservatively capped at 1024 environments because dense ray scans allocate several
-buffers per ray.  Benchmark the target GPU before increasing the count.
+The main task uses a BVH-accelerated pinhole ``RayCastSensor`` and defaults to
+2048 environments, including the stair fine-tuning task. Dense ray scans allocate
+several buffers per ray; tune the count to GPU memory and measured training
+throughput. Play mode defaults to one environment.
 
 .. code-block:: bash
 
@@ -34,6 +35,29 @@ buffers per ray.  Benchmark the target GPU before increasing the count.
 The policy uses ``SpatialSoftmaxCNNModel`` for the depth encoder and an MLP critic.
 The depth image remains a separate observation group instead of being flattened into
 the proprioceptive vector.
+
+Stair fine-tuning
+----------------
+
+``Mjlab-Velocity-Stairs-Unitree-Go1-Perceptive`` uses
+``GO1_STAIRS_TERRAINS_CFG``: 40% pyramid stairs, 40% inverted pyramid stairs,
+10% flat, 5% random rough, and 5% slope terrain. Steps have 30 cm treads and
+increase from 2 to 18 cm across 16 curriculum levels. Initial environments
+start on levels 0--4 (2--6.3 cm steps). Play mode samples random difficulties.
+This is a training target, not a guarantee of 18 cm traversal success.
+
+The observation and network configuration matches the rough perceptive task.
+To continue from an existing run in ``logs/rsl_rl/go1_perceptive_velocity``:
+
+.. code-block:: bash
+
+   uv run train Mjlab-Velocity-Stairs-Unitree-Go1-Perceptive \
+     --agent.resume --agent.load-run <run-directory> \
+     --agent.load-checkpoint model_10000.pt
+
+Replace the run directory and checkpoint filename with your existing checkpoint.
+Evaluate ascent and descent separately at fixed heights before raising the target.
+The original rough task and the general stair preset remain available unchanged.
 
 Rendered-depth validation
 -------------------------

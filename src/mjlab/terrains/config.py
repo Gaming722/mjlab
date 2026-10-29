@@ -331,6 +331,28 @@ STAIRS_TERRAINS_CFG = TerrainGeneratorCfg(
   add_lights=True,
 )
 
+# Stair-focused fine-tuning: retain easy terrain while extending steps to 18 cm.
+GO1_STAIRS_TERRAINS_CFG = TerrainGeneratorCfg(
+  size=(8.0, 8.0),
+  border_width=20.0,
+  num_rows=16,
+  num_cols=5,
+  curriculum=True,
+  sub_terrains={
+    "pyramid_stairs": pyramid_stairs(
+      proportion=0.4, step_height_range=(0.02, 0.18), step_width=0.30
+    ),
+    "pyramid_stairs_inv": pyramid_stairs_inv(
+      proportion=0.4, step_height_range=(0.02, 0.18), step_width=0.30
+    ),
+    "flat": flat(proportion=0.1),
+    "random_rough": random_rough(proportion=0.05),
+    "hf_pyramid_slope": hf_pyramid_slope(proportion=0.05),
+  },
+  add_lights=True,
+)
+
+
 ALL_TERRAINS_CFG = TerrainGeneratorCfg(
   size=(8.0, 8.0),
   border_width=20.0,

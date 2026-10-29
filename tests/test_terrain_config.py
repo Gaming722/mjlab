@@ -8,6 +8,7 @@ import mjlab.terrains as terrain_gen
 from mjlab.terrains.config import (
   ALL_TERRAIN_PRESETS,
   ALL_TERRAINS_CFG,
+  GO1_STAIRS_TERRAINS_CFG,
   ROUGH_TERRAINS_CFG,
   STAIRS_TERRAINS_CFG,
   pyramid_stairs,
@@ -51,6 +52,16 @@ def test_stairs_terrains_cfg_structure():
 def test_all_terrains_cfg_matches_presets():
   assert set(ALL_TERRAINS_CFG.sub_terrains.keys()) == set(ALL_TERRAIN_PRESETS.keys())
   assert ALL_TERRAINS_CFG.num_cols == len(ALL_TERRAIN_PRESETS)
+
+
+@pytest.mark.parametrize("difficulty", [0.0, 1.0])
+def test_go1_stairs_generate_at_curriculum_endpoints(difficulty):
+  spec = mujoco.MjSpec()
+  spec.worldbody.add_body(name="terrain")
+  rng = np.random.default_rng(42)
+  for terrain in GO1_STAIRS_TERRAINS_CFG.sub_terrains.values():
+    terrain.function(difficulty=difficulty, spec=spec, rng=rng)
+  spec.compile()
 
 
 def test_terrain_preset_decorator():

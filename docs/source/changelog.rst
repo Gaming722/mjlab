@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a Go1 perceptive stair fine-tuning task with 80% stair sampling and a
+  2--18 cm height curriculum, retaining flat, rough, and slope terrain.
 - Added D435-like perceptive locomotion tasks for Go1.  The training task uses a
   pinhole ``RayCastSensor`` with a 30 Hz cached optical-Z depth observation and an
   asymmetric CNN actor, while a low-environment ``CameraSensor`` task provides a
@@ -28,6 +30,8 @@ Added
 Changed
 ^^^^^^^
 
+- Increased the default Go1 perceptive raycast training environment count from
+  1024 to 2048, including the stair fine-tuning task.
 - Heightfield terrains now lay hfield rows along y and columns along x, as MuJoCo
   expects. Non-square sub-terrains are no longer stretched with flat patches off the
   terrain; square ones are mirrored across x=y for a given seed.

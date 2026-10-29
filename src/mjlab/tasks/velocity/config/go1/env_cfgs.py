@@ -1,6 +1,7 @@
 """Unitree Go1 velocity environment configurations."""
 
 import math
+from copy import deepcopy
 from typing import Literal
 
 from mjlab.asset_zoo.robots import (
@@ -27,6 +28,7 @@ from mjlab.sensor import (
 from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
+from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
 
 TerrainType = Literal["rough", "obstacles"]
 
@@ -345,9 +347,9 @@ def unitree_go1_perceptive_env_cfg(
       include_geom_groups=(0, 2),
       debug_vis=play,
     )
-    # Dense pinhole scans allocate several per-ray GPU buffers.  Start from a
-    # conservative count; users can raise it after benchmarking their GPU.
-    cfg.scene.num_envs = 1024
+    # Dense pinhole scans allocate several per-ray GPU buffers. Tune this count
+    # to the target GPU's memory and measured training throughput.
+    cfg.scene.num_envs = 2048
     if not play:
       camera_site = SceneEntityCfg("robot", site_names=("d435_depth",))
       cfg.events["d435_mount_position"] = EventTermCfg(
@@ -373,6 +375,24 @@ def unitree_go1_perceptive_env_cfg(
   cfg.observations["depth"] = _d435_observation_cfg(play)
   if play:
     cfg.scene.num_envs = 1
+  return cfg
+
+
+def unitree_go1_stairs_perceptive_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Fine-tune perceptive Go1 on a stair-focused 2--18 cm curriculum."""
+  cfg = unitree_go1_perceptive_env_cfg(play=play)
+  assert cfg.scene.terrain is not None
+  terrain = deepcopy(GO1_STAIRS_TERRAINS_CFG)
+  # Begin at 2--6.3 cm; higher steps are reached through the curriculum.
+  cfg.scene.terrain.max_init_terrain_level = 4
+  if play:
+    terrain.curriculum = False
+    terrain.num_rows = 5
+    terrain.num_cols = 5
+    terrain.border_width = 10.0
+  cfg.scene.terrain.terrain_generator = terrain
   return cfg
 
 
