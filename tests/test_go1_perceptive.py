@@ -45,8 +45,17 @@ def test_stairs_task_preserves_checkpoint_contract_and_isolates_terrain():
   for group in stairs.observations:
     assert set(stairs.observations[group].terms) == set(rough.observations[group].terms)
   assert play.scene.terrain.terrain_generator is not None
-  assert not play.scene.terrain.terrain_generator.curriculum
+  play_terrain = play.scene.terrain.terrain_generator
+  assert play_terrain.num_rows == 1
+  assert play_terrain.difficulty_range == (1.0, 1.0)
+  assert set(play_terrain.sub_terrains) == {"pyramid_stairs", "pyramid_stairs_inv"}
+  for name, stair in play_terrain.sub_terrains.items():
+    assert stair == terrain.sub_terrains[name]
+  assert play.scene.terrain.max_init_terrain_level == 0
+  assert not play.curriculum
+  assert "randomize_terrain" in play.events
   assert play.scene.num_envs == 1
+  assert play.sim.nconmax is None
   terrain.sub_terrains["flat"].proportion = 0.9
   assert GO1_STAIRS_TERRAINS_CFG.sub_terrains["flat"].proportion == 0.1
   assert rough.scene.terrain.terrain_generator is not None

@@ -43,7 +43,9 @@ Stair fine-tuning
 ``GO1_STAIRS_TERRAINS_CFG``: 40% pyramid stairs, 40% inverted pyramid stairs,
 10% flat, 5% random rough, and 5% slope terrain. Steps have 30 cm treads and
 increase from 2 to 18 cm across 16 curriculum levels. Initial environments
-start on levels 0--4 (2--6.3 cm steps). Play mode samples random difficulties.
+start on levels 0--4 (2--6.3 cm steps). Play mode previews only the two stair
+types at the hardest training difficulty: 18 cm steps with 30 cm treads.
+Resets can switch stair type but always retain the maximum step height.
 This is a training target, not a guarantee of 18 cm traversal success.
 
 The observation and network configuration matches the rough perceptive task.
@@ -52,7 +54,7 @@ To continue from an existing run in ``logs/rsl_rl/go1_perceptive_velocity``:
 .. code-block:: bash
 
    uv run train Mjlab-Velocity-Stairs-Unitree-Go1-Perceptive \
-     --agent.resume --agent.load-run <run-directory> \
+     --agent.resume True --agent.load-run <run-directory> \
      --agent.load-checkpoint model_10000.pt
 
 Replace the run directory and checkpoint filename with your existing checkpoint.

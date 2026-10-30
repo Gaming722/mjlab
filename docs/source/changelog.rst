@@ -52,6 +52,10 @@ Changed
 Fixed
 ^^^^^
 
+- Go1 play uses automatic contact capacity sizing to avoid initialization
+  overflow when the pre-reset pose intersects rough terrain or stairs.
+- Go1 perceptive stair play now previews the hardest training stairs (18 cm)
+  instead of randomly spawning on easy rows or non-stair terrain.
 - Increased the Go1 D435 raycast range to 3 m before optical-Z clipping at 2 m,
   avoiding premature saturation of oblique image-edge rays.
 - Enabled Go1 perceptive depth raycast debug visualization in play mode so it can

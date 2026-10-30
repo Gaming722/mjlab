@@ -248,6 +248,9 @@ def unitree_go1_rough_env_cfg(
 
   # Apply play mode overrides.
   if play:
+    # A single preview world cannot share contact capacity with other worlds.
+    # Include contacts at the pre-reset pose in Warp's automatic allocation.
+    cfg.sim.nconmax = None
     # Effectively infinite episode length.
     cfg.episode_length_s = int(1e9)
 
@@ -388,10 +391,16 @@ def unitree_go1_stairs_perceptive_env_cfg(
   # Begin at 2--6.3 cm; higher steps are reached through the curriculum.
   cfg.scene.terrain.max_init_terrain_level = 4
   if play:
-    terrain.curriculum = False
-    terrain.num_rows = 5
-    terrain.num_cols = 5
-    terrain.border_width = 10.0
+    # Preview the hardest training stairs deterministically. Random resets may
+    # switch stair direction, but cannot select easy rows or non-stair terrain.
+    terrain.sub_terrains = {
+      name: terrain.sub_terrains[name]
+      for name in ("pyramid_stairs", "pyramid_stairs_inv")
+    }
+    terrain.num_rows = 1
+    terrain.num_cols = 2
+    terrain.difficulty_range = (1.0, 1.0)
+    cfg.scene.terrain.max_init_terrain_level = 0
   cfg.scene.terrain.terrain_generator = terrain
   return cfg
 
