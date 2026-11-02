@@ -181,7 +181,7 @@ def test_perceptive_configs_keep_blind_actor_and_privileged_critic_contract():
   assert isinstance(sensor.pattern, PinholeCameraPatternCfg)
   assert (sensor.pattern.width, sensor.pattern.height) == (D435_WIDTH, D435_HEIGHT)
   assert sensor.pattern.fovy == pytest.approx(D435_FOVY_DEG)
-  assert cfg.scene.num_envs == 2048
+  assert cfg.scene.num_envs == 4096
 
 
 def test_camera_validation_config_and_asymmetric_runner():

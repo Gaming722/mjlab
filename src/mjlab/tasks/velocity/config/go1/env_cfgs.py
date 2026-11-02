@@ -352,7 +352,7 @@ def unitree_go1_perceptive_env_cfg(
     )
     # Dense pinhole scans allocate several per-ray GPU buffers. Tune this count
     # to the target GPU's memory and measured training throughput.
-    cfg.scene.num_envs = 2048
+    cfg.scene.num_envs = 4096
     if not play:
       camera_site = SceneEntityCfg("robot", site_names=("d435_depth",))
       cfg.events["d435_mount_position"] = EventTermCfg(
