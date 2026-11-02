@@ -386,6 +386,13 @@ def unitree_go1_stairs_perceptive_env_cfg(
 ) -> ManagerBasedRlEnvCfg:
   """Fine-tune perceptive Go1 on a stair-focused 2--18 cm curriculum."""
   cfg = unitree_go1_perceptive_env_cfg(play=play)
+  # Allow brief thigh contact during stair exploration without ending the episode.
+  cfg.terminations.pop("illegal_contact", None)
+  cfg.rewards["thigh_collision"] = RewardTermCfg(
+    func=mdp.self_collision_cost,
+    weight=-0.1,
+    params={"sensor_name": "thigh_ground_touch"},
+  )
   assert cfg.scene.terrain is not None
   terrain = deepcopy(GO1_STAIRS_TERRAINS_CFG)
   # Begin at 2--6.3 cm; higher steps are reached through the curriculum.

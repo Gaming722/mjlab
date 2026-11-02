@@ -30,6 +30,8 @@ Added
 Changed
 ^^^^^^^
 
+- Go1 perceptive stair fine-tuning penalizes thigh-ground contact instead of
+  terminating the episode, allowing brief contact during stair exploration.
 - Increased the default Go1 perceptive raycast training environment count from
   1024 to 2048, including the stair fine-tuning task.
 - Heightfield terrains now lay hfield rows along y and columns along x, as MuJoCo

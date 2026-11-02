@@ -34,6 +34,14 @@ def test_stairs_task_preserves_checkpoint_contract_and_isolates_terrain():
   rough = unitree_go1_perceptive_env_cfg()
   stairs = unitree_go1_stairs_perceptive_env_cfg()
   play = unitree_go1_stairs_perceptive_env_cfg(play=True)
+  assert "illegal_contact" in rough.terminations
+  assert "thigh_collision" not in rough.rewards
+  for cfg in (stairs, play):
+    assert "illegal_contact" not in cfg.terminations
+    penalty = cfg.rewards["thigh_collision"]
+    assert penalty.weight == -0.1
+    assert penalty.params["sensor_name"] == "thigh_ground_touch"
+    assert any(s.name == "thigh_ground_touch" for s in cfg.scene.sensors or ())
   assert stairs.scene.terrain is not None
   assert play.scene.terrain is not None
   assert rough.scene.terrain is not None
