@@ -29,10 +29,12 @@ def track_linear_velocity(
   std: float,
   command_name: str,
   asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+  include_vertical: bool = True,
 ) -> torch.Tensor:
   """Reward for tracking the commanded base linear velocity.
 
   The commanded z velocity is assumed to be zero.
+  Set ``include_vertical=False`` to permit vertical stair-climbing transients.
   """
   asset: Entity = env.scene[asset_cfg.name]
   command = env.command_manager.get_command(command_name)
@@ -40,7 +42,7 @@ def track_linear_velocity(
   actual = asset.data.root_link_lin_vel_b
   xy_error = torch.sum(torch.square(command[:, :2] - actual[:, :2]), dim=1)
   z_error = torch.square(actual[:, 2])
-  lin_vel_error = xy_error + z_error
+  lin_vel_error = xy_error + z_error if include_vertical else xy_error
   return torch.exp(-lin_vel_error / std**2)
 
 
@@ -49,10 +51,12 @@ def track_angular_velocity(
   std: float,
   command_name: str,
   asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+  include_roll_pitch: bool = True,
 ) -> torch.Tensor:
-  """Reward heading error for heading-controlled envs, angular velocity for others.
+  """Reward tracking commanded angular velocity.
 
   The commanded xy angular velocities are assumed to be zero.
+  Set ``include_roll_pitch=False`` to track yaw without suppressing stair motion.
   """
   asset: Entity = env.scene[asset_cfg.name]
   command = env.command_manager.get_command(command_name)
@@ -60,7 +64,7 @@ def track_angular_velocity(
   actual = asset.data.root_link_ang_vel_b
   z_error = torch.square(command[:, 2] - actual[:, 2])
   xy_error = torch.sum(torch.square(actual[:, :2]), dim=1)
-  ang_vel_error = z_error + xy_error
+  ang_vel_error = z_error + xy_error if include_roll_pitch else z_error
   return torch.exp(-ang_vel_error / std**2)
 
 

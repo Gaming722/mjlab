@@ -24,7 +24,7 @@ Training
 --------
 
 The main task uses a BVH-accelerated pinhole ``RayCastSensor`` and defaults to
-2048 environments, including the stair fine-tuning task. Dense ray scans allocate
+4096 environments, including the stair fine-tuning task. Dense ray scans allocate
 several buffers per ray; tune the count to GPU memory and measured training
 throughput. Play mode defaults to one environment.
 
@@ -60,6 +60,26 @@ To continue from an existing run in ``logs/rsl_rl/go1_perceptive_velocity``:
 Replace the run directory and checkpoint filename with your existing checkpoint.
 Evaluate ascent and descent separately at fixed heights before raising the target.
 The original rough task and the general stair preset remain available unchanged.
+
+The stair task keeps its command speed range fixed as terrain difficulty increases.
+It prioritizes planar velocity tracking, permits vertical and roll/pitch transients,
+and uses weaker nominal-pose and motion regularization than the rough task.
+Thigh-ground contacts incur a penalty; falls beyond 70 degrees terminate training
+episodes.
+
+Use the headless evaluator to compare checkpoints at identical heights, speeds,
+and randomized spawn poses:
+
+.. code-block:: bash
+
+   uv run python -m mjlab.scripts.evaluate_go1_stairs \
+     --checkpoints <checkpoint-path> \
+     --heights 0.10 0.14 0.18 --speeds 0.3 0.5 0.8 1.0 \
+     --trials 16 --output artifacts/go1_stairs_evaluation.json
+
+Passage requires crossing the stair flight with the expected change in height;
+falls and lateral exits invalidate that trial. The evaluator reports ascent and
+descent separately. A curriculum level is a training state, not a passage metric.
 
 Rendered-depth validation
 -------------------------

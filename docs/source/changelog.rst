@@ -32,6 +32,9 @@ Added
 Changed
 ^^^^^^^
 
+- Go1 perceptive stair training uses fixed moderate commands and prioritizes planar
+  tracking over posture and motion regularization, while permitting vertical and
+  roll/pitch transients and terminating on falls.
 - Go1 perceptive stair fine-tuning penalizes thigh-ground contact instead of
   terminating the episode, allowing brief contact during stair exploration.
 - Increased the default Go1 perceptive raycast training environment count from

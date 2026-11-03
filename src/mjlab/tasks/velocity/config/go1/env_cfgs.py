@@ -393,6 +393,29 @@ def unitree_go1_stairs_perceptive_env_cfg(
     weight=-0.1,
     params={"sensor_name": "thigh_ground_touch"},
   )
+  # Prioritize commanded planar motion over holding a quiet nominal posture.
+  # Vertical and roll/pitch motion are necessary when negotiating stair edges.
+  cfg.rewards["track_linear_velocity"].weight = 4.0
+  cfg.rewards["track_linear_velocity"].params.update(std=0.25, include_vertical=False)
+  cfg.rewards["track_angular_velocity"].weight = 1.0
+  cfg.rewards["track_angular_velocity"].params["include_roll_pitch"] = False
+  cfg.rewards["pose"].weight = 0.3
+  cfg.rewards["action_rate_l2"].weight = -0.03
+  cfg.rewards["foot_clearance"].weight = -0.5
+  cfg.rewards["foot_swing_height"].weight = -0.1
+  # Keep a consistent speed distribution as terrain difficulty increases.
+  cfg.curriculum.pop("command_vel", None)
+  command = cfg.commands["twist"]
+  assert isinstance(command, UniformVelocityCommandCfg)
+  command.ranges.lin_vel_x = (-0.5, 1.0)
+  command.ranges.lin_vel_y = (-0.3, 0.3)
+  command.rel_forward_envs = 0.5
+  command.rel_standing_envs = 0.05
+  if not play:
+    cfg.terminations["fell_over"] = TerminationTermCfg(
+      func=mdp.bad_orientation,
+      params={"limit_angle": math.radians(70.0)},
+    )
   assert cfg.scene.terrain is not None
   terrain = deepcopy(GO1_STAIRS_TERRAINS_CFG)
   # Begin at 2--6.3 cm; higher steps are reached through the curriculum.
