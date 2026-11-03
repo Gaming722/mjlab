@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a second-stage Go1 perceptive task for frontal low-speed ascent on
+  12--18 cm stairs, retaining descent and non-stair practice.
 - Added a headless Go1 stair evaluation tool with fixed heights and speeds,
   randomized spawn poses, and passage checks that reject falls and side exits.
 - Added a Go1 perceptive stair fine-tuning task with 80% stair sampling and a

@@ -152,6 +152,7 @@ def evaluate(args: EvaluationConfig) -> None:
         active_time = torch.zeros_like(stop_time)
         forward_distance = torch.zeros_like(stop_time)
         trunk_contact_time = torch.zeros_like(stop_time)
+        lateral_peak = torch.zeros_like(stop_time)
         with torch.no_grad():
           for step in range(math.ceil(args.duration / base.step_dt)):
             active = ~passed & ~failed
@@ -166,6 +167,9 @@ def evaluate(args: EvaluationConfig) -> None:
             trunk_contact_time += trunk_touch * active * base.step_dt
             position = robot.data.root_link_pos_w - base.scene.env_origins
             displacement = robot.data.root_link_pos_w - start
+            lateral_peak = torch.maximum(
+              lateral_peak, displacement[:, 1].abs() * active
+            )
             new_pass, new_fail = passage_masks(
               position,
               displacement,
@@ -204,6 +208,8 @@ def evaluate(args: EvaluationConfig) -> None:
                 trunk_contact_time[mask] / active_time[mask].clamp_min(base.step_dt)
               ).mean()
             ),
+            "mean_max_lateral_drift_m": float(lateral_peak[mask].mean()),
+            "worst_lateral_drift_m": float(lateral_peak[mask].max()),
           }
           results.append(row)
           print(json.dumps(row), flush=True)

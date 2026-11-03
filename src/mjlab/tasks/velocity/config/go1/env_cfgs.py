@@ -29,6 +29,7 @@ from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
 from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
+from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
 
 TerrainType = Literal["rough", "obstacles"]
 
@@ -437,6 +438,44 @@ def unitree_go1_stairs_perceptive_env_cfg(
     terrain.difficulty_range = (1.0, 1.0)
     cfg.scene.terrain.max_init_terrain_level = 0
   cfg.scene.terrain.terrain_generator = terrain
+  return cfg
+
+
+def unitree_go1_stairs_low_speed_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Practice frontal low-speed ascent after learning general stair locomotion."""
+  cfg = unitree_go1_stairs_perceptive_env_cfg(play=play)
+  if play:
+    return cfg
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  terrain.num_rows = 7
+  cfg.scene.terrain.max_init_terrain_level = 6
+  for name in ("pyramid_stairs", "pyramid_stairs_inv"):
+    stair = terrain.sub_terrains[name]
+    assert isinstance(stair, BoxPyramidStairsTerrainCfg)
+    stair.step_height_range = (0.12, 0.18)
+  proportions = {
+    "pyramid_stairs": 0.25,
+    "pyramid_stairs_inv": 0.6,
+    "flat": 0.1,
+    "random_rough": 0.025,
+    "hf_pyramid_slope": 0.025,
+  }
+  for name, proportion in proportions.items():
+    terrain.sub_terrains[name].proportion = proportion
+  command = cfg.commands["twist"]
+  assert isinstance(command, UniformVelocityCommandCfg)
+  command.ranges.lin_vel_x = (-0.3, 0.6)
+  command.ranges.lin_vel_y = (-0.2, 0.2)
+  command.ranges.ang_vel_z = (-0.3, 0.3)
+  command.rel_forward_envs = 0.8
+  cfg.events["reset_base"].params["pose_range"].update(
+    x=(-0.2, 0.2), y=(-0.2, 0.2), yaw=(-0.15, 0.15)
+  )
+  cfg.events.pop("push_robot", None)
   return cfg
 
 

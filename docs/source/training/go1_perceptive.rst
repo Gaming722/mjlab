@@ -84,6 +84,21 @@ Passage requires crossing the stair flight with the expected change in height;
 falls and lateral exits invalidate that trial. The evaluator reports ascent and
 descent separately. A curriculum level is a training state, not a passage metric.
 
+For a policy that can already climb stairs but struggles at low forward speeds,
+``Mjlab-Velocity-Stairs-LowSpeed-Unitree-Go1-Perceptive`` provides a second-stage
+fine-tuning task. It samples 12--18 cm steps across seven levels, allocates 60% of
+environments to bottom-spawn ascent, and emphasizes frontal low-speed commands.
+It removes random pushes during this practice stage while retaining startup
+randomization. Resume a capable checkpoint rather than starting this task from
+scratch, and check higher speeds and descent for forgetting:
+
+.. code-block:: bash
+
+   uv run train Mjlab-Velocity-Stairs-LowSpeed-Unitree-Go1-Perceptive \
+     --agent.resume True --agent.load-run <run-directory> \
+     --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 400 \
+     --agent.run-name low_speed_stairs
+
 Rendered-depth validation
 -------------------------
 

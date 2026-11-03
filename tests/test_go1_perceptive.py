@@ -21,6 +21,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   D435_WIDTH,
   unitree_go1_blind_env_cfg,
   unitree_go1_perceptive_env_cfg,
+  unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
@@ -75,6 +76,23 @@ def test_stairs_task_preserves_checkpoint_contract_and_isolates_terrain():
   assert GO1_STAIRS_TERRAINS_CFG.sub_terrains["flat"].proportion == 0.1
   assert rough.scene.terrain.terrain_generator is not None
   assert rough.scene.terrain.terrain_generator.sub_terrains["flat"].proportion == 0.2
+
+
+def test_low_speed_stairs_focus_preserves_general_task():
+  cfg = unitree_go1_stairs_low_speed_env_cfg()
+  general = unitree_go1_stairs_perceptive_env_cfg()
+  assert cfg.scene.terrain is not None
+  assert general.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  assert terrain.num_rows == 7
+  assert cfg.scene.terrain.max_init_terrain_level == 6
+  assert terrain.sub_terrains["pyramid_stairs_inv"].proportion == 0.6
+  assert "push_robot" not in cfg.events
+  assert "push_robot" in general.events
+  assert general.scene.terrain.max_init_terrain_level == 4
+  assert cfg.scene.num_envs == 4096
+  assert cfg.observations == general.observations
 
 
 def _ray_sensor(distances: torch.Tensor):
