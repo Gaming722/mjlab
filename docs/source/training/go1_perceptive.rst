@@ -137,6 +137,32 @@ original clearance and support objectives.
      --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 2000 \
      --agent.run-name robust_locomotion
 
+Edge-placement fine-tuning
+--------------------------
+
+``Mjlab-Velocity-Edges-Unitree-Go1-Perceptive`` increases stair exposure while
+retaining all seven terrain families. Stairs occupy 70% of the sampling weight,
+with 27/30/33 cm treads and a minimum 1 m central platform. Integer step counts
+may leave a slightly larger platform. Forward commands are more frequent and
+last 8--12 seconds, retaining standing, reverse/lateral, and full-range yaw.
+The observation/action contract and robot control parameters are unchanged.
+
+This task is intended to fine-tune a capable checkpoint. It uses a fixed
+learning rate of ``5e-5``. Its runner restores parameters and optimizer moments,
+then applies the configured fixed rate instead of inheriting the parent's rate.
+
+.. code-block:: bash
+
+   uv run train Mjlab-Velocity-Edges-Unitree-Go1-Perceptive \
+     --agent.resume True --agent.load-run <run-directory> \
+     --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 400 \
+     --env.scene.num-envs 2048 --agent.run-name edge_placement
+
+Use the same task with ``play --viewer viser --checkpoint-file <path>`` to view
+the training layout and colored edges. Use the Robust task for comparison on the
+original 30 cm treads and larger central platforms. Assess both, together with
+continuous varied-terrain trials, before selecting a checkpoint.
+
 Continuous evaluation
 ---------------------
 

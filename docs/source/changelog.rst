@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a Go1 edge-placement fine-tuning task with varied stair tread widths,
+  smaller central platforms, retained non-stair terrain, and fixed-rate resume
+  that preserves optimizer moments while applying the configured learning rate.
 - Go1 terrain evaluation accepts alternate stair tread/platform widths, with
   geometric edge checks verified against the generated MuJoCo surfaces.
 - Continuous Go1 evaluation now reports edge landing/support rates, including

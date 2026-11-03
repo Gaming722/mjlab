@@ -69,3 +69,13 @@ def unitree_go1_perceptive_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
   }
   cfg.experiment_name = "go1_perceptive_velocity"
   return cfg
+
+
+def unitree_go1_edge_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Conservative updates for edge-placement fine-tuning of an existing policy."""
+  cfg = unitree_go1_perceptive_ppo_runner_cfg()
+  cfg.algorithm.learning_rate = 5e-5
+  cfg.algorithm.schedule = "fixed"
+  cfg.max_iterations = 400
+  cfg.save_interval = 100
+  return cfg

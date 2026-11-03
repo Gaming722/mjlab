@@ -27,6 +27,7 @@ from mjlab.rl.spatial_softmax import SpatialSoftmaxCNNModel
 from mjlab.scene import SceneCfg
 from mjlab.sim import MujocoCfg, SimulationCfg
 from mjlab.tasks.tracking.rl.runner import _OnnxMotionModel
+from mjlab.tasks.velocity.rl.runner import VelocityFineTuneRunner
 from mjlab.terrains import TerrainEntityCfg
 from mjlab.utils.os import dump_yaml
 
@@ -121,6 +122,34 @@ def test_runner_persists_common_step_counter(env, device, monkeypatch):
     runner.load(checkpoint_path)
 
     assert wrapped_env.unwrapped.common_step_counter == 12345
+
+
+@pytest.mark.parametrize("schedule,expected_lr", [("fixed", 5e-5), ("adaptive", 3e-4)])
+def test_finetune_runner_restores_moments_with_configured_fixed_rate(
+  env, device, tmp_path, schedule, expected_lr
+):
+  cfg = RslRlOnPolicyRunnerCfg(num_steps_per_env=4, upload_model=False)
+  cfg.algorithm.learning_rate = 5e-5
+  cfg.algorithm.schedule = schedule
+  runner = VelocityFineTuneRunner(RslRlVecEnvWrapper(env), asdict(cfg), device=device)
+  optimizer = runner.alg.optimizer
+  parameter = optimizer.param_groups[0]["params"][0]
+  parameter.square().sum().backward()
+  optimizer.step()
+  optimizer.zero_grad()
+  expected_parameter = parameter.detach().clone()
+  expected_moment = optimizer.state[parameter]["exp_avg"].clone()
+  optimizer.param_groups[0]["lr"] = 3e-4
+  checkpoint = str(tmp_path / "parent.pt")
+  MjlabOnPolicyRunner.save(runner, checkpoint)
+  with torch.no_grad():
+    parameter.add_(1.0)
+    optimizer.state[parameter]["exp_avg"].zero_()
+  runner.load(checkpoint)
+  assert optimizer.param_groups[0]["lr"] == expected_lr
+  assert runner.alg.learning_rate == expected_lr
+  torch.testing.assert_close(parameter, expected_parameter)
+  torch.testing.assert_close(optimizer.state[parameter]["exp_avg"], expected_moment)
 
 
 def test_runner_handles_old_checkpoints_without_env_state(env, device):

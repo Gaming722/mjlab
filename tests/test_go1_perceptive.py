@@ -21,17 +21,20 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   D435_HEIGHT,
   D435_WIDTH,
   unitree_go1_blind_env_cfg,
+  unitree_go1_edge_perceptive_env_cfg,
   unitree_go1_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
+  unitree_go1_edge_ppo_runner_cfg,
   unitree_go1_perceptive_ppo_runner_cfg,
 )
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.mdp.observations import depth_camera
 from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
+from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
 
 
 def test_stairs_task_preserves_checkpoint_contract_and_isolates_terrain():
@@ -260,3 +263,30 @@ def test_robust_task_regularizes_base_and_covers_all_rough_types():
     assert scan.pattern.resolution == 0.025
     assert not scan.debug_vis_initial
     assert env.observations["critic"].terms["height_scan"].params["grid_stride"] == 4
+
+
+def test_edge_finetune_covers_varied_treads_without_mutating_robust_task():
+  cfg = unitree_go1_edge_perceptive_env_cfg()
+  play = unitree_go1_edge_perceptive_env_cfg(play=True)
+  for env in (cfg, play):
+    assert env.scene.terrain is not None
+    terrain = env.scene.terrain.terrain_generator
+    assert terrain is not None
+    stairs = [
+      s
+      for s in terrain.sub_terrains.values()
+      if isinstance(s, BoxPyramidStairsTerrainCfg)
+    ]
+    assert len(stairs) == 6
+    assert {s.step_width for s in stairs} == {0.27, 0.30, 0.33}
+    assert sum(s.proportion for s in stairs) == pytest.approx(0.7)
+    assert len(terrain.sub_terrains) == 11
+    assert sum(s.proportion for s in terrain.sub_terrains.values()) == pytest.approx(1)
+    assert set(env.observations["actor"].terms) == set(cfg.observations["actor"].terms)
+  original = unitree_go1_robust_perceptive_env_cfg()
+  assert original.scene.terrain is not None
+  assert original.scene.terrain.terrain_generator is not None
+  assert len(original.scene.terrain.terrain_generator.sub_terrains) == 7
+  rl = unitree_go1_edge_ppo_runner_cfg()
+  assert rl.algorithm.schedule == "fixed"
+  assert rl.algorithm.learning_rate == 5e-5

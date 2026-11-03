@@ -31,6 +31,7 @@ from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
 from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG, ROUGH_TERRAINS_CFG
 from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
+from mjlab.terrains.terrain_generator import SubTerrainCfg
 
 TerrainType = Literal["rough", "obstacles"]
 
@@ -615,6 +616,44 @@ def unitree_go1_robust_perceptive_env_cfg(
       "pitch": (-0.2, 0.2),
       "yaw": (-0.3, 0.3),
     }
+  return cfg
+
+
+def unitree_go1_edge_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Practice edge-aware placement with varied treads and frequent stair exposure."""
+  cfg = unitree_go1_robust_perceptive_env_cfg(play=play)
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  variants: dict[str, SubTerrainCfg] = {}
+  other_weights = {
+    "flat": 0.1,
+    "random_rough": 0.1,
+    "wave_terrain": 0.05,
+    "hf_pyramid_slope": 0.025,
+    "hf_pyramid_slope_inv": 0.025,
+  }
+  for name, sub in terrain.sub_terrains.items():
+    if isinstance(sub, BoxPyramidStairsTerrainCfg):
+      for width in (0.27, 0.30, 0.33):
+        variant = deepcopy(sub)
+        variant.step_width = width
+        variant.platform_width = 1.0
+        variant.proportion = 0.35 / 3
+        variants[f"{name}_w{round(width * 100):02d}"] = variant
+    else:
+      variant = deepcopy(sub)
+      variant.proportion = other_weights[name]
+      variants[name] = variant
+  terrain.sub_terrains = variants
+  terrain.num_cols = len(variants)
+  cfg.scene.terrain.max_init_terrain_level = terrain.num_rows - 1
+  command = cfg.commands["twist"]
+  assert isinstance(command, UniformVelocityCommandCfg)
+  command.rel_forward_envs = 0.65
+  command.rel_turning_envs = 0.15
+  command.rel_standing_envs = 0.05
+  command.resampling_time_range = (8.0, 12.0)
   return cfg
 
 
