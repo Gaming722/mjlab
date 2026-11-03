@@ -8,6 +8,7 @@ import torch
 
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.tasks.velocity.mdp.rewards import (
+  commanded_motion_deficit,
   track_angular_velocity,
   track_linear_velocity,
 )
@@ -40,3 +41,37 @@ def test_tracking_optional_stair_transients(include_transients):
   assert angular.item() == pytest.approx(
     torch.exp(torch.tensor(-2.0)).item() if include_transients else 1.0
   )
+
+
+def test_motion_deficit_requires_progress_along_command():
+  command = torch.tensor(
+    [
+      [0.0, 0.0, 1.0],
+      [0.3, 0.0, 0.0],
+      [0.3, 0.0, 0.0],
+      [0.3, 0.0, 0.0],
+      [0.3, 0.0, 0.0],
+      [-0.3, 0.0, 0.0],
+    ]
+  )
+  velocity = torch.tensor(
+    [
+      [0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0],
+      [0.075, 0.0, 0.0],
+      [0.15, 0.0, 0.0],
+      [0.0, 0.3, 0.0],
+      [-0.15, 0.0, 0.0],
+    ]
+  )
+  env = cast(
+    ManagerBasedRlEnv,
+    SimpleNamespace(
+      scene={
+        "robot": SimpleNamespace(data=SimpleNamespace(root_link_lin_vel_b=velocity))
+      },
+      command_manager=SimpleNamespace(get_command=lambda _: command),
+    ),
+  )
+  cost = commanded_motion_deficit(env, command_name="twist")
+  torch.testing.assert_close(cost, torch.tensor([0.0, 1.0, 0.5, 0.0, 1.0, 0.0]))

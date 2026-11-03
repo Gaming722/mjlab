@@ -403,6 +403,11 @@ def unitree_go1_stairs_perceptive_env_cfg(
   cfg.rewards["action_rate_l2"].weight = -0.03
   cfg.rewards["foot_clearance"].weight = -0.5
   cfg.rewards["foot_swing_height"].weight = -0.1
+  cfg.rewards["motion_deficit"] = RewardTermCfg(
+    func=mdp.commanded_motion_deficit,
+    weight=-3.0,
+    params={"command_name": "twist", "minimum_speed_fraction": 0.5},
+  )
   # Keep a consistent speed distribution as terrain difficulty increases.
   cfg.curriculum.pop("command_vel", None)
   command = cfg.commands["twist"]

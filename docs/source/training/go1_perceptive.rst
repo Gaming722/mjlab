@@ -66,6 +66,9 @@ It prioritizes planar velocity tracking, permits vertical and roll/pitch transie
 and uses weaker nominal-pose and motion regularization than the rough task.
 Thigh-ground contacts incur a penalty; falls beyond 70 degrees terminate training
 episodes.
+Commanded planar motion below half the requested speed incurs a directional
+deficit cost; standing and pure-yaw commands are exempt. The evaluator also
+reports actual forward speed and the fraction of time the trunk touches terrain.
 
 Use the headless evaluator to compare checkpoints at identical heights, speeds,
 and randomized spawn poses:

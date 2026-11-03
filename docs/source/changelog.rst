@@ -32,6 +32,8 @@ Added
 Changed
 ^^^^^^^
 
+- Go1 stair training penalizes stalled commanded motion without penalizing standing
+  or pure-yaw commands; stair evaluation also reports speed and trunk contact time.
 - Go1 perceptive stair training uses fixed moderate commands and prioritizes planar
   tracking over posture and motion regularization, while permitting vertical and
   roll/pitch transients and terminating on falls.

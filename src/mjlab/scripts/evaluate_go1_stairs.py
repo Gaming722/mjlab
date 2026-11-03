@@ -149,9 +149,21 @@ def evaluate(args: EvaluationConfig) -> None:
         failed = torch.zeros_like(passed)
         passage_time = torch.full((env.num_envs,), args.duration, device=args.device)
         stop_time = torch.zeros(env.num_envs, device=args.device)
+        active_time = torch.zeros_like(stop_time)
+        forward_distance = torch.zeros_like(stop_time)
+        trunk_contact_time = torch.zeros_like(stop_time)
         with torch.no_grad():
           for step in range(math.ceil(args.duration / base.step_dt)):
+            active = ~passed & ~failed
             obs, _, _, _ = env.step(policy(obs))
+            active_time += active * base.step_dt
+            forward_distance += (
+              robot.data.root_link_lin_vel_b[:, 0] * active * base.step_dt
+            )
+            trunk_contacts = base.scene["trunk_ground_touch"].data.found
+            assert trunk_contacts is not None
+            trunk_touch = (trunk_contacts > 0).flatten(start_dim=1).any(dim=1)
+            trunk_contact_time += trunk_touch * active * base.step_dt
             position = robot.data.root_link_pos_w - base.scene.env_origins
             displacement = robot.data.root_link_pos_w - start
             new_pass, new_fail = passage_masks(
@@ -182,6 +194,16 @@ def evaluate(args: EvaluationConfig) -> None:
             "success_rate": float(success.float().mean()),
             "mean_passage_s": float(times.mean()) if times.numel() else None,
             "mean_stop_s": float(stop_time[mask].mean()),
+            "mean_forward_speed_m_s": float(
+              (
+                forward_distance[mask] / active_time[mask].clamp_min(base.step_dt)
+              ).mean()
+            ),
+            "mean_trunk_contact_fraction": float(
+              (
+                trunk_contact_time[mask] / active_time[mask].clamp_min(base.step_dt)
+              ).mean()
+            ),
           }
           results.append(row)
           print(json.dumps(row), flush=True)

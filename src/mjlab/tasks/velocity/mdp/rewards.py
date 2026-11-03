@@ -24,6 +24,33 @@ if TYPE_CHECKING:
 _DEFAULT_ASSET_CFG = SceneEntityCfg("robot")
 
 
+def commanded_motion_deficit(
+  env: ManagerBasedRlEnv,
+  command_name: str,
+  minimum_speed_fraction: float = 0.5,
+  command_threshold: float = 0.1,
+  asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+) -> torch.Tensor:
+  """Penalize insufficient planar motion along the commanded direction.
+
+  Returns one at standstill, decreasing linearly to zero at the configured
+  fraction of commanded speed. Sideways motion cannot remove the penalty.
+  Standing and pure-yaw commands are exempt.
+  """
+  if not 0.0 < minimum_speed_fraction <= 1.0:
+    raise ValueError("minimum_speed_fraction must be in (0, 1]")
+  command = env.command_manager.get_command(command_name)
+  assert command is not None
+  planar_command = command[:, :2]
+  speed = torch.linalg.vector_norm(planar_command, dim=-1)
+  asset: Entity = env.scene[asset_cfg.name]
+  velocity = asset.data.root_link_lin_vel_b[:, :2]
+  progress = torch.sum(velocity * planar_command, dim=-1) / speed.clamp_min(1e-6)
+  target = (speed * minimum_speed_fraction).clamp_min(1e-6)
+  deficit = (1.0 - progress / target).clamp(0.0, 1.0)
+  return deficit * (speed > command_threshold)
+
+
 def track_linear_velocity(
   env: ManagerBasedRlEnv,
   std: float,
