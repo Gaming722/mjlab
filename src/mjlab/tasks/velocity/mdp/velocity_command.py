@@ -45,6 +45,7 @@ class UniformVelocityCommand(CommandTerm):
     self.is_standing_env = torch.zeros_like(self.is_heading_env)
     self.is_world_env = torch.zeros_like(self.is_heading_env)
     self.is_forward_env = torch.zeros_like(self.is_heading_env)
+    self.is_turning_env = torch.zeros_like(self.is_heading_env)
 
     # World-frame integral of the commanded linear velocity over the episode.
     self.commanded_displacement_w = torch.zeros(self.num_envs, 2, device=self.device)
@@ -81,6 +82,7 @@ class UniformVelocityCommand(CommandTerm):
     self.vel_command_b[env_ids, 0] = r.uniform_(*self.cfg.ranges.lin_vel_x)
     self.vel_command_b[env_ids, 1] = r.uniform_(*self.cfg.ranges.lin_vel_y)
     self.vel_command_b[env_ids, 2] = r.uniform_(*self.cfg.ranges.ang_vel_z)
+    sampled_yaw = self.vel_command_b[env_ids, 2].clone()
     if self.cfg.heading_command:
       assert self.cfg.ranges.heading is not None
       self.heading_target[env_ids] = r.uniform_(*self.cfg.ranges.heading)
@@ -104,6 +106,16 @@ class UniformVelocityCommand(CommandTerm):
       # Heading and world-frame envs rewrite vel_command_b every step.
       self.is_heading_env[fwd_ids] = False
       self.is_world_env[fwd_ids] = False
+
+    # Pure turning gets explicit coverage, including zero planar commands.
+    if self.cfg.rel_turning_envs > 0.0:
+      self.is_turning_env[env_ids] = r.uniform_(0.0, 1.0) < self.cfg.rel_turning_envs
+      turn_ids = env_ids[self.is_turning_env[env_ids]]
+      self.vel_command_b[turn_ids, :2] = 0.0
+      self.vel_command_b[turn_ids, 2] = sampled_yaw[self.is_turning_env[env_ids]]
+      self.is_heading_env[turn_ids] = False
+      self.is_world_env[turn_ids] = False
+      self.is_forward_env[turn_ids] = False
 
   def _integrate_command(
     self, dt: float | torch.Tensor, env_ids: torch.Tensor | None
@@ -337,6 +349,9 @@ class UniformVelocityCommandCfg(CommandTermCfg):
   init_velocity_prob: float = 0.0
   """Probability that an env starts its episode already moving at its sampled
   planar command velocity. Applied on reset only."""
+  rel_turning_envs: float = 0.0
+  """Fraction assigned pure yaw commands after forward-only sampling.
+  Standing commands take precedence over both motion groups."""
 
   @dataclass
   class Ranges:

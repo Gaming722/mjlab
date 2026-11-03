@@ -29,11 +29,14 @@ def terrain_levels_vel(
   asset_cfg: SceneEntityCfg = _DEFAULT_SCENE_CFG,
   promotion_fraction: float = 0.8,
   min_commanded_distance: float = 1.0,
+  traversal_term: str | None = None,
 ) -> dict[str, torch.Tensor]:
   """Promote or demote envs by distance walked relative to distance commanded.
 
   Envs commanded less than min_commanded_distance meters are never promoted, so
   drift cannot promote an env that was asked to stand still.
+  With ``traversal_term``, promote only a successful tile traversal; any physical
+  termination prevents promotion even if the robot crossed the distance threshold.
   """
   asset: Entity = env.scene[asset_cfg.name]
 
@@ -68,6 +71,11 @@ def terrain_levels_vel(
   # simpler terrains.
   move_down = distance < commanded_distance * 0.5
   move_down &= ~move_up
+  if traversal_term is not None:
+    traversed = env.termination_manager.get_term(traversal_term)[env_ids]
+    failed = env.termination_manager.terminated[env_ids]
+    move_up = traversed & ~failed & (commanded_distance >= min_commanded_distance)
+    move_down = (failed | (move_down & ~traversed)) & ~move_up
 
   # On the initial reset (before any env step) the robot is still at its spawn
   # pose rather than a walked-to position, so ``distance`` is meaningless and

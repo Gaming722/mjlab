@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added explicit pure-yaw sampling for velocity commands and an opt-in terrain
+  curriculum that promotes successful tile traversals and rejects failed episodes.
 - Added a second-stage Go1 perceptive task for frontal low-speed ascent on
   12--18 cm stairs, retaining descent and non-stair practice.
 - Added a headless Go1 stair evaluation tool with fixed heights and speeds,

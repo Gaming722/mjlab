@@ -112,3 +112,15 @@ def test_early_termination_owes_the_time_left():
   terrain_levels_vel(env, torch.arange(1), command_name="twist")
 
   assert terrain.terrain_levels.tolist() == [2]
+
+
+def test_successful_traversal_required_for_robust_curriculum():
+  terrain = _FakeTerrain(num_envs=3)
+  terrain.terrain_levels[:] = 3
+  env = _make_env(terrain, 1, walked=3.7, commanded=8.0)
+  env.termination_manager.get_term = Mock(
+    return_value=torch.tensor([True, True, False])
+  )
+  env.termination_manager.terminated = torch.tensor([False, True, False])
+  terrain_levels_vel(env, torch.arange(3), command_name="twist", traversal_term="edge")
+  assert terrain.terrain_levels.tolist() == [4, 2, 2]
