@@ -45,6 +45,8 @@ Added
 Changed
 ^^^^^^^
 
+- Refined Go1 edge scans to 2.5 cm while preserving critic samples, and added
+  configurable initial ray-overlay visibility so edge colors remain readable.
 - Go1 feet-edge training uses a continuous distance cost, emphasizing new
   landings while retaining a smaller stance cost to avoid abrupt unloading.
 - Robust Go1 training samples more pure turns, increases yaw tracking weight,
@@ -82,6 +84,8 @@ Changed
 Fixed
 ^^^^^
 
+- Feet-edge elevation matching includes the riser span between adjacent treads,
+  avoiding a gap in penalties for contacts midway up a high step.
 - Wave terrain spawn origins now clear central crests instead of placing feet
   inside positive wave surfaces at reset.
 - Continuous terrain evaluation now isolates each case with flat runout; dense

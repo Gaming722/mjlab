@@ -66,13 +66,16 @@ def foot_edge_distances(
   upper: torch.Tensor,
   height_tolerance: float = 0.08,
 ) -> torch.Tensor:
-  """Nearest edge XY distance, matching either adjacent support elevation."""
+  """Nearest edge XY distance within the adjacent treads and riser span."""
   distance = torch.cdist(
     feet[..., :2], edges[..., :2], compute_mode="donot_use_mm_for_euclid_dist"
   )
   foot_z = feet[..., 2, None]
-  dz = torch.minimum((foot_z - lower[:, None]).abs(), (foot_z - upper[:, None]).abs())
-  eligible = valid[:, None] & (dz < height_tolerance)
+  eligible = (
+    valid[:, None]
+    & (foot_z >= lower[:, None] - height_tolerance)
+    & (foot_z <= upper[:, None] + height_tolerance)
+  )
   return torch.where(eligible, distance, torch.inf).amin(-1)
 
 

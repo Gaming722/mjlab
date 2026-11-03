@@ -48,9 +48,18 @@ def _configure_feet_edge(cfg: ManagerBasedRlEnvCfg) -> None:
   terrain_scan = next(s for s in cfg.scene.sensors or () if s.name == "terrain_scan")
   assert isinstance(terrain_scan, RayCastSensorCfg)
   assert isinstance(terrain_scan.pattern, GridPatternCfg)
-  terrain_scan.pattern.resolution = 0.05
+  terrain_scan.pattern.resolution = 0.025
   # Keep the critic's original 17x11 scan and checkpoint input dimensions.
-  cfg.observations["critic"].terms["height_scan"].params["grid_stride"] = 2
+  cfg.observations["critic"].terms["height_scan"].params["grid_stride"] = 4
+  # The edge term already draws the scan. Keep other ray clouds available in
+  # the viewer without obscuring the colored edge overlay by default.
+  for sensor in cfg.scene.sensors or ():
+    if isinstance(sensor, RayCastSensorCfg) and sensor.name in (
+      "terrain_scan",
+      "foot_height_scan",
+      "d435_depth",
+    ):
+      sensor.debug_vis_initial = False
   cfg.rewards["feet_edge"] = RewardTermCfg(
     func=mdp.feet_edge,
     weight=-1.0,
@@ -58,9 +67,9 @@ def _configure_feet_edge(cfg: ManagerBasedRlEnvCfg) -> None:
       "sensor_name": "feet_ground_contact",
       "height_sensor_name": "terrain_scan",
       "asset_cfg": SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL")),
-      "margin": 0.06,
+      "margin": 0.05,
       "height_threshold": 0.03,
-      "landing_weight": 5.0,
+      "landing_weight": 10.0,
       "support_weight": 0.25,
     },
   )

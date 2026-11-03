@@ -257,5 +257,6 @@ def test_robust_task_regularizes_base_and_covers_all_rough_types():
     scan = next(s for s in env.scene.sensors or () if s.name == "terrain_scan")
     assert isinstance(scan, RayCastSensorCfg)
     assert isinstance(scan.pattern, GridPatternCfg)
-    assert scan.pattern.resolution == 0.05
-    assert env.observations["critic"].terms["height_scan"].params["grid_stride"] == 2
+    assert scan.pattern.resolution == 0.025
+    assert not scan.debug_vis_initial
+    assert env.observations["critic"].terms["height_scan"].params["grid_stride"] == 4

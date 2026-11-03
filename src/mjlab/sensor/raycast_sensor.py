@@ -431,6 +431,9 @@ class RayCastSensorCfg(SensorCfg):
   viz: VizCfg = field(default_factory=VizCfg)
   """Visualization settings."""
 
+  debug_vis_initial: bool = True
+  """Initial ray-overlay checkbox state when debug visualization is available."""
+
   def build(self) -> RayCastSensor:
     return RayCastSensor(self)
 
@@ -479,7 +482,7 @@ class RayCastSensor(Sensor[RayCastData]):
     self._cached_frame_pos: torch.Tensor | None = None
     self._cached_frame_mat: torch.Tensor | None = None
 
-    self._debug_vis_enabled: bool = True
+    self._debug_vis_enabled: bool = cfg.debug_vis_initial
     self._ctx: SensorContext | None = None
 
   def edit_spec(
