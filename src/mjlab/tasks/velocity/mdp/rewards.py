@@ -42,6 +42,30 @@ def base_roll_pitch_velocity_l2(
   return asset.data.root_link_ang_vel_b[:, :2].square().sum(dim=-1)
 
 
+def forward_tipping_cost(
+  env: ManagerBasedRlEnv,
+  sensor_name: str,
+  force_threshold: float = 5.0,
+  asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+) -> torch.Tensor:
+  """Discourage nose-down front-only support, a precursor to forward flips.
+
+  Go1 feet are ordered FR, FL, RR, RL. Ordinary diagonal support, unloaded
+  forefeet, and nose-up climbing are exempt. Cost ramps from 10 to 40 degrees.
+  """
+  sensor: ContactSensor = env.scene[sensor_name]
+  forces = sensor.data.force
+  assert forces is not None and forces.shape[1] == 4
+  support = forces.norm(dim=-1) > force_threshold
+  front_only = support[:, :2].any(dim=-1) & ~support[:, 2:].any(dim=-1)
+  asset: Entity = env.scene[asset_cfg.name]
+  nose_down = asset.data.projected_gravity_b[:, 0]
+  low = float(np.sin(np.deg2rad(10.0)))
+  high = float(np.sin(np.deg2rad(40.0)))
+  tilt = ((nose_down - low) / (high - low)).clamp(0.0, 1.0)
+  return front_only.float() * tilt.square()
+
+
 def commanded_motion_deficit(
   env: ManagerBasedRlEnv,
   command_name: str,

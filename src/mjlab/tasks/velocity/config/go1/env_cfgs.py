@@ -488,10 +488,15 @@ def unitree_go1_robust_perceptive_env_cfg(
   """Train balanced terrain locomotion with explicit base-motion regularization."""
   cfg = unitree_go1_stairs_perceptive_env_cfg(play=play)
   cfg.rewards["lin_vel_z"] = RewardTermCfg(
-    func=mdp.base_vertical_velocity_l2, weight=-2.0
+    func=mdp.base_vertical_velocity_l2, weight=-8.0
   )
   cfg.rewards["ang_vel_xy"] = RewardTermCfg(
     func=mdp.base_roll_pitch_velocity_l2, weight=-0.2
+  )
+  cfg.rewards["forward_tipping"] = RewardTermCfg(
+    func=mdp.forward_tipping_cost,
+    weight=-2.0,
+    params={"sensor_name": "feet_ground_contact"},
   )
   cfg.rewards["pose"].weight = 0.5
   cfg.rewards["action_rate_l2"].weight = -0.08
@@ -544,9 +549,14 @@ def unitree_go1_robust_perceptive_env_cfg(
     params={"sensor_name": "trunk_ground_touch", "force_threshold": 100.0},
   )
   if not play:
+    # Keep collecting post-descent transitions instead of ending at the first
+    # patch edge. At moderate speeds this covers an adjacent terrain as well.
+    cfg.episode_length_s = 30.0
     cfg.events["reset_base"].params["pose_range"].update(x=(-0.2, 0.2), y=(-0.2, 0.2))
     cfg.terminations["tile_traversed"] = TerminationTermCfg(
-      func=mdp.terrain_edge_reached, time_out=True
+      func=mdp.terrain_edge_reached,
+      params={"threshold_fraction": 1.8},
+      time_out=True,
     )
     cfg.curriculum["terrain_levels"].params["traversal_term"] = "tile_traversed"
     cfg.events["push_robot"].interval_range_s = (5.0, 10.0)

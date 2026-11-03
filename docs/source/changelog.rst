@@ -40,6 +40,8 @@ Added
 Changed
 ^^^^^^^
 
+- Robust Go1 training now continues beyond the first patch, strengthens vertical
+  stability, and penalizes nose-down front-only support before a forward flip.
 - Go1 stair rewards track horizontal heading rate rather than body-axis spin,
   accounting for roll/pitch coupling and reducing yaw drift while climbing.
 - Go1 stair training penalizes stalled commanded motion without penalizing standing

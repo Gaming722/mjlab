@@ -12,6 +12,7 @@ from mjlab.tasks.velocity.mdp.rewards import (
   base_roll_pitch_velocity_l2,
   base_vertical_velocity_l2,
   commanded_motion_deficit,
+  forward_tipping_cost,
   track_angular_velocity,
   track_linear_velocity,
 )
@@ -131,4 +132,28 @@ def test_base_motion_penalties_ignore_planar_velocity_and_yaw():
   torch.testing.assert_close(base_vertical_velocity_l2(env), torch.tensor([0.25, 0.0]))
   torch.testing.assert_close(
     base_roll_pitch_velocity_l2(env), torch.tensor([0.25, 0.0])
+  )
+
+
+def test_forward_tipping_cost_requires_nose_down_front_only_support():
+  forces = torch.zeros(4, 4, 3)
+  forces[:, 0, 2] = 30.0
+  forces[1, 2, 2] = 10.0  # A supporting hind foot removes the risk condition.
+  forces[3, 0, 2] = 0.0  # Free flight is not front-only support.
+  data = SimpleNamespace(
+    projected_gravity_b=torch.tensor(
+      [[0.8, 0.0, -0.6], [0.8, 0.0, -0.6], [-0.8, 0.0, -0.6], [0.8, 0.0, -0.6]]
+    )
+  )
+  env = cast(
+    ManagerBasedRlEnv,
+    SimpleNamespace(
+      scene={
+        "robot": SimpleNamespace(data=data),
+        "feet": SimpleNamespace(data=SimpleNamespace(force=forces)),
+      }
+    ),
+  )
+  torch.testing.assert_close(
+    forward_tipping_cost(env, "feet"), torch.tensor([1.0, 0.0, 0.0, 0.0])
   )

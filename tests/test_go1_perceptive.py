@@ -235,7 +235,7 @@ def test_robust_task_regularizes_base_and_covers_all_rough_types():
   cfg = unitree_go1_robust_perceptive_env_cfg()
   play = unitree_go1_robust_perceptive_env_cfg(play=True)
   for env in (cfg, play):
-    assert env.rewards["lin_vel_z"].weight == -2.0
+    assert env.rewards["lin_vel_z"].weight == -8.0
     assert env.rewards["ang_vel_xy"].weight == -0.2
     command = env.commands["twist"]
     assert isinstance(command, UniformVelocityCommandCfg)
@@ -248,4 +248,6 @@ def test_robust_task_regularizes_base_and_covers_all_rough_types():
     assert "fell_over" in env.terminations
   assert cfg.curriculum["terrain_levels"].params["traversal_term"] == "tile_traversed"
   assert cfg.terminations["tile_traversed"].time_out
+  assert cfg.terminations["tile_traversed"].params["threshold_fraction"] == 1.8
+  assert cfg.episode_length_s == 30.0
   assert "tile_traversed" not in play.terminations

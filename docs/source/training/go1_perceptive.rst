@@ -116,6 +116,12 @@ and landing penalties discourage oscillation and hard footfalls. Failed episodes
 incur a terminal cost. The curriculum promotes successful tile crossings and
 does not promote falls. Gentle random pushes remain enabled during training.
 
+Episodes last up to 30 seconds and successful routes extend 7.2 m, retaining
+post-descent transitions across patch boundaries. Vertical velocity has weight -8;
+roll/pitch rates have weight -0.2. A separate -2 risk cost applies only when the
+front feet bear load, both hind feet are unloaded, and the base pitches nose-down.
+Normal diagonal support and nose-up ascent are exempt from this risk cost.
+
 .. code-block:: bash
 
    uv run train Mjlab-Velocity-Robust-Unitree-Go1-Perceptive \
