@@ -217,6 +217,11 @@ survival, and base-motion metrics.
 Use ``--stair-step-width`` and ``--stair-platform-width`` to check alternate
 stair geometry; omitting them retains the task defaults. Exact edge locations
 are recomputed for that geometry rather than assuming a 30 cm tread.
+For repeated flights and neighboring terrain transitions, combine
+``--tile-spacing 8 --terrain-rows 8``. Scan metrics and failure checks follow the
+entire route; exact geometric stair counts remain restricted to the original
+spawn patch. Loaded-foot slip is reported for full-trial survivors, and sustained
+missing ground beneath the base is a failure even if the robot remains upright.
 
 Rendered-depth validation
 -------------------------

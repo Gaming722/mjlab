@@ -87,6 +87,7 @@ class EvaluationConfig:
   spawn_xy: float = 0.25
   friction: float | None = None
   tile_spacing: float = 64.0
+  terrain_rows: int = 1
   stair_step_width: float | None = None
   stair_platform_width: float | None = None
   seed: int = 43
@@ -128,13 +129,17 @@ def update_failure(
   gravity_z: torch.Tensor,
   trunk_contact_steps: torch.Tensor,
   dt: float,
+  no_ground_steps: torch.Tensor | None = None,
 ) -> torch.Tensor:
   """Keep checking failures after crossing; reject sustained belly contact."""
-  return (
+  result = (
     failed
     | (gravity_z > -math.cos(math.radians(70)))
     | (trunk_contact_steps * dt >= 0.5)
   )
+  if no_ground_steps is not None:
+    result |= no_ground_steps * dt >= 0.5
+  return result
 
 
 def square_edge_distance(feet_xy: torch.Tensor, radii: torch.Tensor) -> torch.Tensor:
@@ -160,6 +165,8 @@ def evaluate(args: EvaluationConfig) -> None:
     raise ValueError("difficulties must be in [0, 1]")
   if args.tile_spacing < 8:
     raise ValueError("tile_spacing must be at least 8 m")
+  if args.terrain_rows < 1:
+    raise ValueError("terrain_rows must be positive")
   for width in (args.stair_step_width, args.stair_platform_width):
     if width is not None and width <= 0:
       raise ValueError("stair step/platform widths must be positive")
@@ -197,12 +204,12 @@ def evaluate(args: EvaluationConfig) -> None:
     )
     for name, d in labels
   }
-  terrain.num_rows = 1
+  terrain.num_rows = args.terrain_rows
   terrain.size = (args.tile_spacing, args.tile_spacing)
   terrain.num_cols = len(labels)
   terrain.curriculum = True
   terrain.border_width = 40.0
-  cfg.scene.terrain.max_init_terrain_level = 0
+  cfg.scene.terrain.max_init_terrain_level = args.terrain_rows - 1
   cfg.scene.num_envs = len(labels) * args.trials
   for sensor in cfg.scene.sensors or ():
     if isinstance(sensor, (RayCastSensorCfg, TerrainHeightSensorCfg)):
@@ -270,6 +277,9 @@ def evaluate(args: EvaluationConfig) -> None:
         failure_time = torch.full((env.num_envs,), args.duration, device=args.device)
         failure_position = torch.zeros(env.num_envs, 3, device=args.device)
         contact_steps = torch.zeros(env.num_envs, device=args.device)
+        no_ground_steps = torch.zeros_like(contact_steps)
+        no_ground_time = torch.zeros_like(contact_steps)
+        no_ground_failed = torch.zeros_like(failed)
         alive_time = torch.zeros_like(contact_steps)
         trunk_time = torch.zeros_like(contact_steps)
         risk_time = torch.zeros_like(contact_steps)
@@ -279,6 +289,7 @@ def evaluate(args: EvaluationConfig) -> None:
         stall_time = torch.zeros_like(contact_steps)
         sums = torch.zeros(env.num_envs, 9, device=args.device)
         edge_counts = torch.zeros(env.num_envs, 8, device=args.device)
+        foot_motion = torch.zeros(env.num_envs, 2, device=args.device)
         previous_motion = torch.zeros(env.num_envs, 3, device=args.device)
         previous_heading = robot.data.heading_w.clone()
         low_pass = torch.zeros_like(previous_motion)
@@ -338,8 +349,22 @@ def evaluate(args: EvaluationConfig) -> None:
             assert contacts is not None
             trunk_touch = (contacts > 0).flatten(start_dim=1).any(dim=1)
             contact_steps = torch.where(trunk_touch, contact_steps + 1, 0)
+            scan = base.scene["terrain_scan"].data
+            center = scan.distances.shape[1] // 2
+            no_ground = (
+              (scan.distances[:, center] < 0)
+              | (scan.normals_w[:, center, 2] < 0.2)
+              | ~torch.isfinite(scan.hit_pos_w[:, center]).all(-1)
+            )
+            no_ground_steps = torch.where(no_ground, no_ground_steps + 1, 0)
+            no_ground_time += no_ground * active * base.step_dt
+            no_ground_failed |= (no_ground_steps * base.step_dt >= 0.5) & active
             new_failed = update_failure(
-              failed, robot.data.projected_gravity_b[:, 2], contact_steps, base.step_dt
+              failed,
+              robot.data.projected_gravity_b[:, 2],
+              contact_steps,
+              base.step_dt,
+              no_ground_steps,
             )
             position = robot.data.root_link_pos_w - base.scene.env_origins
             failure_position[new_failed & ~failed] = position[new_failed & ~failed]
@@ -385,6 +410,9 @@ def evaluate(args: EvaluationConfig) -> None:
             # Ignore the initial settling transient when measuring vibration.
             if elapsed >= 1.0:
               sums += values * active[:, None] * base.step_dt
+              slip_sq = robot.data.site_lin_vel_w[:, feet_ids, :2].square().sum(-1)
+              foot_motion[:, 0] += (slip_sq * loaded).sum(-1) * active
+              foot_motion[:, 1] += loaded.sum(-1) * active
         for i, (name, difficulty) in enumerate(labels):
           mask = types == i
           count = int(mask.sum())
@@ -394,6 +422,9 @@ def evaluate(args: EvaluationConfig) -> None:
           # contributing samples. Report motion quality only for full survivors.
           rms = torch.sqrt(sums[mask] / valid_time[:, None])[survived].mean(0)
           metrics = [float(v) if survived.any() else None for v in rms]
+          slip_rms = torch.sqrt(
+            foot_motion[mask, 0] / foot_motion[mask, 1].clamp_min(1)
+          )[survived]
           counts = edge_counts[mask].sum(0)
           edge_rates = [
             float(counts[j] / counts[j + 1]) if counts[j + 1] > 0 else None
@@ -416,6 +447,8 @@ def evaluate(args: EvaluationConfig) -> None:
               )
             ],
             "failed_after_crossing": int((crossed[mask] & ~survived).sum()),
+            "no_ground_failures": int(no_ground_failed[mask].sum()),
+            "mean_no_ground_s": float(no_ground_time[mask].mean()),
             "foot_slide_friction": friction_values[mask].tolist(),
             "crossed_and_survived": int((crossed[mask] & survived).sum()),
             "mean_failure_or_end_s": float(failure_time[mask].mean()),
@@ -437,6 +470,7 @@ def evaluate(args: EvaluationConfig) -> None:
             "velocity_xy_rmse": metrics[6],
             "yaw_rate_rmse": metrics[7],
             "action_rate_rms": metrics[8],
+            "loaded_foot_slip_rms": float(slip_rms.mean()) if survived.any() else None,
             "scan_edge_support_fraction": edge_rates[0],
             "scan_edge_landing_fraction": edge_rates[1],
             "stair_edge_support_fraction_3cm": edge_rates[2],

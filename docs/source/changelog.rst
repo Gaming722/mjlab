@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Go1 continuous evaluation supports multi-row terrain routes, reports loaded-foot
+  slip, and rejects sustained missing ground even if the robot remains upright.
 - Added a Go1 edge-placement fine-tuning task with varied stair tread widths,
   smaller central platforms, retained non-stair terrain, and fixed-rate resume
   that preserves optimizer moments while applying the configured learning rate.

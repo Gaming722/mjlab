@@ -80,6 +80,17 @@ def test_sustained_trunk_contact_is_failure():
   assert failed.tolist() == [False, True]
 
 
+def test_sustained_missing_ground_cannot_count_as_upright_survival():
+  failed = update_failure(
+    torch.zeros(2, dtype=torch.bool),
+    torch.tensor([-1.0, -1.0]),
+    torch.zeros(2),
+    0.02,
+    torch.tensor([24.0, 25.0]),
+  )
+  assert failed.tolist() == [False, True]
+
+
 def test_command_schedules_include_stop_reverse_and_full_yaw_range():
   assert scheduled_command("maneuver", 10.0) == (0.0, 0.0, 0.0)
   assert scheduled_command("maneuver", 25.0) == (-0.25, 0.0, 0.0)
