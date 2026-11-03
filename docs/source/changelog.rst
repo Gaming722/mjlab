@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a balanced Go1 perceptive locomotion task with seven terrain types,
+  explicit base-motion/smoothness penalties, and yaw commands up to 1 rad/s.
 - Added explicit pure-yaw sampling for velocity commands and an opt-in terrain
   curriculum that promotes successful tile traversals and rejects failed episodes.
 - Added a second-stage Go1 perceptive task for frontal low-speed ascent on

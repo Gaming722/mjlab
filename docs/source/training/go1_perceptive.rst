@@ -101,6 +101,28 @@ scratch, and check higher speeds and descent for forgetting:
      --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 400 \
      --agent.run-name low_speed_stairs
 
+Balanced terrain locomotion
+---------------------------
+
+``Mjlab-Velocity-Robust-Unitree-Go1-Perceptive`` balances flat terrain, ascending
+and descending stairs, both slope directions, random rough terrain, and waves.
+Stairs retain the 2--18 cm range. It samples forward, reverse, lateral, standing,
+and explicit pure-yaw commands; the yaw command range is ``[-1, 1] rad/s``.
+Linear commands remain moderate rather than expanding with training time.
+
+Planar tracking is separate from explicit ``lin_vel_z`` and ``ang_vel_xy``
+quadratic penalties. Action-rate, action-acceleration, joint-acceleration, torque,
+and landing penalties discourage oscillation and hard footfalls. Failed episodes
+incur a terminal cost. The curriculum promotes successful tile crossings and
+does not promote falls. Gentle random pushes remain enabled during training.
+
+.. code-block:: bash
+
+   uv run train Mjlab-Velocity-Robust-Unitree-Go1-Perceptive \
+     --agent.resume True --agent.load-run <run-directory> \
+     --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 2000 \
+     --agent.run-name robust_locomotion
+
 Rendered-depth validation
 -------------------------
 

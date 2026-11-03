@@ -9,6 +9,8 @@ import torch
 
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.tasks.velocity.mdp.rewards import (
+  base_roll_pitch_velocity_l2,
+  base_vertical_velocity_l2,
   commanded_motion_deficit,
   track_angular_velocity,
   track_linear_velocity,
@@ -116,3 +118,17 @@ def test_heading_rate_tracking_accounts_for_roll_pitch_coupling():
   )
   assert actual_heading.item() == pytest.approx(1.0)
   assert body_axis.item() == pytest.approx(math.exp(-((expected_rate / 0.5) ** 2)))
+
+
+def test_base_motion_penalties_ignore_planar_velocity_and_yaw():
+  data = SimpleNamespace(
+    root_link_lin_vel_b=torch.tensor([[2.0, 3.0, 0.5], [2.0, 3.0, 0.0]]),
+    root_link_ang_vel_b=torch.tensor([[0.3, 0.4, 2.0], [0.0, 0.0, 2.0]]),
+  )
+  env = cast(
+    ManagerBasedRlEnv, SimpleNamespace(scene={"robot": SimpleNamespace(data=data)})
+  )
+  torch.testing.assert_close(base_vertical_velocity_l2(env), torch.tensor([0.25, 0.0]))
+  torch.testing.assert_close(
+    base_roll_pitch_velocity_l2(env), torch.tensor([0.25, 0.0])
+  )

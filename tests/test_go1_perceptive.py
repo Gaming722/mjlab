@@ -21,12 +21,14 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   D435_WIDTH,
   unitree_go1_blind_env_cfg,
   unitree_go1_perceptive_env_cfg,
+  unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
   unitree_go1_perceptive_ppo_runner_cfg,
 )
+from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.mdp.observations import depth_camera
 from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
 
@@ -227,3 +229,23 @@ def test_camera_validation_config_and_asymmetric_runner():
     "actor": ("actor", "depth"),
     "critic": ("critic",),
   }
+
+
+def test_robust_task_regularizes_base_and_covers_all_rough_types():
+  cfg = unitree_go1_robust_perceptive_env_cfg()
+  play = unitree_go1_robust_perceptive_env_cfg(play=True)
+  for env in (cfg, play):
+    assert env.rewards["lin_vel_z"].weight == -2.0
+    assert env.rewards["ang_vel_xy"].weight == -0.2
+    command = env.commands["twist"]
+    assert isinstance(command, UniformVelocityCommandCfg)
+    assert command.ranges.ang_vel_z == (-1.0, 1.0)
+    assert command.rel_turning_envs == 0.2
+    assert env.scene.terrain is not None
+    terrain = env.scene.terrain.terrain_generator
+    assert terrain is not None
+    assert len(terrain.sub_terrains) == 7
+    assert "fell_over" in env.terminations
+  assert cfg.curriculum["terrain_levels"].params["traversal_term"] == "tile_traversed"
+  assert cfg.terminations["tile_traversed"].time_out
+  assert "tile_traversed" not in play.terminations

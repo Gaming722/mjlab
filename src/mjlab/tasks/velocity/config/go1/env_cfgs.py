@@ -28,7 +28,7 @@ from mjlab.sensor import (
 from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
-from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
+from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG, ROUGH_TERRAINS_CFG
 from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
 
 TerrainType = Literal["rough", "obstacles"]
@@ -479,6 +479,85 @@ def unitree_go1_stairs_low_speed_env_cfg(
     x=(-0.2, 0.2), y=(-0.2, 0.2), yaw=(-0.15, 0.15)
   )
   cfg.events.pop("push_robot", None)
+  return cfg
+
+
+def unitree_go1_robust_perceptive_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Train balanced terrain locomotion with explicit base-motion regularization."""
+  cfg = unitree_go1_stairs_perceptive_env_cfg(play=play)
+  cfg.rewards["lin_vel_z"] = RewardTermCfg(
+    func=mdp.base_vertical_velocity_l2, weight=-2.0
+  )
+  cfg.rewards["ang_vel_xy"] = RewardTermCfg(
+    func=mdp.base_roll_pitch_velocity_l2, weight=-0.2
+  )
+  cfg.rewards["pose"].weight = 0.5
+  cfg.rewards["action_rate_l2"].weight = -0.08
+  cfg.rewards["action_acc_l2"] = RewardTermCfg(func=mdp.action_acc_l2, weight=-0.01)
+  cfg.rewards["joint_acc_l2"] = RewardTermCfg(func=mdp.joint_acc_l2, weight=-2.5e-7)
+  cfg.rewards["joint_torques_l2"] = RewardTermCfg(
+    func=mdp.joint_torques_l2, weight=-2e-4
+  )
+  cfg.rewards["soft_landing"].weight = -5e-5
+  cfg.rewards["motion_deficit"].weight = -1.0
+  cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] = 0.35
+  cfg.rewards["termination"] = RewardTermCfg(func=mdp.is_terminated, weight=-50.0)
+  command = cfg.commands["twist"]
+  assert isinstance(command, UniformVelocityCommandCfg)
+  command.ranges.lin_vel_x = (-0.5, 0.8)
+  command.ranges.lin_vel_y = (-0.3, 0.3)
+  command.ranges.ang_vel_z = (-1.0, 1.0)
+  command.rel_forward_envs = 0.35
+  command.rel_turning_envs = 0.2
+  command.rel_standing_envs = 0.1
+  command.resampling_time_range = (4.0, 8.0)
+  assert cfg.scene.terrain is not None
+  terrain = deepcopy(ROUGH_TERRAINS_CFG)
+  terrain.curriculum = True
+  terrain.num_rows = 16
+  terrain.num_cols = len(terrain.sub_terrains)
+  proportions = {
+    "flat": 0.15,
+    "pyramid_stairs": 0.2,
+    "pyramid_stairs_inv": 0.2,
+    "hf_pyramid_slope": 0.1,
+    "hf_pyramid_slope_inv": 0.1,
+    "random_rough": 0.15,
+    "wave_terrain": 0.1,
+  }
+  for name, proportion in proportions.items():
+    terrain.sub_terrains[name].proportion = proportion
+  for name in ("pyramid_stairs", "pyramid_stairs_inv"):
+    stair = terrain.sub_terrains[name]
+    assert isinstance(stair, BoxPyramidStairsTerrainCfg)
+    stair.step_height_range = (0.02, 0.18)
+    stair.step_width = 0.3
+  cfg.scene.terrain.terrain_generator = terrain
+  cfg.scene.terrain.max_init_terrain_level = 8
+  cfg.terminations["fell_over"] = TerminationTermCfg(
+    func=mdp.bad_orientation, params={"limit_angle": math.radians(70.0)}
+  )
+  cfg.terminations["trunk_contact"] = TerminationTermCfg(
+    func=mdp.illegal_contact,
+    params={"sensor_name": "trunk_ground_touch", "force_threshold": 100.0},
+  )
+  if not play:
+    cfg.events["reset_base"].params["pose_range"].update(x=(-0.2, 0.2), y=(-0.2, 0.2))
+    cfg.terminations["tile_traversed"] = TerminationTermCfg(
+      func=mdp.terrain_edge_reached, time_out=True
+    )
+    cfg.curriculum["terrain_levels"].params["traversal_term"] = "tile_traversed"
+    cfg.events["push_robot"].interval_range_s = (5.0, 10.0)
+    cfg.events["push_robot"].params["velocity_range"] = {
+      "x": (-0.2, 0.2),
+      "y": (-0.2, 0.2),
+      "z": (-0.1, 0.1),
+      "roll": (-0.2, 0.2),
+      "pitch": (-0.2, 0.2),
+      "yaw": (-0.3, 0.3),
+    }
   return cfg
 
 

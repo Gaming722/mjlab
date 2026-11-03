@@ -24,6 +24,24 @@ if TYPE_CHECKING:
 _DEFAULT_ASSET_CFG = SceneEntityCfg("robot")
 
 
+def base_vertical_velocity_l2(
+  env: ManagerBasedRlEnv,
+  asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+) -> torch.Tensor:
+  """Penalize body-frame vertical velocity without coupling planar tracking."""
+  asset: Entity = env.scene[asset_cfg.name]
+  return asset.data.root_link_lin_vel_b[:, 2].square()
+
+
+def base_roll_pitch_velocity_l2(
+  env: ManagerBasedRlEnv,
+  asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+) -> torch.Tensor:
+  """Penalize roll/pitch body rates while allowing commanded yaw motion."""
+  asset: Entity = env.scene[asset_cfg.name]
+  return asset.data.root_link_ang_vel_b[:, :2].square().sum(dim=-1)
+
+
 def commanded_motion_deficit(
   env: ManagerBasedRlEnv,
   command_name: str,
