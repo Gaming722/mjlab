@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a headless Go1 stair evaluation tool with fixed heights and speeds,
+  randomized spawn poses, and passage checks that reject falls and side exits.
 - Added a Go1 perceptive stair fine-tuning task with 80% stair sampling and a
   2--18 cm height curriculum, retaining flat, rough, and slope terrain.
 - Added D435-like perceptive locomotion tasks for Go1.  The training task uses a
