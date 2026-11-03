@@ -87,6 +87,8 @@ class EvaluationConfig:
   spawn_xy: float = 0.25
   friction: float | None = None
   tile_spacing: float = 64.0
+  stair_step_width: float | None = None
+  stair_platform_width: float | None = None
   seed: int = 43
   device: str = "cuda:0"
 
@@ -144,6 +146,13 @@ def square_edge_distance(feet_xy: torch.Tensor, radii: torch.Tensor) -> torch.Te
   return distance.amin(dim=-1)
 
 
+def stair_riser_radii(terrain: BoxPyramidStairsTerrainCfg, device: str) -> torch.Tensor:
+  """Exact square risers for the evaluator's original 8 m patch geometry."""
+  outer = 4.0 - terrain.border_width
+  count = max(0, int((2 * outer - terrain.platform_width) / (2 * terrain.step_width)))
+  return outer - torch.arange(count + 1, device=device) * terrain.step_width
+
+
 def evaluate(args: EvaluationConfig) -> None:
   if args.trials < 1 or args.duration <= 0 or not args.terrains:
     raise ValueError("trials, duration, and terrains must be nonempty/positive")
@@ -151,6 +160,9 @@ def evaluate(args: EvaluationConfig) -> None:
     raise ValueError("difficulties must be in [0, 1]")
   if args.tile_spacing < 8:
     raise ValueError("tile_spacing must be at least 8 m")
+  for width in (args.stair_step_width, args.stair_platform_width):
+    if width is not None and width <= 0:
+      raise ValueError("stair step/platform widths must be positive")
   for profile in args.profiles:
     scheduled_command(profile, 0.0)
   configure_torch_backends()
@@ -172,6 +184,12 @@ def evaluate(args: EvaluationConfig) -> None:
   assert cfg.scene.terrain is not None
   terrain = cfg.scene.terrain.terrain_generator
   assert terrain is not None
+  for sub_terrain in terrain.sub_terrains.values():
+    if isinstance(sub_terrain, BoxPyramidStairsTerrainCfg):
+      if args.stair_step_width is not None:
+        sub_terrain.step_width = args.stair_step_width
+      if args.stair_platform_width is not None:
+        sub_terrain.platform_width = args.stair_platform_width
   labels = [(name, d) for name in args.terrains for d in args.difficulties]
   terrain.sub_terrains = {
     f"{name}_{d}": FixedDifficultyTerrainCfg(
@@ -220,7 +238,7 @@ def evaluate(args: EvaluationConfig) -> None:
   assert isinstance(edge_term, feet_edge)
   feet_ids, _ = robot.find_sites(("FR", "FL", "RR", "RL"), preserve_order=True)
   # Exact square riser locations provide an independent stair-only check.
-  radii = torch.full((env.num_envs, 32), torch.inf, device=args.device)
+  riser_values: dict[int, torch.Tensor] = {}
   stair_inner = torch.zeros(env.num_envs, device=args.device)
   stair_outer = torch.zeros_like(stair_inner)
   is_stair = torch.zeros(env.num_envs, dtype=torch.bool, device=args.device)
@@ -230,13 +248,14 @@ def evaluate(args: EvaluationConfig) -> None:
     source = fixed.terrain
     if not isinstance(source, BoxPyramidStairsTerrainCfg) or source.holes:
       continue
-    outer = 4.0 - source.border_width  # Original patch size is fixed at 8 m.
-    count = int((2 * outer - source.platform_width) / (2 * source.step_width))
-    values = outer - torch.arange(count + 1, device=args.device) * source.step_width
+    riser_values[i] = stair_riser_radii(source, args.device)
+  max_risers = max((len(v) for v in riser_values.values()), default=1)
+  radii = torch.full((env.num_envs, max_risers), torch.inf, device=args.device)
+  for i, values in riser_values.items():
     selected = types == i
-    radii[selected, : count + 1] = values
+    radii[selected, : len(values)] = values
     stair_inner[selected] = values[-1] - 0.1
-    stair_outer[selected] = outer + 0.1
+    stair_outer[selected] = values[0] + 0.1
     is_stair[selected] = True
   results = []
   try:

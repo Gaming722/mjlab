@@ -188,6 +188,9 @@ counts only contacts in the stair flight, excluding the central platform and fla
 runout. Raw event counts are saved for weighted aggregation; no-contact cases
 report null rather than zero. Compare edge rates alongside traversal, stalls,
 survival, and base-motion metrics.
+Use ``--stair-step-width`` and ``--stair-platform-width`` to check alternate
+stair geometry; omitting them retains the task defaults. Exact edge locations
+are recomputed for that geometry rather than assuming a 30 cm tread.
 
 Rendered-depth validation
 -------------------------

@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Go1 terrain evaluation accepts alternate stair tread/platform widths, with
+  geometric edge checks verified against the generated MuJoCo surfaces.
 - Continuous Go1 evaluation now reports edge landing/support rates, including
   an independent exact square-riser metric restricted to stair flights.
 - Added a scandot-based Go1 feet-edge penalty with slope rejection and colored

@@ -9,9 +9,51 @@ from mjlab.scripts.evaluate_go1_locomotion import (
   FixedDifficultyTerrainCfg,
   scheduled_command,
   square_edge_distance,
+  stair_riser_radii,
   update_failure,
 )
 from mjlab.terrains.config import pyramid_stairs_inv
+from mjlab.terrains.primitive_terrains import (
+  BoxInvertedPyramidStairsTerrainCfg,
+  BoxPyramidStairsTerrainCfg,
+)
+
+
+@pytest.mark.parametrize("width,platform", [(0.27, 1.0), (0.33, 1.0), (0.3, 3.0)])
+@pytest.mark.parametrize("inverted", [False, True])
+def test_exact_risers_match_generated_stairs_at_varied_widths(
+  width, platform, inverted
+):
+  cls = BoxInvertedPyramidStairsTerrainCfg if inverted else BoxPyramidStairsTerrainCfg
+  cfg = cls(
+    size=(8.0, 8.0),
+    border_width=1.0,
+    step_height_range=(0.14, 0.14),
+    step_width=width,
+    platform_width=platform,
+  )
+  spec = mujoco.MjSpec()
+  spec.worldbody.add_body(name="terrain")
+  cfg.function(1.0, spec, np.random.default_rng(43))
+  model = spec.compile()
+  data = mujoco.MjData(model)
+  mujoco.mj_forward(model, data)
+
+  def hit_z(radius):
+    distance = mujoco.mj_ray(
+      model,
+      data,
+      np.array([4.0 + radius, 4.0, 5.0]),
+      np.array([0.0, 0.0, -1.0]),
+      None,
+      True,
+      -1,
+      np.zeros(1, dtype=np.int32),
+    )
+    return 5.0 - distance
+
+  for radius in stair_riser_radii(cfg, "cpu").tolist():
+    assert abs(hit_z(radius - 0.005) - hit_z(radius + 0.005)) == pytest.approx(0.14)
 
 
 def test_exact_stair_edge_distance_includes_euclidean_corners():
