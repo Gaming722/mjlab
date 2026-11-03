@@ -19,6 +19,7 @@ from mjlab.sensor import (
   CameraSensorCfg,
   ContactMatch,
   ContactSensorCfg,
+  GridPatternCfg,
   ObjRef,
   PinholeCameraPatternCfg,
   RayCastSensorCfg,
@@ -41,6 +42,26 @@ D435_HFOV = math.radians(87.0)
 D435_FOVY_DEG = math.degrees(
   2.0 * math.atan(math.tan(D435_HFOV / 2.0) * D435_HEIGHT / D435_WIDTH)
 )
+
+
+def _configure_feet_edge(cfg: ManagerBasedRlEnvCfg) -> None:
+  terrain_scan = next(s for s in cfg.scene.sensors or () if s.name == "terrain_scan")
+  assert isinstance(terrain_scan, RayCastSensorCfg)
+  assert isinstance(terrain_scan.pattern, GridPatternCfg)
+  terrain_scan.pattern.resolution = 0.05
+  # Keep the critic's original 17x11 scan and checkpoint input dimensions.
+  cfg.observations["critic"].terms["height_scan"].params["grid_stride"] = 2
+  cfg.rewards["feet_edge"] = RewardTermCfg(
+    func=mdp.feet_edge,
+    weight=-1.0,
+    params={
+      "sensor_name": "feet_ground_contact",
+      "height_sensor_name": "terrain_scan",
+      "asset_cfg": SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL")),
+      "margin": 0.06,
+      "height_threshold": 0.03,
+    },
+  )
 
 
 def unitree_go1_rough_env_cfg(
@@ -441,6 +462,8 @@ def unitree_go1_stairs_perceptive_env_cfg(
     terrain.difficulty_range = (1.0, 1.0)
     cfg.scene.terrain.max_init_terrain_level = 0
   cfg.scene.terrain.terrain_generator = terrain
+  if play:
+    _configure_feet_edge(cfg)
   return cfg
 
 
@@ -487,6 +510,7 @@ def unitree_go1_robust_perceptive_env_cfg(
 ) -> ManagerBasedRlEnvCfg:
   """Train balanced terrain locomotion with explicit base-motion regularization."""
   cfg = unitree_go1_stairs_perceptive_env_cfg(play=play)
+  _configure_feet_edge(cfg)
   cfg.rewards["lin_vel_z"] = RewardTermCfg(
     func=mdp.base_vertical_velocity_l2, weight=-8.0
   )

@@ -8,7 +8,7 @@ import torch
 
 from mjlab.entity import Entity
 from mjlab.managers.scene_entity_config import SceneEntityCfg
-from mjlab.sensor import BuiltinSensor, RayCastSensor
+from mjlab.sensor import BuiltinSensor, GridPatternCfg, RayCastSensor
 
 if TYPE_CHECKING:
   from mjlab.envs import ManagerBasedRlEnv
@@ -128,6 +128,7 @@ def height_scan(
   sensor_name: str,
   offset: float = 0.0,
   miss_value: float | None = None,
+  grid_stride: int = 1,
 ) -> torch.Tensor:
   """Height scan from a raycast sensor.
 
@@ -140,6 +141,7 @@ def height_scan(
     offset: Constant offset subtracted from heights.
     miss_value: Value to use for rays that miss (distance < 0).
       Defaults to the sensor's ``max_distance``.
+    grid_stride: Subsample a grid in both axes while keeping frame-major order.
 
   Returns:
     Tensor of shape [B, N] where N = num_frames * num_rays_per_frame.
@@ -160,4 +162,17 @@ def height_scan(
   heights = (frame_z - hit_z - offset).view(B, F * N)
 
   miss_mask = data.distances < 0
-  return torch.where(miss_mask, torch.full_like(heights, miss_value), heights)
+  result = torch.where(miss_mask, torch.full_like(heights, miss_value), heights)
+  if grid_stride != 1:
+    if grid_stride < 1 or not isinstance(sensor.cfg.pattern, GridPatternCfg):
+      raise ValueError("grid_stride requires a grid pattern and a positive stride")
+    pattern = sensor.cfg.pattern
+    resolution = pattern.resolution
+    rx, ry = (
+      (resolution, resolution) if isinstance(resolution, (int, float)) else resolution
+    )
+    nx = round(pattern.size[0] / rx) + 1
+    ny = round(pattern.size[1] / ry) + 1
+    result = result.reshape(B, F, ny, nx)[:, :, ::grid_stride, ::grid_stride]
+    result = result.flatten(start_dim=1)
+  return result

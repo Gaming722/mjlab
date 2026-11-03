@@ -140,6 +140,18 @@ original clearance and support objectives.
 Continuous evaluation
 ---------------------
 
+Robust training also penalizes loaded feet within 6 cm of terrain edges extracted
+from neighboring ``terrain_scan`` scandots. The scan spacing is 5 cm; the critic
+still receives its original 10 cm grid through subsampling. Height jumps must
+exceed 3 cm in both neighboring surface tangent planes, excluding continuous
+slopes. Edge locations are estimates between rays, with finite grid resolution.
+The original foot-clearance scan and actor inputs are unchanged.
+
+In Robust and stair play tasks, enable the ``feet_edge`` reward debug overlay to
+see ordinary scan points in green, extracted upper edges in orange, loaded feet
+near an edge in red, and other feet in blue. The overlay uses the same edge map
+and distance threshold as the reward.
+
 Stair passage is only one diagnostic. Use continuous trials to check falls after
 the last step, changes in direction, and vibration on flat and uneven terrain:
 

@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a scandot-based Go1 feet-edge penalty with slope rejection and colored
+  edge/foot visualization in Robust and stair play tasks. Robust training uses a
+  denser terrain scan while preserving the checkpoint's critic scan inputs.
 - Added continuous Go1 locomotion evaluation with post-crossing fall detection,
   stop/reverse/lateral/yaw sequences, and base-motion vibration measurements.
 - Added a balanced Go1 perceptive locomotion task with seven terrain types,

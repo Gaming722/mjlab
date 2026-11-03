@@ -10,6 +10,7 @@ from mjlab.envs import ManagerBasedRlEnv
 from mjlab.managers import ObservationTermCfg
 from mjlab.sensor import (
   CameraSensorCfg,
+  GridPatternCfg,
   ObjRef,
   PinholeCameraPatternCfg,
   RayCastData,
@@ -251,3 +252,10 @@ def test_robust_task_regularizes_base_and_covers_all_rough_types():
   assert cfg.terminations["tile_traversed"].params["threshold_fraction"] == 1.8
   assert cfg.episode_length_s == 30.0
   assert "tile_traversed" not in play.terminations
+  for env in (cfg, play, unitree_go1_stairs_perceptive_env_cfg(play=True)):
+    assert env.rewards["feet_edge"].weight == -1.0
+    scan = next(s for s in env.scene.sensors or () if s.name == "terrain_scan")
+    assert isinstance(scan, RayCastSensorCfg)
+    assert isinstance(scan.pattern, GridPatternCfg)
+    assert scan.pattern.resolution == 0.05
+    assert env.observations["critic"].terms["height_scan"].params["grid_stride"] == 2
