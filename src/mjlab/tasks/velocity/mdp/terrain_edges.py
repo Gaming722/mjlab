@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import torch
 
+from mjlab.managers.observation_manager import ObservationTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import ContactSensor, GridPatternCfg, RayCastSensor
@@ -21,6 +22,19 @@ def grid_neighbor_pairs(nx: int, ny: int, device: str) -> torch.Tensor:
   a = torch.cat((indices[:, :-1].flatten(), indices[:-1].flatten()))
   b = torch.cat((indices[:, 1:].flatten(), indices[1:].flatten()))
   return torch.stack((a, b))
+
+
+def _terrain_scan_pairs(sensor: RayCastSensor, device: str) -> torch.Tensor:
+  pattern = sensor.cfg.pattern
+  if not isinstance(pattern, GridPatternCfg) or sensor.num_frames != 1:
+    raise ValueError("Edge terms require a single-frame grid terrain scan")
+  resolution = pattern.resolution
+  rx, ry = (
+    (resolution, resolution) if isinstance(resolution, (int, float)) else resolution
+  )
+  nx = round(pattern.size[0] / rx) + 1
+  ny = round(pattern.size[1] / ry) + 1
+  return grid_neighbor_pairs(nx, ny, device)
 
 
 def scan_edge_points(
@@ -79,6 +93,50 @@ def foot_edge_distances(
   return torch.where(eligible, distance, torch.inf).amin(-1)
 
 
+def _scan_foot_distances(
+  env: ManagerBasedRlEnv,
+  height_sensor_name: str,
+  asset_cfg: SceneEntityCfg,
+  pairs: torch.Tensor,
+  height_threshold: float,
+) -> torch.Tensor:
+  sensor: RayCastSensor = env.scene[height_sensor_name]
+  data = sensor.data
+  edges, valid, lower, upper = scan_edge_points(
+    data.hit_pos_w, data.normals_w, data.distances, pairs, height_threshold
+  )
+  feet = env.scene[asset_cfg.name].data.site_pos_w[:, asset_cfg.site_ids]
+  return foot_edge_distances(feet, edges, valid, lower, upper)
+
+
+class feet_edge_proximity:
+  """Privileged per-foot proximity using the reward's precise edge geometry.
+
+  Each value is one at an edge and zero outside the margin. This can augment
+  critic observations without changing the deployed actor's inputs.
+  """
+
+  def __init__(self, cfg: ObservationTermCfg, env: ManagerBasedRlEnv):
+    sensor = env.scene[cfg.params["height_sensor_name"]]
+    assert isinstance(sensor, RayCastSensor)
+    self._pairs = _terrain_scan_pairs(sensor, env.device)
+
+  def __call__(
+    self,
+    env: ManagerBasedRlEnv,
+    height_sensor_name: str,
+    asset_cfg: SceneEntityCfg,
+    margin: float = 0.05,
+    height_threshold: float = 0.03,
+  ) -> torch.Tensor:
+    if margin <= 0:
+      raise ValueError("The edge proximity margin must be positive")
+    distance = _scan_foot_distances(
+      env, height_sensor_name, asset_cfg, self._pairs, height_threshold
+    )
+    return (1.0 - distance / margin).clamp(0.0, 1.0)
+
+
 class feet_edge:
   """Penalize edge landings and support with a smooth distance cost."""
 
@@ -88,16 +146,7 @@ class feet_edge:
     self._debug_vis_enabled = True
     sensor = env.scene[cfg.params["height_sensor_name"]]
     assert isinstance(sensor, RayCastSensor)
-    pattern = sensor.cfg.pattern
-    if not isinstance(pattern, GridPatternCfg) or sensor.num_frames != 1:
-      raise ValueError("feet_edge requires a single-frame grid terrain scan")
-    resolution = pattern.resolution
-    rx, ry = (
-      (resolution, resolution) if isinstance(resolution, (int, float)) else resolution
-    )
-    nx = round(pattern.size[0] / rx) + 1
-    ny = round(pattern.size[1] / ry) + 1
-    self._pairs = grid_neighbor_pairs(nx, ny, env.device)
+    self._pairs = _terrain_scan_pairs(sensor, env.device)
     self.edge_mask = torch.zeros((env.num_envs, 4), dtype=torch.bool, device=env.device)
     self.loaded = torch.zeros_like(self.edge_mask)
     self.edge_distance = torch.full_like(self.edge_mask, torch.inf, dtype=torch.float)
@@ -114,13 +163,9 @@ class feet_edge:
     landing_weight: float = 5.0,
     support_weight: float = 0.25,
   ) -> torch.Tensor:
-    sensor: RayCastSensor = env.scene[height_sensor_name]
-    data = sensor.data
-    edges, valid, lower, upper = scan_edge_points(
-      data.hit_pos_w, data.normals_w, data.distances, self._pairs, height_threshold
+    self.edge_distance = _scan_foot_distances(
+      env, height_sensor_name, asset_cfg, self._pairs, height_threshold
     )
-    feet = env.scene[asset_cfg.name].data.site_pos_w[:, asset_cfg.site_ids]
-    self.edge_distance = foot_edge_distances(feet, edges, valid, lower, upper)
     self.edge_mask = self.edge_distance < margin
     contact: ContactSensor = env.scene[sensor_name]
     force = contact.data.force

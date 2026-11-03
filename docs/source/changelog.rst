@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added optional per-foot edge-proximity observations for privileged critics,
+  using the same geometric edge detector as the feet-edge reward.
 - Go1 continuous evaluation supports multi-row terrain routes, reports loaded-foot
   slip, and rejects sustained missing ground even if the robot remains upright.
 - Added a Go1 edge-placement fine-tuning task with varied stair tread widths,

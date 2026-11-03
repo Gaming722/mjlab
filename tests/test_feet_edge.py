@@ -6,11 +6,13 @@ import pytest
 import torch
 
 from mjlab.envs.mdp.observations import height_scan
+from mjlab.managers.observation_manager import ObservationTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import GridPatternCfg, ObjRef, RayCastSensor, RayCastSensorCfg
 from mjlab.tasks.velocity.mdp.terrain_edges import (
   feet_edge,
+  feet_edge_proximity,
   foot_edge_distances,
   grid_neighbor_pairs,
   scan_edge_points,
@@ -80,6 +82,36 @@ def test_edge_distances_include_riser_contacts_and_ignore_other_elevations():
   assert distance[0, 1].item() == pytest.approx(0.125, abs=1e-4)
   assert torch.isinf(distance[0, 2])
   assert distance[0, 3] == 0
+
+
+@pytest.mark.parametrize("kind", ["flat", "slope", "step"])
+def test_privileged_proximity_resolves_tread_edge_without_contact_state(kind):
+  robot = MagicMock()
+  robot.data.site_pos_w = torch.tensor(
+    [
+      [
+        [1000.025, 1000.0, 0.2],
+        [1000.05, 1000.0, 0.2],
+        [1000.1, 1000.0, 0.2],
+        [1000.025, 1000.0, 0.8],
+      ]
+    ]
+  )
+  env = MagicMock()
+  env.device = "cpu"
+  env.scene.__getitem__.side_effect = {"scan": _scan(kind), "robot": robot}.__getitem__
+  cfg = ObservationTermCfg(
+    func=feet_edge_proximity,
+    params={
+      "height_sensor_name": "scan",
+      "asset_cfg": SceneEntityCfg("robot", site_ids=[0, 1, 2, 3]),
+    },
+  )
+  term = feet_edge_proximity(cfg, env)
+  expected = [1.0, 0.5, 0.0, 0.0] if kind == "step" else [0.0] * 4
+  torch.testing.assert_close(
+    term(env, **cfg.params), torch.tensor([expected]), atol=0.002, rtol=0
+  )
 
 
 def test_edge_cost_requires_contact_and_draws_colored_overlays():
