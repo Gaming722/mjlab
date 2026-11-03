@@ -45,6 +45,8 @@ Added
 Changed
 ^^^^^^^
 
+- Go1 feet-edge training uses a continuous distance cost, emphasizing new
+  landings while retaining a smaller stance cost to avoid abrupt unloading.
 - Robust Go1 training samples more pure turns, increases yaw tracking weight,
   and encourages foot clearance and fore/hind support during uneven-ground turns.
 - Robust Go1 training now continues beyond the first patch, strengthens vertical

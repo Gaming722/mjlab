@@ -77,7 +77,7 @@ def foot_edge_distances(
 
 
 class feet_edge:
-  """Penalize loaded feet near scandot edges; expose colored play overlays."""
+  """Penalize edge landings and support with a smooth distance cost."""
 
   def __init__(self, cfg: RewardTermCfg, env: ManagerBasedRlEnv):
     self._env = env
@@ -108,6 +108,8 @@ class feet_edge:
     margin: float = 0.06,
     height_threshold: float = 0.03,
     force_threshold: float = 5.0,
+    landing_weight: float = 5.0,
+    support_weight: float = 0.25,
   ) -> torch.Tensor:
     sensor: RayCastSensor = env.scene[height_sensor_name]
     data = sensor.data
@@ -128,7 +130,9 @@ class feet_edge:
     env.extras["log"]["Metrics/feet_edge_landing_fraction"] = (
       self.edge_mask & landing
     ).sum() / landing.sum().clamp_min(1)
-    return (self.edge_mask & self.loaded).float().sum(-1)
+    proximity = (1.0 - self.edge_distance / margin).clamp(0.0, 1.0)
+    contact_weight = support_weight * self.loaded + landing_weight * landing
+    return (proximity * contact_weight).sum(-1)
 
   def reset(self, env_ids: torch.Tensor) -> None:
     self.edge_mask[env_ids] = False

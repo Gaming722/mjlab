@@ -60,6 +60,8 @@ def _configure_feet_edge(cfg: ManagerBasedRlEnvCfg) -> None:
       "asset_cfg": SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL")),
       "margin": 0.06,
       "height_threshold": 0.03,
+      "landing_weight": 5.0,
+      "support_weight": 0.25,
     },
   )
 

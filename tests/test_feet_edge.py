@@ -102,7 +102,15 @@ def test_edge_cost_requires_contact_and_draws_colored_overlays():
     },
   )
   term = feet_edge(cfg, env)
-  torch.testing.assert_close(term(env, **cfg.params), torch.tensor([1.0]))
+  result = term(env, **cfg.params)
+  expected = (1.0 - term.edge_distance[:, 0] / 0.06) * 5.25
+  torch.testing.assert_close(result, expected)
+  contact.compute_first_contact.return_value.zero_()
+  support_only = term(env, **cfg.params)
+  torch.testing.assert_close(support_only, expected * (0.25 / 5.25))
+  robot.data.site_pos_w[..., 0] += 0.02
+  farther = term(env, **cfg.params)
+  assert 0 < farther.item() < support_only.item()
   visualizer = MagicMock()
   visualizer.get_env_indices.return_value = [0]
   term.debug_vis(visualizer)
@@ -110,6 +118,8 @@ def test_edge_cost_requires_contact_and_draws_colored_overlays():
   assert (1.0, 0.5, 0.0, 1.0) in colors  # Extracted edges.
   assert (1.0, 0.05, 0.05, 0.9) in colors  # Loaded edge foot.
   assert (0.0, 0.5, 1.0, 0.8) in colors  # Swing feet are not penalized.
+  contact.data.force.zero_()
+  torch.testing.assert_close(term(env, **cfg.params), torch.zeros(1))
 
 
 def test_dense_scan_preserves_original_critic_samples():
