@@ -498,6 +498,18 @@ def unitree_go1_robust_perceptive_env_cfg(
     weight=-2.0,
     params={"sensor_name": "feet_ground_contact"},
   )
+  cfg.rewards["track_angular_velocity"].weight = 2.0
+  cfg.rewards["rough_turn_support"] = RewardTermCfg(
+    func=mdp.rough_turn_support_cost,
+    weight=-1.0,
+    params={
+      "sensor_name": "feet_ground_contact",
+      "height_sensor_name": "foot_height_scan",
+      "command_name": "twist",
+    },
+  )
+  for name in ("foot_clearance", "foot_swing_height"):
+    cfg.rewards[name].params["rough_turn_extra_height"] = 0.05
   cfg.rewards["pose"].weight = 0.5
   cfg.rewards["action_rate_l2"].weight = -0.08
   cfg.rewards["action_acc_l2"] = RewardTermCfg(func=mdp.action_acc_l2, weight=-0.01)
@@ -515,7 +527,7 @@ def unitree_go1_robust_perceptive_env_cfg(
   command.ranges.lin_vel_y = (-0.3, 0.3)
   command.ranges.ang_vel_z = (-1.0, 1.0)
   command.rel_forward_envs = 0.35
-  command.rel_turning_envs = 0.2
+  command.rel_turning_envs = 0.3
   command.rel_standing_envs = 0.1
   command.resampling_time_range = (4.0, 8.0)
   assert cfg.scene.terrain is not None

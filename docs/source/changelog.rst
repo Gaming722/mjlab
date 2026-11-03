@@ -40,6 +40,8 @@ Added
 Changed
 ^^^^^^^
 
+- Robust Go1 training samples more pure turns, increases yaw tracking weight,
+  and encourages foot clearance and fore/hind support during uneven-ground turns.
 - Robust Go1 training now continues beyond the first patch, strengthens vertical
   stability, and penalizes nose-down front-only support before a forward flip.
 - Go1 stair rewards track horizontal heading rate rather than body-axis spin,

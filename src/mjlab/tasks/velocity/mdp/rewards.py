@@ -93,6 +93,40 @@ def commanded_motion_deficit(
   return deficit * (speed > command_threshold)
 
 
+def _rough_turn_mask(
+  height_sensor: TerrainHeightSensor, command: torch.Tensor
+) -> torch.Tensor:
+  data = height_sensor.data
+  ground_z = data.frame_pos_w[:, :, 2] - data.heights
+  uneven = ground_z.amax(dim=-1) - ground_z.amin(dim=-1) > 0.05
+  turning = (command[:, 2].abs() > 0.4) & (command[:, :2].norm(dim=-1) < 0.4)
+  return uneven & turning
+
+
+def rough_turn_support_cost(
+  env: ManagerBasedRlEnv,
+  sensor_name: str,
+  height_sensor_name: str,
+  command_name: str,
+  force_threshold: float = 5.0,
+) -> torch.Tensor:
+  """Encourage fore/hind support during low-speed turns on uneven ground.
+
+  Diagonal support is allowed; front-only, hind-only, and flight phases incur a
+  cost. Straight motion and flat-ground turns retain their original objective.
+  """
+  height_sensor = env.scene[height_sensor_name]
+  assert isinstance(height_sensor, TerrainHeightSensor)
+  contact_sensor: ContactSensor = env.scene[sensor_name]
+  forces = contact_sensor.data.force
+  assert forces is not None and forces.shape[1] == 4
+  support = forces.norm(dim=-1) > force_threshold
+  missing_end = ~support[:, :2].any(-1) | ~support[:, 2:].any(-1)
+  command = env.command_manager.get_command(command_name)
+  assert command is not None
+  return missing_end.float() * _rough_turn_mask(height_sensor, command)
+
+
 def track_linear_velocity(
   env: ManagerBasedRlEnv,
   std: float,
@@ -332,6 +366,7 @@ def feet_clearance(
   command_name: str | None = None,
   command_threshold: float = 0.01,
   asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+  rough_turn_extra_height: float = 0.0,
 ) -> torch.Tensor:
   """Penalize deviation from target clearance height, weighted by foot velocity."""
   asset: Entity = env.scene[asset_cfg.name]
@@ -342,7 +377,14 @@ def feet_clearance(
   foot_height = height_sensor.data.heights  # [B, F]
   foot_vel_xy = asset.data.site_lin_vel_w[:, asset_cfg.site_ids, :2]  # [B, F, 2]
   vel_norm = torch.norm(foot_vel_xy, dim=-1)  # [B, F]
-  delta = torch.abs(foot_height - target_height)  # [B, F]
+  target: float | torch.Tensor = target_height
+  if rough_turn_extra_height > 0 and command_name is not None:
+    command = env.command_manager.get_command(command_name)
+    assert command is not None
+    target = target_height + rough_turn_extra_height * _rough_turn_mask(
+      height_sensor, command
+    ).float().unsqueeze(1)
+  delta = torch.abs(foot_height - target)  # [B, F]
   cost = torch.sum(delta * vel_norm, dim=1)  # [B]
   if command_name is not None:
     command = env.command_manager.get_command(command_name)
@@ -377,6 +419,7 @@ class feet_swing_height:
     target_height: float,
     command_name: str,
     command_threshold: float,
+    rough_turn_extra_height: float = 0.0,
   ) -> torch.Tensor:
     contact_sensor: ContactSensor = env.scene[sensor_name]
     command = env.command_manager.get_command(command_name)
@@ -394,7 +437,12 @@ class feet_swing_height:
     angular_norm = torch.abs(command[:, 2])
     total_command = linear_norm + angular_norm
     active = (total_command > command_threshold).float()
-    error = self.peak_heights / target_height - 1.0
+    target: float | torch.Tensor = target_height
+    if rough_turn_extra_height > 0:
+      target = target_height + rough_turn_extra_height * _rough_turn_mask(
+        height_sensor, command
+      ).float().unsqueeze(1)
+    error = self.peak_heights / target - 1.0
     cost = torch.sum(torch.square(error) * first_contact.float(), dim=1) * active
     num_landings = torch.sum(first_contact.float())
     peak_heights_at_landing = self.peak_heights * first_contact.float()

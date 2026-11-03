@@ -240,7 +240,7 @@ def test_robust_task_regularizes_base_and_covers_all_rough_types():
     command = env.commands["twist"]
     assert isinstance(command, UniformVelocityCommandCfg)
     assert command.ranges.ang_vel_z == (-1.0, 1.0)
-    assert command.rel_turning_envs == 0.2
+    assert command.rel_turning_envs == 0.3
     assert env.scene.terrain is not None
     terrain = env.scene.terrain.terrain_generator
     assert terrain is not None

@@ -122,6 +122,14 @@ roll/pitch rates have weight -0.2. A separate -2 risk cost applies only when the
 front feet bear load, both hind feet are unloaded, and the base pitches nose-down.
 Normal diagonal support and nose-up ascent are exempt from this risk cost.
 
+Pure-turn commands occupy 30% of the sampling distribution before standing
+overrides. Yaw tracking has weight 2. During low-speed turns on uneven ground
+(foot-ground height spread above 5 cm, planar command below 0.4 m/s, and yaw
+command above 0.4 rad/s), clearance targets increase from 10 to 15 cm. A -1
+support cost discourages unloading an entire front or hind pair in those turns;
+diagonal support remains allowed. Flat turns and straight motion retain their
+original clearance and support objectives.
+
 .. code-block:: bash
 
    uv run train Mjlab-Velocity-Robust-Unitree-Go1-Perceptive \

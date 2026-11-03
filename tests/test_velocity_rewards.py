@@ -10,7 +10,12 @@ import torch
 from mjlab.managers.reward_manager import RewardManager, RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import ContactSensor, RayCastData, RayCastSensor, TerrainHeightSensor
-from mjlab.tasks.velocity.mdp.rewards import feet_swing_height, upright
+from mjlab.tasks.velocity.mdp.rewards import (
+  feet_clearance,
+  feet_swing_height,
+  rough_turn_support_cost,
+  upright,
+)
 from mjlab.utils.lab_api.math import quat_from_euler_xyz
 
 
@@ -19,6 +24,50 @@ def _identity_quat(B: int) -> torch.Tensor:
   q = torch.zeros(B, 4)
   q[:, 0] = 1.0
   return q
+
+
+def test_rough_turn_support_preserves_diagonal_and_straight_gaits():
+  height = MagicMock(spec=TerrainHeightSensor)
+  height.data.heights = torch.full((6, 4), 0.15)
+  height.data.frame_pos_w = torch.zeros(6, 4, 3)
+  height.data.frame_pos_w[:, :, 2] = 0.15
+  height.data.frame_pos_w[[0, 1, 3, 4, 5], 0, 2] += 0.14
+  contacts = MagicMock(spec=ContactSensor)
+  contacts.data.force = torch.zeros(6, 4, 3)
+  contacts.data.force[:, 0, 2] = 20.0
+  contacts.data.force[1, 3, 2] = 20.0
+  contacts.data.force[5] = 0.0
+  env = MagicMock()
+  sensors = {"height": height, "contact": contacts}
+  env.scene.__getitem__.side_effect = sensors.__getitem__
+  env.command_manager.get_command.return_value = torch.tensor(
+    [[0, 0, 1], [0, 0, 1], [0, 0, 1], [0.3, 0, 0], [0.6, 0, 1], [0, 0, 1]]
+  ).float()
+  cost = rough_turn_support_cost(env, "contact", "height", "twist")
+  torch.testing.assert_close(cost, torch.tensor([1, 0, 0, 0, 0, 1]).float())
+
+
+def test_rough_turn_clearance_target_only_increases_on_uneven_turns():
+  height = MagicMock(spec=TerrainHeightSensor)
+  height.data.heights = torch.full((2, 4), 0.15)
+  height.data.frame_pos_w = torch.zeros(2, 4, 3)
+  height.data.frame_pos_w[:, :, 2] = 0.15
+  height.data.frame_pos_w[0, 0, 2] += 0.14
+  robot = MagicMock()
+  robot.data.site_lin_vel_w = torch.zeros(2, 4, 3)
+  robot.data.site_lin_vel_w[:, :, 0] = 1.0
+  env = MagicMock()
+  env.scene.__getitem__.side_effect = {"height": height, "robot": robot}.__getitem__
+  env.command_manager.get_command.return_value = torch.tensor([[0.0, 0.0, 1.0]] * 2)
+  cost = feet_clearance(
+    env,
+    0.1,
+    "height",
+    "twist",
+    asset_cfg=SceneEntityCfg("robot", site_ids=[0, 1, 2, 3]),
+    rough_turn_extra_height=0.05,
+  )
+  torch.testing.assert_close(cost, torch.tensor([0.0, 0.2]), atol=1e-6, rtol=1e-6)
 
 
 def _quat_from_roll(roll_rad: float, B: int = 1) -> torch.Tensor:
