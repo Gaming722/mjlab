@@ -75,6 +75,8 @@ Fixed
 
 - Wave terrain spawn origins now clear central crests instead of placing feet
   inside positive wave surfaces at reset.
+- Continuous terrain evaluation now isolates each case with flat runout; dense
+  mixed-terrain testing remains available through ``--tile-spacing 8``.
 - Stair evaluation now rejects falls later in a trial even after a passage was
   recorded; passage alone no longer freezes successful status.
 - Go1 play uses automatic contact capacity sizing to avoid initialization

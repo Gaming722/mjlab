@@ -1,6 +1,6 @@
 """Evaluate continuous Go1 locomotion, including falls after a terrain crossing.
 
-Unlike stair-passage scoring, failure detection remains active for the full trial.
+Passage, command tracking, and full-trial survival are reported separately.
 """
 
 import json
@@ -19,8 +19,12 @@ from mjlab.envs import ManagerBasedRlEnv
 from mjlab.rl import MjlabOnPolicyRunner, RslRlVecEnvWrapper
 from mjlab.sensor import RayCastSensorCfg, TerrainHeightSensorCfg
 from mjlab.tasks.registry import load_env_cfg, load_rl_cfg, load_runner_cls
-from mjlab.tasks.velocity.mdp import UniformVelocityCommand
-from mjlab.terrains.terrain_generator import SubTerrainCfg, TerrainOutput
+from mjlab.tasks.velocity.mdp import UniformVelocityCommand, forward_tipping_cost
+from mjlab.terrains.terrain_generator import (
+  SubTerrainCfg,
+  TerrainGeometry,
+  TerrainOutput,
+)
 from mjlab.utils.torch import configure_torch_backends
 
 TASK = "Mjlab-Velocity-Robust-Unitree-Go1-Perceptive"
@@ -35,8 +39,29 @@ class FixedDifficultyTerrainCfg(SubTerrainCfg):
     self, difficulty: float, spec: mujoco.MjSpec, rng: np.random.Generator
   ) -> TerrainOutput:
     del difficulty
-    self.terrain.size = self.size
-    return self.terrain.function(self.difficulty, spec, rng)
+    # Preserve the 8 m terrain geometry while isolating cases in larger cells.
+    # Otherwise a long trial may enter a neighboring terrain and be mislabeled.
+    self.terrain.size = (8.0, 8.0)
+    output = self.terrain.function(self.difficulty, spec, rng)
+    shift = np.array([(self.size[0] - 8.0) / 2, (self.size[1] - 8.0) / 2, 0.0])
+    for geometry in output.geometries:
+      if geometry.geom is not None:
+        geometry.geom.pos = np.asarray(geometry.geom.pos) + shift
+    output.origin = output.origin + shift
+    x, y = shift[:2]
+    if x > 0 and y > 0:
+      body = spec.body("terrain")
+      # Ground surrounds the original patch but never fills an inverted pit.
+      borders = (
+        ((x / 2, self.size[1] / 2, 0.25), (x / 2, self.size[1] / 2, -0.25)),
+        ((x / 2, self.size[1] / 2, 0.25), (x + 8 + x / 2, self.size[1] / 2, -0.25)),
+        ((4.0, y / 2, 0.25), (x + 4, y / 2, -0.25)),
+        ((4.0, y / 2, 0.25), (x + 4, y + 8 + y / 2, -0.25)),
+      )
+      for size, position in borders:
+        geom = body.add_geom(type=mujoco.mjtGeom.mjGEOM_BOX, size=size, pos=position)
+        output.geometries.append(TerrainGeometry(geom=geom))
+    return output
 
 
 @dataclass
@@ -59,6 +84,7 @@ class EvaluationConfig:
   spawn_yaw: float = math.pi
   spawn_xy: float = 0.25
   friction: float | None = None
+  tile_spacing: float = 64.0
   seed: int = 43
   device: str = "cuda:0"
 
@@ -68,6 +94,7 @@ def scheduled_command(profile: str, elapsed: float) -> tuple[float, float, float
     return (0.3, 0.0, 0.0)
   if profile == "medium":
     return (0.6, 0.0, 0.0)
+  elapsed %= 40.0
   if profile == "maneuver":
     stages = (
       (0.35, 0.0, 0.0),
@@ -111,6 +138,8 @@ def evaluate(args: EvaluationConfig) -> None:
     raise ValueError("trials, duration, and terrains must be nonempty/positive")
   if not args.difficulties or any(not 0 <= d <= 1 for d in args.difficulties):
     raise ValueError("difficulties must be in [0, 1]")
+  if args.tile_spacing < 8:
+    raise ValueError("tile_spacing must be at least 8 m")
   for profile in args.profiles:
     scheduled_command(profile, 0.0)
   configure_torch_backends()
@@ -140,6 +169,7 @@ def evaluate(args: EvaluationConfig) -> None:
     for name, d in labels
   }
   terrain.num_rows = 1
+  terrain.size = (args.tile_spacing, args.tile_spacing)
   terrain.num_cols = len(labels)
   terrain.curriculum = True
   terrain.border_width = 40.0
@@ -168,6 +198,10 @@ def evaluate(args: EvaluationConfig) -> None:
     env, asdict(agent), device=args.device
   )
   robot = base.scene["robot"]
+  foot_indices, _ = robot.find_geoms(".*_foot_collision")
+  assert len(foot_indices) == 4
+  foot_geoms = robot.indexing.geom_ids[foot_indices]
+  friction_values = base.sim.model.geom_friction[:, foot_geoms, 0].mean(dim=1)
   terrain_entity = base.scene.terrain
   assert terrain_entity is not None
   types = terrain_entity.terrain_types
@@ -182,9 +216,13 @@ def evaluate(args: EvaluationConfig) -> None:
         failed = torch.zeros(env.num_envs, dtype=torch.bool, device=args.device)
         crossed = torch.zeros_like(failed)
         failure_time = torch.full((env.num_envs,), args.duration, device=args.device)
+        failure_position = torch.zeros(env.num_envs, 3, device=args.device)
         contact_steps = torch.zeros(env.num_envs, device=args.device)
         alive_time = torch.zeros_like(contact_steps)
         trunk_time = torch.zeros_like(contact_steps)
+        risk_time = torch.zeros_like(contact_steps)
+        risk_streak = torch.zeros_like(contact_steps)
+        max_risk_streak = torch.zeros_like(contact_steps)
         distance = torch.zeros_like(contact_steps)
         stall_time = torch.zeros_like(contact_steps)
         sums = torch.zeros(env.num_envs, 9, device=args.device)
@@ -220,13 +258,20 @@ def evaluate(args: EvaluationConfig) -> None:
             new_failed = update_failure(
               failed, robot.data.projected_gravity_b[:, 2], contact_steps, base.step_dt
             )
+            position = robot.data.root_link_pos_w - base.scene.env_origins
+            failure_position[new_failed & ~failed] = position[new_failed & ~failed]
             failure_time[new_failed & ~failed] = (step + 1) * base.step_dt
             failed = new_failed
-            position = robot.data.root_link_pos_w - base.scene.env_origins
             crossed |= (position[:, :2].abs().amax(dim=-1) >= 3.4) & ~failed
             alive_time += active * base.step_dt
             distance += velocity[:, :2].norm(dim=-1) * active * base.step_dt
             trunk_time += trunk_touch * active * base.step_dt
+            risky_support = forward_tipping_cost(base, "feet_ground_contact") > 0
+            risk_time += risky_support * active * base.step_dt
+            risk_streak = torch.where(
+              risky_support & active, risk_streak + base.step_dt, 0
+            )
+            max_risk_streak = torch.maximum(max_risk_streak, risk_streak)
             active_command = target[:2].norm() > 0.1
             projected = (velocity[:, :2] * target[:2]).sum(-1) / target[
               :2
@@ -274,6 +319,16 @@ def evaluate(args: EvaluationConfig) -> None:
             "trials": count,
             "survivors": int(survived.sum()),
             "survival_rate": float(survived.float().mean()),
+            "trial_survived": survived.tolist(),
+            "trial_failure_or_end_s": failure_time[mask].tolist(),
+            "trial_failure_position": [
+              None if alive else xyz
+              for xyz, alive in zip(
+                failure_position[mask].tolist(), survived.tolist(), strict=True
+              )
+            ],
+            "failed_after_crossing": int((crossed[mask] & ~survived).sum()),
+            "foot_slide_friction": friction_values[mask].tolist(),
             "crossed_and_survived": int((crossed[mask] & survived).sum()),
             "mean_failure_or_end_s": float(failure_time[mask].mean()),
             "mean_distance_m": float(distance[mask].mean()),
@@ -281,6 +336,10 @@ def evaluate(args: EvaluationConfig) -> None:
             "mean_trunk_contact_fraction": float(
               (trunk_time[mask] / alive_time[mask].clamp_min(base.step_dt)).mean()
             ),
+            "front_only_risk_fraction": float(
+              (risk_time[mask] / alive_time[mask].clamp_min(base.step_dt)).mean()
+            ),
+            "max_front_only_risk_s": float(max_risk_streak[mask].max()),
             "lin_vel_z_rms": metrics[0],
             "ang_vel_xy_rms": metrics[1],
             "lin_vel_z_highpass_rms": metrics[2],

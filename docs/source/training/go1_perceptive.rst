@@ -142,11 +142,18 @@ the last step, changes in direction, and vibration on flat and uneven terrain:
      --output artifacts/go1_locomotion/evaluation.json
 
 The default evaluates all seven training terrain types at four difficulties,
-with randomized initial heading and 40-second command sequences. Failure remains
+with randomized initial heading and 40-second command sequences. Each original
+8 m patch is surrounded by flat runout in a 64 m cell, so a trial cannot be
+mislabeled after entering a different terrain. Use ``--tile-spacing 8`` for
+continuous mixed-terrain stress tests instead. Failure remains
 latched for the entire trial. Report survival together with tracking and traversal:
 standing still must not be mistaken for good locomotion. Vibration metrics are
 computed for full-trial survivors so early falls cannot make a model look smooth.
 The command profiles include pure yaw at both -1 and +1 rad/s.
+The maneuver and yaw profiles repeat every 40 seconds for longer stress trials,
+for example ``--profiles maneuver yaw --duration 120``.
+Per-trial friction and failure positions are recorded. ``--friction 1`` selects
+a nominal-friction comparison; omitting it retains startup friction randomization.
 
 Rendered-depth validation
 -------------------------
