@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Continuous Go1 evaluation now reports edge landing/support rates, including
+  an independent exact square-riser metric restricted to stair flights.
 - Added a scandot-based Go1 feet-edge penalty with slope rejection and colored
   edge/foot visualization in Robust and stair play tasks. Robust training uses a
   denser terrain scan while preserving the checkpoint's critic scan inputs.

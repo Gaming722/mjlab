@@ -20,6 +20,8 @@ from mjlab.rl import MjlabOnPolicyRunner, RslRlVecEnvWrapper
 from mjlab.sensor import RayCastSensorCfg, TerrainHeightSensorCfg
 from mjlab.tasks.registry import load_env_cfg, load_rl_cfg, load_runner_cls
 from mjlab.tasks.velocity.mdp import UniformVelocityCommand, forward_tipping_cost
+from mjlab.tasks.velocity.mdp.terrain_edges import feet_edge
+from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
 from mjlab.terrains.terrain_generator import (
   SubTerrainCfg,
   TerrainGeometry,
@@ -133,6 +135,15 @@ def update_failure(
   )
 
 
+def square_edge_distance(feet_xy: torch.Tensor, radii: torch.Tensor) -> torch.Tensor:
+  """Exact distance to square stair risers, independent of the reward scan."""
+  delta = feet_xy.abs()[:, :, None] - radii[:, None, :, None]
+  outside = delta.clamp_min(0).norm(dim=-1)
+  inside = -delta.amax(dim=-1)
+  distance = torch.where(delta.amax(dim=-1) > 0, outside, inside)
+  return distance.amin(dim=-1)
+
+
 def evaluate(args: EvaluationConfig) -> None:
   if args.trials < 1 or args.duration <= 0 or not args.terrains:
     raise ValueError("trials, duration, and terrains must be nonempty/positive")
@@ -205,6 +216,28 @@ def evaluate(args: EvaluationConfig) -> None:
   terrain_entity = base.scene.terrain
   assert terrain_entity is not None
   types = terrain_entity.terrain_types
+  edge_term = dict(base.reward_manager.get_visualizable_terms())["feet_edge"]
+  assert isinstance(edge_term, feet_edge)
+  feet_ids, _ = robot.find_sites(("FR", "FL", "RR", "RL"), preserve_order=True)
+  # Exact square riser locations provide an independent stair-only check.
+  radii = torch.full((env.num_envs, 32), torch.inf, device=args.device)
+  stair_inner = torch.zeros(env.num_envs, device=args.device)
+  stair_outer = torch.zeros_like(stair_inner)
+  is_stair = torch.zeros(env.num_envs, dtype=torch.bool, device=args.device)
+  for i, (name, difficulty) in enumerate(labels):
+    fixed = terrain.sub_terrains[f"{name}_{difficulty}"]
+    assert isinstance(fixed, FixedDifficultyTerrainCfg)
+    source = fixed.terrain
+    if not isinstance(source, BoxPyramidStairsTerrainCfg) or source.holes:
+      continue
+    outer = 4.0 - source.border_width  # Original patch size is fixed at 8 m.
+    count = int((2 * outer - source.platform_width) / (2 * source.step_width))
+    values = outer - torch.arange(count + 1, device=args.device) * source.step_width
+    selected = types == i
+    radii[selected, : count + 1] = values
+    stair_inner[selected] = values[-1] - 0.1
+    stair_outer[selected] = outer + 0.1
+    is_stair[selected] = True
   results = []
   try:
     for checkpoint in args.checkpoints:
@@ -226,6 +259,7 @@ def evaluate(args: EvaluationConfig) -> None:
         distance = torch.zeros_like(contact_steps)
         stall_time = torch.zeros_like(contact_steps)
         sums = torch.zeros(env.num_envs, 9, device=args.device)
+        edge_counts = torch.zeros(env.num_envs, 8, device=args.device)
         previous_motion = torch.zeros(env.num_envs, 3, device=args.device)
         previous_heading = robot.data.heading_w.clone()
         low_pass = torch.zeros_like(previous_motion)
@@ -241,6 +275,36 @@ def evaluate(args: EvaluationConfig) -> None:
             obs = env.get_observations()
             active = ~failed
             obs, _, _, _ = env.step(policy(obs))
+            landing = base.scene["feet_ground_contact"].compute_first_contact(
+              base.step_dt
+            )
+            loaded = edge_term.loaded
+            near_edge = edge_term.edge_mask
+            feet_xy = (
+              robot.data.site_pos_w[:, feet_ids, :2]
+              - base.scene.env_origins[:, None, :2]
+            )
+            radius = feet_xy.abs().amax(-1)
+            stair_zone = (
+              is_stair[:, None]
+              & (radius >= stair_inner[:, None])
+              & (radius <= stair_outer[:, None])
+            )
+            exact_edge = square_edge_distance(feet_xy, radii) < 0.03
+            count_values = torch.stack(
+              (
+                (near_edge & loaded).sum(-1),
+                loaded.sum(-1),
+                (near_edge & landing).sum(-1),
+                landing.sum(-1),
+                (exact_edge & loaded & stair_zone).sum(-1),
+                (loaded & stair_zone).sum(-1),
+                (exact_edge & landing & stair_zone).sum(-1),
+                (landing & stair_zone).sum(-1),
+              ),
+              dim=-1,
+            )
+            edge_counts += count_values * active[:, None]
             velocity = robot.data.root_link_lin_vel_b
             omega = robot.data.root_link_ang_vel_b
             motion = torch.stack((velocity[:, 2], omega[:, 0], omega[:, 1]), dim=-1)
@@ -311,6 +375,11 @@ def evaluate(args: EvaluationConfig) -> None:
           # contributing samples. Report motion quality only for full survivors.
           rms = torch.sqrt(sums[mask] / valid_time[:, None])[survived].mean(0)
           metrics = [float(v) if survived.any() else None for v in rms]
+          counts = edge_counts[mask].sum(0)
+          edge_rates = [
+            float(counts[j] / counts[j + 1]) if counts[j + 1] > 0 else None
+            for j in (0, 2, 4, 6)
+          ]
           row = {
             "checkpoint": str(checkpoint.resolve()),
             "terrain": name,
@@ -349,6 +418,11 @@ def evaluate(args: EvaluationConfig) -> None:
             "velocity_xy_rmse": metrics[6],
             "yaw_rate_rmse": metrics[7],
             "action_rate_rms": metrics[8],
+            "scan_edge_support_fraction": edge_rates[0],
+            "scan_edge_landing_fraction": edge_rates[1],
+            "stair_edge_support_fraction_3cm": edge_rates[2],
+            "stair_edge_landing_fraction_3cm": edge_rates[3],
+            "edge_event_counts": counts.tolist(),
           }
           results.append(row)
           print(json.dumps(row), flush=True)

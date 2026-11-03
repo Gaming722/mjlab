@@ -8,9 +8,16 @@ import torch
 from mjlab.scripts.evaluate_go1_locomotion import (
   FixedDifficultyTerrainCfg,
   scheduled_command,
+  square_edge_distance,
   update_failure,
 )
 from mjlab.terrains.config import pyramid_stairs_inv
+
+
+def test_exact_stair_edge_distance_includes_euclidean_corners():
+  feet = torch.tensor([[[0.9, 0.5], [1.03, 1.04], [1.0, -0.4]]])
+  result = square_edge_distance(feet, torch.tensor([[1.0, torch.inf]]))
+  torch.testing.assert_close(result, torch.tensor([[0.1, 0.05, 0.0]]))
 
 
 def test_late_fall_is_latched_even_if_robot_recovers():

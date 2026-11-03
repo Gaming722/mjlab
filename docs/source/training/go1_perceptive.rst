@@ -174,6 +174,12 @@ The maneuver and yaw profiles repeat every 40 seconds for longer stress trials,
 for example ``--profiles maneuver yaw --duration 120``.
 Per-trial friction and failure positions are recorded. ``--friction 1`` selects
 a nominal-friction comparison; omitting it retains startup friction randomization.
+Edge reports include scan-based landing/support fractions and an independent
+3 cm distance test against the exact square risers of pyramid stairs. The latter
+counts only contacts in the stair flight, excluding the central platform and flat
+runout. Raw event counts are saved for weighted aggregation; no-contact cases
+report null rather than zero. Compare edge rates alongside traversal, stalls,
+survival, and base-motion metrics.
 
 Rendered-depth validation
 -------------------------
