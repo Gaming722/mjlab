@@ -10,6 +10,8 @@ Added
 
 - Added optional per-foot edge-proximity observations for privileged critics,
   using the same geometric edge detector as the feet-edge reward.
+- Added an append-only MLP critic checkpoint expansion helper that preserves
+  actor parameters and existing optimizer moments when adding privileged inputs.
 - Go1 continuous evaluation supports multi-row terrain routes, reports loaded-foot
   slip, and rejects sustained missing ground even if the robot remains upright.
 - Added a Go1 edge-placement fine-tuning task with varied stair tread widths,

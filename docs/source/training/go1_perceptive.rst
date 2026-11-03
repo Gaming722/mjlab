@@ -163,6 +163,16 @@ the training layout and colored edges. Use the Robust task for comparison on the
 original 30 cm treads and larger central platforms. Assess both, together with
 continuous varied-terrain trials, before selecting a checkpoint.
 
+For experiments with more precise value inputs, ``mdp.feet_edge_proximity`` can
+be appended to the critic's observation terms. Its four per-foot values use the
+same edge geometry as the reward. Existing actor observations remain unchanged.
+The term must be appended after the original critic inputs when warm-starting.
+``mjlab.tasks.velocity.rl.critic_checkpoint.expand_edge_critic_inputs`` returns
+a copy of a loaded checkpoint with zero-weight columns for four extra inputs,
+zero/unit normalizer defaults, and zero-padded optimizer moments. It preserves
+the actor and the existing critic function at initialization, and rejects
+ambiguous optimizer shapes. Existing task defaults do not add this observation.
+
 Continuous evaluation
 ---------------------
 
