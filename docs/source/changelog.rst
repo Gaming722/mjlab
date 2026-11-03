@@ -34,6 +34,8 @@ Added
 Changed
 ^^^^^^^
 
+- Go1 stair rewards track horizontal heading rate rather than body-axis spin,
+  accounting for roll/pitch coupling and reducing yaw drift while climbing.
 - Go1 stair training penalizes stalled commanded motion without penalizing standing
   or pure-yaw commands; stair evaluation also reports speed and trunk contact time.
 - Go1 perceptive stair training uses fixed moderate commands and prioritizes planar

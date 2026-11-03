@@ -79,17 +79,31 @@ def track_angular_velocity(
   command_name: str,
   asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
   include_roll_pitch: bool = True,
+  yaw_in_heading_frame: bool = False,
 ) -> torch.Tensor:
   """Reward tracking commanded angular velocity.
 
   The commanded xy angular velocities are assumed to be zero.
   Set ``include_roll_pitch=False`` to track yaw without suppressing stair motion.
+  ``yaw_in_heading_frame`` tracks the rate of the horizontal heading rather than
+  body-axis spin, which differs when the base rolls or pitches on stairs.
   """
   asset: Entity = env.scene[asset_cfg.name]
   command = env.command_manager.get_command(command_name)
   assert command is not None, f"Command '{command_name}' not found."
   actual = asset.data.root_link_ang_vel_b
-  z_error = torch.square(command[:, 2] - actual[:, 2])
+  yaw_rate = actual[:, 2]
+  if yaw_in_heading_frame:
+    forward = quat_apply(asset.data.root_link_quat_w, asset.data.forward_vec_b)
+    omega_w = asset.data.root_link_ang_vel_w
+    horizontal_sq = torch.sum(forward[:, :2].square(), dim=-1).clamp_min(1e-6)
+    yaw_rate = (
+      omega_w[:, 2]
+      - forward[:, 2]
+      * torch.sum(forward[:, :2] * omega_w[:, :2], dim=-1)
+      / horizontal_sq
+    )
+  z_error = torch.square(command[:, 2] - yaw_rate)
   xy_error = torch.sum(torch.square(actual[:, :2]), dim=1)
   ang_vel_error = z_error + xy_error if include_roll_pitch else z_error
   return torch.exp(-ang_vel_error / std**2)

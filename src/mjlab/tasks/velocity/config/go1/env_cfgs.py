@@ -400,6 +400,9 @@ def unitree_go1_stairs_perceptive_env_cfg(
   cfg.rewards["track_linear_velocity"].params.update(std=0.25, include_vertical=False)
   cfg.rewards["track_angular_velocity"].weight = 1.0
   cfg.rewards["track_angular_velocity"].params["include_roll_pitch"] = False
+  cfg.rewards["track_angular_velocity"].params.update(
+    std=0.25, yaw_in_heading_frame=True
+  )
   cfg.rewards["pose"].weight = 0.3
   cfg.rewards["action_rate_l2"].weight = -0.03
   cfg.rewards["foot_clearance"].weight = -0.5

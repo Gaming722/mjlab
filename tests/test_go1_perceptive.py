@@ -45,6 +45,8 @@ def test_stairs_task_preserves_checkpoint_contract_and_isolates_terrain():
     assert any(s.name == "thigh_ground_touch" for s in cfg.scene.sensors or ())
     assert cfg.rewards["track_linear_velocity"].params["include_vertical"] is False
     assert cfg.rewards["track_angular_velocity"].params["include_roll_pitch"] is False
+    assert cfg.rewards["track_angular_velocity"].params["yaw_in_heading_frame"] is True
+    assert cfg.rewards["track_angular_velocity"].params["std"] == 0.25
     assert "command_vel" not in cfg.curriculum
     assert cfg.rewards["motion_deficit"].weight == -3.0
   assert "motion_deficit" not in rough.rewards

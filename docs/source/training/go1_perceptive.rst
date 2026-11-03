@@ -64,6 +64,8 @@ The original rough task and the general stair preset remain available unchanged.
 The stair task keeps its command speed range fixed as terrain difficulty increases.
 It prioritizes planar velocity tracking, permits vertical and roll/pitch transients,
 and uses weaker nominal-pose and motion regularization than the rough task.
+Yaw tracking uses the rate of horizontal heading, including roll/pitch coupling,
+with a tighter tolerance to reduce turning drift during ascent.
 Thigh-ground contacts incur a penalty; falls beyond 70 degrees terminate training
 episodes.
 Commanded planar motion below half the requested speed incurs a directional
