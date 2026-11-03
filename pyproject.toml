@@ -156,6 +156,8 @@ ignore = ["B011"]
 pythonVersion = "3.10"
 venvPath = "."
 venv = ".venv"
+# Keep generated experiment/video scripts outside project type checking.
+exclude = ["**/node_modules", "**/__pycache__", "**/.*", "artifacts", "videos"]
 ignore = ["./typings", "./src/mjlab/utils/lab_api", "./docs"]
 stubPath = "typings"
 
