@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added continuous Go1 locomotion evaluation with post-crossing fall detection,
+  stop/reverse/lateral/yaw sequences, and base-motion vibration measurements.
 - Added a balanced Go1 perceptive locomotion task with seven terrain types,
   explicit base-motion/smoothness penalties, and yaw commands up to 1 rad/s.
 - Added explicit pure-yaw sampling for velocity commands and an opt-in terrain
@@ -69,6 +71,8 @@ Changed
 Fixed
 ^^^^^
 
+- Stair evaluation now rejects falls later in a trial even after a passage was
+  recorded; passage alone no longer freezes successful status.
 - Go1 play uses automatic contact capacity sizing to avoid initialization
   overflow when the pre-reset pose intersects rough terrain or stairs.
 - Go1 perceptive stair play now previews the hardest training stairs (18 cm)

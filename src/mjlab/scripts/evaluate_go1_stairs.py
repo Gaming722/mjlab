@@ -179,13 +179,14 @@ def evaluate(args: EvaluationConfig) -> None:
             )
             elapsed = (step + 1) * base.step_dt
             passage_time[new_pass & ~passed] = elapsed
-            failed |= new_fail & ~passed
+            # Passage is provisional: a subsequent fall still fails the trial.
+            failed |= new_fail
             passed |= new_pass
             stopped = robot.data.root_link_lin_vel_b[:, 0].abs() < 0.1
             stop_time += (stopped & ~passed & ~failed) * base.step_dt
         for i, (direction, height) in enumerate(labels):
           mask = types == i
-          success = passed[mask]
+          success = passed[mask] & ~failed[mask]
           times = passage_time[mask][success]
           row = {
             "checkpoint": str(checkpoint.resolve()),

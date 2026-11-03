@@ -123,6 +123,25 @@ does not promote falls. Gentle random pushes remain enabled during training.
      --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 2000 \
      --agent.run-name robust_locomotion
 
+Continuous evaluation
+---------------------
+
+Stair passage is only one diagnostic. Use continuous trials to check falls after
+the last step, changes in direction, and vibration on flat and uneven terrain:
+
+.. code-block:: bash
+
+   uv run python -m mjlab.scripts.evaluate_go1_locomotion \
+     --checkpoints <checkpoint-path> --trials 8 --seed 43 \
+     --output artifacts/go1_locomotion/evaluation.json
+
+The default evaluates all seven training terrain types at four difficulties,
+with randomized initial heading and 40-second command sequences. Failure remains
+latched for the entire trial. Report survival together with tracking and traversal:
+standing still must not be mistaken for good locomotion. Vibration metrics are
+computed for full-trial survivors so early falls cannot make a model look smooth.
+The command profiles include pure yaw at both -1 and +1 rad/s.
+
 Rendered-depth validation
 -------------------------
 
