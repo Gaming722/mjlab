@@ -669,7 +669,16 @@ class HfWaveTerrainCfg(SubTerrainCfg):
       material=material_name,
     )
 
-    spawn_height = 0.0
+    # A zero origin can put standing feet inside a positive wave crest. Use
+    # the highest surface in the central 2 m spawn region, as resets also
+    # perturb XY and the feet extend beyond the root position.
+    cy, cx = (n // 2 for n in physical_heights.shape)
+    radius = max(1, int(np.ceil(1.0 / self.horizontal_scale)))
+    spawn_region = physical_heights[
+      max(0, cy - radius) : cy + radius + 1,
+      max(0, cx - radius) : cx + radius + 1,
+    ]
+    spawn_height = float(np.max(spawn_region))
     origin = np.array([self.size[0] / 2, self.size[1] / 2, spawn_height])
 
     flat_patches = _compute_flat_patches(
