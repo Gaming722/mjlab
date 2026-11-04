@@ -658,6 +658,27 @@ def unitree_go1_edge_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   return cfg
 
 
+def unitree_go1_precise_edge_perceptive_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Resume edge-aware critics with a wider safety band and calmer base motion."""
+  cfg = unitree_go1_edge_perceptive_env_cfg(play=play)
+  edge = cfg.rewards["feet_edge"]
+  edge.params["margin"] = 0.07
+  cfg.rewards["ang_vel_xy"].weight = -0.5
+  # Append only: converted 259-input critics preserve their existing function.
+  cfg.observations["critic"].terms["feet_edge_proximity"] = ObservationTermCfg(
+    func=mdp.feet_edge_proximity,
+    params={
+      "height_sensor_name": "terrain_scan",
+      "asset_cfg": SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL")),
+      "margin": edge.params["margin"],
+      "height_threshold": edge.params["height_threshold"],
+    },
+  )
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

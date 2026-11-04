@@ -23,6 +23,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_blind_env_cfg,
   unitree_go1_edge_perceptive_env_cfg,
   unitree_go1_perceptive_env_cfg,
+  unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
@@ -293,3 +294,22 @@ def test_edge_finetune_covers_varied_treads_without_mutating_robust_task():
   rl = unitree_go1_edge_ppo_runner_cfg()
   assert rl.algorithm.schedule == "fixed"
   assert rl.algorithm.learning_rate == 5e-5
+
+
+def test_precise_edge_profile_appends_critic_inputs_and_preserves_actor_contract():
+  original = unitree_go1_edge_perceptive_env_cfg()
+  critic_names = list(original.observations["critic"].terms)
+  for play in (False, True):
+    original = unitree_go1_edge_perceptive_env_cfg(play=play)
+    cfg = unitree_go1_precise_edge_perceptive_env_cfg(play=play)
+    assert list(cfg.observations["critic"].terms) == [
+      *critic_names,
+      "feet_edge_proximity",
+    ]
+    assert cfg.observations["actor"] == original.observations["actor"]
+    assert cfg.observations["depth"] == original.observations["depth"]
+    assert cfg.actions == original.actions
+    proximity = cfg.observations["critic"].terms["feet_edge_proximity"]
+    assert proximity.params["margin"] == cfg.rewards["feet_edge"].params["margin"]
+    assert cfg.rewards["lin_vel_z"].weight == original.rewards["lin_vel_z"].weight
+  assert "feet_edge_proximity" not in original.observations["critic"].terms

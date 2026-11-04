@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a precise Go1 edge-placement task for resuming critics with four appended
+  foot-edge inputs, a 7 cm safety band, and stronger base angular-motion cost.
 - Added optional per-foot edge-proximity observations for privileged critics,
   using the same geometric edge detector as the feet-edge reward.
 - Added an append-only MLP critic checkpoint expansion helper that preserves

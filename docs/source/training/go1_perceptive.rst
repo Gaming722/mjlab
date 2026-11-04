@@ -175,7 +175,24 @@ The term must be appended after the original critic inputs when warm-starting.
 a copy of a loaded checkpoint with zero-weight columns for four extra inputs,
 zero/unit normalizer defaults, and zero-padded optimizer moments. It preserves
 the actor and the existing critic function at initialization, and rejects
-ambiguous optimizer shapes. Existing task defaults do not add this observation.
+ambiguous optimizer shapes. The original Edges and Robust task defaults do not
+add this observation.
+
+``Mjlab-Velocity-Edges-Precise-Unitree-Go1-Perceptive`` provides a separate preset
+with these four inputs appended to the critic, a 7 cm edge margin, and an
+``ang_vel_xy`` weight of -0.5. It retains the balanced terrain mixture, command
+ranges, actor inputs, actions, and fixed fine-tuning rate. Use it to resume a
+263-input critic checkpoint; the original Edges task retains its 259 inputs.
+A 259-input parent must first be expanded with the helper above. Full-state
+checkpoint loading remains strict; this preset does not silently discard inputs.
+The play preset uses the same 7 cm warning band as its training reward.
+
+.. code-block:: bash
+
+   uv run train Mjlab-Velocity-Edges-Precise-Unitree-Go1-Perceptive \
+     --agent.resume True --agent.load-run <263-input-run-directory> \
+     --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 800 \
+     --env.scene.num-envs 2048 --agent.run-name edge_refinement
 
 Continuous evaluation
 ---------------------
