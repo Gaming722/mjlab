@@ -292,6 +292,32 @@ entire route; exact geometric stair counts remain restricted to the original
 spawn patch. Loaded-foot slip is reported for full-trial survivors, and sustained
 missing ground beneath the base is a failure even if the robot remains upright.
 
+Motor safety evaluation
+-----------------------
+
+Compare the same checkpoints, commands, terrain seeds, and randomized friction:
+
+.. code-block:: bash
+
+   uv run python -m mjlab.scripts.evaluate_go1_motor_safety \
+     --checkpoints path/to/baseline.pt path/to/candidate.pt \
+     --output artifacts/go1_motor/comparison.json
+
+This adds monitoring without changing the policy output or actuator law. Reports
+retain any PD guard violation, including startup and individual physics substeps,
+and count a guard-free survivor only if the complete trial also survives. Delivered
+torque is sampled after every physics integration: near-limit and saturation
+fractions use physical sample counts, rather than the last force of a control step.
+Joint acceleration RMS averages across joints; base acceleration RMS is the
+world-frame vector magnitude. Motion-quality measurements exclude the first second
+and samples after failure. Compare them on common full-trial survivors so early
+falls cannot appear smoother. Target differences use the SDK-limited joint target;
+they are reported in radians and do not replace measured physical acceleration.
+Use ``--record-motor-traces`` to retain the underlying time series.
+
+The simulated delivered force uses the current fixed-cap actuator model. These
+results do not establish calibration of the real Go1 torque-speed envelope.
+
 Rendered-depth validation
 -------------------------
 

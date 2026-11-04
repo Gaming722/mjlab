@@ -5,6 +5,7 @@ Passage, command tracking, and full-trial survival are reported separately.
 
 import json
 import math
+from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -158,7 +159,13 @@ def stair_riser_radii(terrain: BoxPyramidStairsTerrainCfg, device: str) -> torch
   return outer - torch.arange(count + 1, device=device) * terrain.step_width
 
 
-def evaluate(args: EvaluationConfig) -> None:
+def evaluate(
+  args: EvaluationConfig,
+  *,
+  env_factory: Callable[..., ManagerBasedRlEnv] | None = None,
+  step_observer: Callable[[ManagerBasedRlEnv, Path, str, float, torch.Tensor], None]
+  | None = None,
+) -> None:
   if args.trials < 1 or args.duration <= 0 or not args.terrains:
     raise ValueError("trials, duration, and terrains must be nonempty/positive")
   if not args.difficulties or any(not 0 <= d <= 1 for d in args.difficulties):
@@ -214,7 +221,7 @@ def evaluate(args: EvaluationConfig) -> None:
   for sensor in cfg.scene.sensors or ():
     if isinstance(sensor, (RayCastSensorCfg, TerrainHeightSensorCfg)):
       sensor.debug_vis = False
-  base = ManagerBasedRlEnv(cfg=cfg, device=args.device)
+  base = (env_factory or ManagerBasedRlEnv)(cfg=cfg, device=args.device)
   env = RslRlVecEnvWrapper(base)
   command = base.command_manager.get_term("twist")
   assert isinstance(command, UniformVelocityCommand)
@@ -305,6 +312,8 @@ def evaluate(args: EvaluationConfig) -> None:
             obs = env.get_observations()
             active = ~failed
             obs, _, _, _ = env.step(policy(obs))
+            if step_observer is not None:
+              step_observer(base, checkpoint, profile, elapsed, active)
             landing = base.scene["feet_ground_contact"].compute_first_contact(
               base.step_dt
             )

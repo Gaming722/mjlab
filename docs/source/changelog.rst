@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added matched Go1 checkpoint evaluation of deployment PD guard violations,
+  delivered torque exposure, and physical-substep acceleration.
 - Added an opt-in Go1 smooth-motion fine-tuning task with requested and delivered
   torque margins, explicit limit-exceedance cost, and substep acceleration costs.
 - Added opt-in pre-saturation PD effort monitoring, deployment target-limit

@@ -155,6 +155,11 @@ class MonitoredJointPositionAction(JointPositionAction):
     return torch.maximum(self.peak_guard_ratio, self.peak_request_ratio)
 
   @property
+  def guard_position_target(self) -> torch.Tensor:
+    """Requested encoder-coordinate target after the deployment SDK bounds."""
+    return self._processed_actions.clamp(self.guard_lower, self.guard_upper)
+
+  @property
   def guard_exceeded(self) -> torch.Tensor:
     """Match the deployment guard's 1e-5 Nm comparison tolerance."""
     invalid = ~torch.isfinite(self.peak_guard_ratio)
@@ -165,7 +170,7 @@ class MonitoredJointPositionAction(JointPositionAction):
     position = data.joint_pos[:, self.target_ids]
     velocity = data.joint_vel[:, self.target_ids]
     bias = data.encoder_bias[:, self.target_ids]
-    guard_target = self._processed_actions.clamp(self.guard_lower, self.guard_upper)
+    guard_target = self.guard_position_target
     guard = predicted_pd_effort(
       guard_target, position + bias, velocity, self.nominal_kp, self.nominal_kd
     )
