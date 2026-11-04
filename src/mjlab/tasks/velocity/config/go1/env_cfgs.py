@@ -622,12 +622,13 @@ def unitree_go1_robust_perceptive_env_cfg(
 def unitree_go1_edge_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Practice edge-aware placement with varied treads and frequent stair exposure."""
   cfg = unitree_go1_robust_perceptive_env_cfg(play=play)
+  cfg.rewards["feet_edge"].params.update(landing_weight=20.0, support_weight=1.0)
   assert cfg.scene.terrain is not None
   terrain = cfg.scene.terrain.terrain_generator
   assert terrain is not None
   variants: dict[str, SubTerrainCfg] = {}
   other_weights = {
-    "flat": 0.1,
+    "flat": 0.2,
     "random_rough": 0.1,
     "wave_terrain": 0.05,
     "hf_pyramid_slope": 0.025,
@@ -639,7 +640,7 @@ def unitree_go1_edge_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlEnv
         variant = deepcopy(sub)
         variant.step_width = width
         variant.platform_width = 1.0
-        variant.proportion = 0.35 / 3
+        variant.proportion = 0.30 / 3
         variants[f"{name}_w{round(width * 100):02d}"] = variant
     else:
       variant = deepcopy(sub)
@@ -650,10 +651,10 @@ def unitree_go1_edge_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   cfg.scene.terrain.max_init_terrain_level = terrain.num_rows - 1
   command = cfg.commands["twist"]
   assert isinstance(command, UniformVelocityCommandCfg)
-  command.rel_forward_envs = 0.65
-  command.rel_turning_envs = 0.15
-  command.rel_standing_envs = 0.05
-  command.resampling_time_range = (8.0, 12.0)
+  command.rel_forward_envs = 0.50
+  command.rel_turning_envs = 0.25
+  command.rel_standing_envs = 0.10
+  command.resampling_time_range = (6.0, 10.0)
   return cfg
 
 

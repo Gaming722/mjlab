@@ -56,6 +56,8 @@ Added
 Changed
 ^^^^^^^
 
+- Go1 edge fine-tuning now samples 60% stairs and 20% flat terrain, includes
+  more turning practice, and uses the balanced run's edge-contact weights.
 - Refined Go1 edge scans to 2.5 cm while preserving critic samples, and added
   configurable initial ray-overlay visibility so edge colors remain readable.
 - Go1 feet-edge training uses a continuous distance cost, emphasizing new

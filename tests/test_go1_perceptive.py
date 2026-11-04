@@ -279,7 +279,10 @@ def test_edge_finetune_covers_varied_treads_without_mutating_robust_task():
     ]
     assert len(stairs) == 6
     assert {s.step_width for s in stairs} == {0.27, 0.30, 0.33}
-    assert sum(s.proportion for s in stairs) == pytest.approx(0.7)
+    assert sum(s.proportion for s in stairs) == pytest.approx(0.6)
+    assert terrain.sub_terrains["flat"].proportion == pytest.approx(0.2)
+    assert env.rewards["feet_edge"].params["landing_weight"] == 20.0
+    assert env.rewards["feet_edge"].params["support_weight"] == 1.0
     assert len(terrain.sub_terrains) == 11
     assert sum(s.proportion for s in terrain.sub_terrains.values()) == pytest.approx(1)
     assert set(env.observations["actor"].terms) == set(cfg.observations["actor"].terms)
