@@ -79,3 +79,11 @@ def unitree_go1_edge_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
   cfg.max_iterations = 600
   cfg.save_interval = 100
   return cfg
+
+
+def unitree_go1_smooth_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Use small fixed updates when refining an already capable edge policy."""
+  cfg = unitree_go1_edge_ppo_runner_cfg()
+  cfg.algorithm.learning_rate = 2e-5
+  cfg.max_iterations = 600
+  return cfg

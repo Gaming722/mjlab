@@ -194,6 +194,44 @@ The play preset uses the same 7 cm warning band as its training reward.
      --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 800 \
      --env.scene.num-envs 2048 --agent.run-name edge_refinement
 
+Motor effort and smooth-motion refinement
+----------------------------------------
+
+``Mjlab-Velocity-Smooth-Unitree-Go1-Perceptive`` inherits the Precise task's
+263-input critic and unchanged actor/control contract. Its optional action
+monitor observes requests without clipping or filtering policy outputs.
+``torque_limit`` penalizes a margin starting at 85% of each joint's effort
+limit, the amount above the hard limit, and an explicit any-joint exceedance.
+It uses the largest ratio over the new-command boundary and physics substeps:
+both the deployment-style nominal PD request after SDK target-position clipping
+and the simulated request using current gains. Encoder bias is handled in the
+corresponding feedback coordinates. The Go1 limits remain 23.7 Nm for hip/thigh
+and 35.55 Nm for calf; the deployment guard's tolerance is 1e-5 Nm.
+
+Delivered effort is also constrained: ``actual_torque_limit`` starts at 80% of
+the nominal limit, and ``joint_torques_l2`` measures actual effort squared over
+all physics substeps. These are distinct from the unsaturated request. Actual
+actuator effort is the force used during each completed integration, not a
+fresh PD prediction after the robot has already moved.
+
+Joint acceleration and world-frame base linear/angular acceleration are sampled
+after every physics integration. Velocity differences start from the current
+state at each command boundary, so resets and imposed velocity pushes do not
+create fictitious acceleration penalties. The task retains base velocity,
+tracking, terrain and edge objectives while increasing action smoothing.
+It uses a fixed learning rate of ``2e-5`` for fine-tuning.
+
+.. code-block:: bash
+
+   uv run train Mjlab-Velocity-Smooth-Unitree-Go1-Perceptive \
+     --agent.resume True --agent.load-run <263-input-run-directory> \
+     --agent.load-checkpoint <checkpoint-file> --agent.max-iterations 600 \
+     --env.scene.num-envs 2048 --agent.run-name torque_smooth
+
+Reward shaping does not replace the hardware effort guard. The actuator's
+existing fixed force clipping remains unchanged; this preset does not claim
+to calibrate a physical motor torque-speed curve.
+
 Continuous evaluation
 ---------------------
 

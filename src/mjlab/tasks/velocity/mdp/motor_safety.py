@@ -29,14 +29,19 @@ def predicted_pd_effort(
 
 
 def effort_limit_cost(
-  ratio: torch.Tensor, soft_ratio: float = 0.85, hard_excess_scale: float = 5.0
+  ratio: torch.Tensor,
+  soft_ratio: float = 0.85,
+  hard_excess_scale: float = 5.0,
+  hard_violation_cost: float = 0.0,
 ) -> torch.Tensor:
   """Build a safety margin and penalize each joint's actual limit exceedance."""
-  if not 0 < soft_ratio <= 1 or hard_excess_scale < 0:
+  if not 0 < soft_ratio <= 1 or min(hard_excess_scale, hard_violation_cost) < 0:
     raise ValueError("Require 0 < soft_ratio <= 1 and nonnegative excess scale")
   soft = (ratio - soft_ratio).clamp_min(0).square()
   hard = (ratio - 1.0).clamp_min(0)
-  return (soft + hard_excess_scale * hard).sum(-1)
+  return (soft + hard_excess_scale * hard).sum(-1) + hard_violation_cost * (
+    ratio > 1.0
+  ).any(-1)
 
 
 @dataclass(kw_only=True)
@@ -127,9 +132,14 @@ class MonitoredJointPositionAction(JointPositionAction):
     self.peak_guard_ratio = torch.zeros_like(self.initial_guard_ratio)
     self.peak_request_ratio = torch.zeros_like(self.initial_guard_ratio)
     self.joint_acc_sq_sum = torch.zeros_like(self.initial_guard_ratio)
+    self.actual_effort_sq_sum = torch.zeros_like(self.initial_guard_ratio)
+    self.peak_actual_ratio = torch.zeros_like(self.initial_guard_ratio)
+    self.peak_saturation_ratio = torch.zeros_like(self.initial_guard_ratio)
     self.base_lin_acc_sq_sum = torch.zeros((self.num_envs, 3), device=self.device)
     self.base_ang_acc_sq_sum = torch.zeros_like(self.base_lin_acc_sq_sum)
     self.acc_sample_count = torch.zeros(self.num_envs, device=self.device)
+    self.near_limit_sample_count = torch.zeros_like(self.acc_sample_count)
+    self.saturation_sample_count = torch.zeros_like(self.acc_sample_count)
     self.peak_joint_acc = torch.zeros_like(self.acc_sample_count)
     self.peak_base_lin_acc = torch.zeros_like(self.acc_sample_count)
     self.peak_base_ang_acc = torch.zeros_like(self.acc_sample_count)
@@ -185,9 +195,14 @@ class MonitoredJointPositionAction(JointPositionAction):
     self.peak_guard_ratio.copy_(guard)
     self.peak_request_ratio.copy_(request)
     self.joint_acc_sq_sum.zero_()
+    self.actual_effort_sq_sum.zero_()
+    self.peak_actual_ratio.zero_()
+    self.peak_saturation_ratio.zero_()
     self.base_lin_acc_sq_sum.zero_()
     self.base_ang_acc_sq_sum.zero_()
     self.acc_sample_count.zero_()
+    self.near_limit_sample_count.zero_()
+    self.saturation_sample_count.zero_()
     self.peak_joint_acc.zero_()
     self.peak_base_lin_acc.zero_()
     self.peak_base_ang_acc.zero_()
@@ -209,6 +224,28 @@ class MonitoredJointPositionAction(JointPositionAction):
     joint_velocity = self._entity.data.joint_vel[:, self.target_ids]
     base_velocity = self._base_velocity_world()
     valid = self._history_valid.float()
+    # mj_step retains the force applied during the completed integration.
+    # Unit-gear joint transmissions were validated at initialization.
+    actual = self._env.sim.data.actuator_force[:, self.ctrl_ids]
+    bounds = self._env.sim.model.actuator_forcerange[:, self.ctrl_ids]
+    runtime_limits = torch.minimum(-bounds[..., 0], bounds[..., 1])
+    self.actual_effort_sq_sum.add_(actual.square() * valid[:, None])
+    self.peak_actual_ratio.copy_(
+      torch.maximum(
+        self.peak_actual_ratio, actual.abs() / self.effort_limits * valid[:, None]
+      )
+    )
+    self.peak_saturation_ratio.copy_(
+      torch.maximum(
+        self.peak_saturation_ratio, actual.abs() / runtime_limits * valid[:, None]
+      )
+    )
+    self.near_limit_sample_count.add_(
+      ((actual.abs() / self.effort_limits) >= 0.9).any(-1).float() * valid
+    )
+    self.saturation_sample_count.add_(
+      ((actual.abs() / runtime_limits) >= 0.99).any(-1).float() * valid
+    )
     joint_acc = (joint_velocity - self._previous_joint_velocity) / self._physics_dt
     base_acc = (base_velocity - self._previous_base_velocity) / self._physics_dt
     self.joint_acc_sq_sum.add_(joint_acc.square() * valid[:, None])
@@ -238,9 +275,14 @@ class MonitoredJointPositionAction(JointPositionAction):
       self.peak_guard_ratio,
       self.peak_request_ratio,
       self.joint_acc_sq_sum,
+      self.actual_effort_sq_sum,
+      self.peak_actual_ratio,
+      self.peak_saturation_ratio,
       self.base_lin_acc_sq_sum,
       self.base_ang_acc_sq_sum,
       self.acc_sample_count,
+      self.near_limit_sample_count,
+      self.saturation_sample_count,
       self.peak_joint_acc,
       self.peak_base_lin_acc,
       self.peak_base_ang_acc,
@@ -262,6 +304,7 @@ def torque_limit(
   action_name: str,
   soft_ratio: float = 0.85,
   hard_excess_scale: float = 5.0,
+  hard_violation_cost: float = 0.0,
 ) -> torch.Tensor:
   monitor = motor_monitor(env, action_name)
   ratio = torch.nan_to_num(
@@ -271,12 +314,30 @@ def torque_limit(
   env.extras["log"]["Metrics/motor/guard_exceeded_fraction"] = (
     monitor.guard_exceeded.float().mean()
   )
-  return effort_limit_cost(ratio, soft_ratio, hard_excess_scale)
+  return effort_limit_cost(ratio, soft_ratio, hard_excess_scale, hard_violation_cost)
 
 
 def sample_motor_motion(env: ManagerBasedRlEnv, action_name: str) -> torch.Tensor:
   """Configure as a per-substep metric to collect complete physical intervals."""
   return motor_monitor(env, action_name).record_substep_motion()
+
+
+def actual_torque_limit(
+  env: ManagerBasedRlEnv, action_name: str, soft_ratio: float = 0.8
+) -> torch.Tensor:
+  """Keep delivered torque below a margin, even when hard clipping hides excess."""
+  if not 0 < soft_ratio < 1:
+    raise ValueError("Actual torque margin must be inside the hard limit")
+  ratio = motor_monitor(env, action_name).peak_actual_ratio
+  return (ratio - soft_ratio).clamp_min(0).square().sum(-1)
+
+
+def monitored_joint_torques_l2(
+  env: ManagerBasedRlEnv, action_name: str
+) -> torch.Tensor:
+  """Mean actual actuator effort² over all physical substeps, in Nm²."""
+  monitor = motor_monitor(env, action_name)
+  return monitor.actual_effort_sq_sum.sum(-1) / monitor.acc_sample_count.clamp_min(1)
 
 
 def monitored_joint_acceleration_l2(

@@ -7,6 +7,7 @@ import pytest
 import torch
 
 from mjlab.envs import ManagerBasedRlEnv
+from mjlab.envs.mdp.actions import JointPositionActionCfg
 from mjlab.managers import ObservationTermCfg
 from mjlab.sensor import (
   CameraSensorCfg,
@@ -25,6 +26,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_perceptive_env_cfg,
   unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
+  unitree_go1_smooth_perceptive_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
@@ -313,3 +315,19 @@ def test_precise_edge_profile_appends_critic_inputs_and_preserves_actor_contract
     assert proximity.params["margin"] == cfg.rewards["feet_edge"].params["margin"]
     assert cfg.rewards["lin_vel_z"].weight == original.rewards["lin_vel_z"].weight
   assert "feet_edge_proximity" not in original.observations["critic"].terms
+
+
+def test_smooth_profile_preserves_actor_and_enables_substep_motor_sampling():
+  original = unitree_go1_precise_edge_perceptive_env_cfg()
+  cfg = unitree_go1_smooth_perceptive_env_cfg()
+  assert cfg.observations == original.observations
+  assert cfg.commands == original.commands
+  action = cfg.actions["joint_pos"]
+  previous = original.actions["joint_pos"]
+  assert isinstance(action, JointPositionActionCfg)
+  assert isinstance(previous, JointPositionActionCfg)
+  assert action.scale == previous.scale
+  assert action.clip == previous.clip
+  assert cfg.metrics["motor_motion"].per_substep
+  assert cfg.rewards["torque_limit"].params["soft_ratio"] < 1.0
+  assert "torque_limit" not in original.rewards

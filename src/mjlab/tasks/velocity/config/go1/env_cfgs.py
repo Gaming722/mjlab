@@ -2,6 +2,7 @@
 
 import math
 from copy import deepcopy
+from dataclasses import asdict
 from typing import Literal
 
 from mjlab.asset_zoo.robots import (
@@ -13,6 +14,7 @@ from mjlab.envs import mdp as envs_mdp
 from mjlab.envs.mdp.actions import JointPositionActionCfg
 from mjlab.managers import ObservationGroupCfg, ObservationTermCfg, TerminationTermCfg
 from mjlab.managers.event_manager import EventTermCfg
+from mjlab.managers.metrics_manager import MetricsTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import (
@@ -676,6 +678,70 @@ def unitree_go1_precise_edge_perceptive_env_cfg(
       "height_threshold": edge.params["height_threshold"],
     },
   )
+  return cfg
+
+
+def configure_go1_motor_monitor(cfg: ManagerBasedRlEnvCfg) -> None:
+  """Observe the Go1 SDK's pre-saturation guard without modifying actions."""
+  action = cfg.actions["joint_pos"]
+  assert isinstance(action, JointPositionActionCfg)
+  if not isinstance(action, mdp.MonitoredJointPositionActionCfg):
+    cfg.actions["joint_pos"] = mdp.MonitoredJointPositionActionCfg(
+      **asdict(action),
+      guard_position_limits={
+        ".*_hip_joint": (-1.047, 1.047),
+        ".*_thigh_joint": (-0.663, 2.966),
+        ".*_calf_joint": (-2.721, -0.837),
+      },
+    )
+  cfg.metrics["motor_motion"] = MetricsTermCfg(
+    func=mdp.sample_motor_motion,
+    params={"action_name": "joint_pos"},
+    per_substep=True,
+  )
+
+
+def unitree_go1_smooth_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Refine a capable policy for PD effort margins and smooth physical motion."""
+  cfg = unitree_go1_precise_edge_perceptive_env_cfg(play=play)
+  configure_go1_motor_monitor(cfg)
+  cfg.rewards["torque_limit"] = RewardTermCfg(
+    func=mdp.torque_limit,
+    weight=-20.0,
+    params={
+      "action_name": "joint_pos",
+      "soft_ratio": 0.85,
+      "hard_excess_scale": 5.0,
+      "hard_violation_cost": 1.0,
+    },
+  )
+  cfg.rewards["actual_torque_limit"] = RewardTermCfg(
+    func=mdp.actual_torque_limit,
+    weight=-10.0,
+    params={"action_name": "joint_pos", "soft_ratio": 0.8},
+  )
+  cfg.rewards["joint_torques_l2"] = RewardTermCfg(
+    func=mdp.monitored_joint_torques_l2,
+    weight=-4e-4,
+    params={"action_name": "joint_pos"},
+  )
+  cfg.rewards["joint_acc_l2"] = RewardTermCfg(
+    func=mdp.monitored_joint_acceleration_l2,
+    weight=-2e-6,
+    params={"action_name": "joint_pos"},
+  )
+  cfg.rewards["base_lin_acc_l2"] = RewardTermCfg(
+    func=mdp.base_linear_acceleration_l2,
+    weight=-0.005,
+    params={"action_name": "joint_pos"},
+  )
+  cfg.rewards["base_ang_acc_l2"] = RewardTermCfg(
+    func=mdp.base_angular_acceleration_l2,
+    weight=-0.0002,
+    params={"action_name": "joint_pos"},
+  )
+  cfg.rewards["action_rate_l2"].weight = -0.12
+  cfg.rewards["action_acc_l2"].weight = -0.03
   return cfg
 
 

@@ -90,6 +90,10 @@ def test_limit_cost_sees_unsaturated_request_and_per_joint_limits():
   )
   assert effort_limit_cost(torch.full_like(ratio, 0.8)).item() == 0
   assert effort_limit_cost(torch.full_like(ratio, 0.9)).item() > 0
+  excess = torch.tensor([[1.001, 0.2]])
+  torch.testing.assert_close(
+    effort_limit_cost(excess, hard_violation_cost=1.0), effort_limit_cost(excess) + 1.0
+  )
 
 
 def test_initial_peak_survives_relaxed_post_step_state_without_changing_target(
@@ -149,6 +153,25 @@ def test_encoder_coordinates_and_randomized_runtime_gains(motor_env):
   action.process_actions(torch.full((2, 1), 0.2))
   torch.testing.assert_close(action.initial_guard_ratio, torch.full((2, 1), 0.5))
   torch.testing.assert_close(action.peak_request_ratio, torch.ones(2, 1))
+
+
+def test_actual_torque_peak_and_substep_average_are_both_retained(motor_env):
+  env, _ = motor_env
+  action = make_action(env)
+  action.process_actions(torch.zeros(2, 1))
+  action.apply_actions()
+  env.sim.data.actuator_force[:] = torch.tensor([[2.0], [0.5]])
+  action.record_substep_motion()
+  env.sim.data.actuator_force[:] = torch.tensor([[0.0], [0.5]])
+  action.record_substep_motion()
+  torch.testing.assert_close(action.peak_actual_ratio[:, 0], torch.tensor([1.0, 0.25]))
+  torch.testing.assert_close(action.peak_saturation_ratio, action.peak_actual_ratio)
+  torch.testing.assert_close(action.near_limit_sample_count, torch.tensor([1.0, 0.0]))
+  torch.testing.assert_close(action.saturation_sample_count, torch.tensor([1.0, 0.0]))
+  torch.testing.assert_close(
+    action.actual_effort_sq_sum[:, 0] / action.acc_sample_count,
+    torch.tensor([2.0, 0.25]),
+  )
 
 
 def test_motion_intervals_exclude_reset_and_external_velocity_push(motor_env):

@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 smooth-motion fine-tuning task with requested and delivered
+  torque margins, explicit limit-exceedance cost, and substep acceleration costs.
 - Added opt-in pre-saturation PD effort monitoring, deployment target-limit
   checks, and reset-aware world-frame acceleration costs for locomotion.
 - Added a precise Go1 edge-placement task for resuming critics with four appended
