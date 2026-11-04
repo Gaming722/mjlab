@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added opt-in pre-saturation PD effort monitoring, deployment target-limit
+  checks, and reset-aware world-frame acceleration costs for locomotion.
 - Added a precise Go1 edge-placement task for resuming critics with four appended
   foot-edge inputs, a 7 cm safety band, and stronger base angular-motion cost.
 - Added optional per-foot edge-proximity observations for privileged critics,
