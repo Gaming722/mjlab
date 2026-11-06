@@ -327,6 +327,11 @@ def sample_motor_motion(env: ManagerBasedRlEnv, action_name: str) -> torch.Tenso
   return motor_monitor(env, action_name).record_substep_motion()
 
 
+def predicted_effort_guard(env: ManagerBasedRlEnv, action_name: str) -> torch.Tensor:
+  """End a trial when the deployment's nominal PD guard would leave RL mode."""
+  return motor_monitor(env, action_name).guard_exceeded
+
+
 def actual_torque_limit(
   env: ManagerBasedRlEnv, action_name: str, soft_ratio: float = 0.8
 ) -> torch.Tensor:

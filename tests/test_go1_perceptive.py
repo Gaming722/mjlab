@@ -23,6 +23,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   D435_WIDTH,
   unitree_go1_blind_env_cfg,
   unitree_go1_edge_perceptive_env_cfg,
+  unitree_go1_guarded_smooth_env_cfg,
   unitree_go1_perceptive_env_cfg,
   unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
@@ -331,3 +332,25 @@ def test_smooth_profile_preserves_actor_and_enables_substep_motor_sampling():
   assert cfg.metrics["motor_motion"].per_substep
   assert cfg.rewards["torque_limit"].params["soft_ratio"] < 1.0
   assert "torque_limit" not in original.rewards
+
+
+def test_guarded_smooth_profile_preserves_safety_costs_and_demands_progress():
+  for play in (False, True):
+    original = unitree_go1_smooth_perceptive_env_cfg(play=play)
+    cfg = unitree_go1_guarded_smooth_env_cfg(play=play)
+    assert cfg.observations == original.observations
+    assert cfg.commands == original.commands
+    assert cfg.actions == original.actions
+    for name in (
+      "torque_limit",
+      "actual_torque_limit",
+      "joint_acc_l2",
+      "base_lin_acc_l2",
+      "base_ang_acc_l2",
+      "feet_edge",
+    ):
+      assert cfg.rewards[name] == original.rewards[name]
+    assert not cfg.terminations["predicted_effort_guard"].time_out
+    assert "predicted_effort_guard" not in original.terminations
+    assert cfg.rewards["motion_deficit"].weight == -3.0
+    assert cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] == 0.5

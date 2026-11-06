@@ -745,6 +745,20 @@ def unitree_go1_smooth_perceptive_env_cfg(play: bool = False) -> ManagerBasedRlE
   return cfg
 
 
+def unitree_go1_guarded_smooth_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Refine smooth locomotion without continuing past a deployment guard trip."""
+  cfg = unitree_go1_smooth_perceptive_env_cfg(play=play)
+  cfg.terminations["predicted_effort_guard"] = TerminationTermCfg(
+    func=mdp.predicted_effort_guard, params={"action_name": "joint_pos"}
+  )
+  # A guard trip is terminal on hardware. Counter the alternative of parking
+  # before difficult terrain by retaining a strong directed-motion objective.
+  cfg.rewards["track_linear_velocity"].weight = 5.0
+  cfg.rewards["motion_deficit"].weight = -3.0
+  cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] = 0.5
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

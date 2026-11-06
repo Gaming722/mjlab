@@ -232,6 +232,20 @@ Reward shaping does not replace the hardware effort guard. The actuator's
 existing fixed force clipping remains unchanged; this preset does not claim
 to calibrate a physical motor torque-speed curve.
 
+``Mjlab-Velocity-Smooth-Guarded-Unitree-Go1-Perceptive`` additionally ends an
+episode when the nominal deployment guard would exit RL mode. The original
+Smooth preset continues to provide penalty-only training. Both retain the same
+requested and delivered torque costs, acceleration costs, actuator law, and
+observation dimensions. The guarded preset raises linear tracking weight to 5
+and motion-deficit weight to -3, with a minimum directed-speed fraction of 0.5,
+so parking before stairs is costly. The guard also applies during play; this
+models leaving RL mode as an episode ending, without simulating DAMPING recovery.
+It uses SDK-limited targets and nominal gains, not the raw randomized-gain
+request, with the same 1e-5 Nm guard tolerance. Use the guarded task name in the
+training command above to opt in. Evaluate it with the same continuous benchmark:
+the benchmark removes reset terminations and separately records every guard
+violation, physical fall, and stall for the entire trial.
+
 Continuous evaluation
 ---------------------
 

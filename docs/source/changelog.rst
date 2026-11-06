@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 guarded smooth-motion task that ends episodes on predicted
+  deployment PD effort violations while strengthening commanded progress.
 - Added matched Go1 checkpoint evaluation of deployment PD guard violations,
   delivered torque exposure, and physical-substep acceleration.
 - Added an opt-in Go1 smooth-motion fine-tuning task with requested and delivered

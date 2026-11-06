@@ -5,6 +5,7 @@ from .env_cfgs import (
   unitree_go1_blind_env_cfg,
   unitree_go1_edge_perceptive_env_cfg,
   unitree_go1_flat_env_cfg,
+  unitree_go1_guarded_smooth_env_cfg,
   unitree_go1_perceptive_env_cfg,
   unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
@@ -40,6 +41,14 @@ register_mjlab_task(
   task_id="Mjlab-Velocity-Smooth-Unitree-Go1-Perceptive",
   env_cfg=unitree_go1_smooth_perceptive_env_cfg(),
   play_env_cfg=unitree_go1_smooth_perceptive_env_cfg(play=True),
+  rl_cfg=unitree_go1_smooth_ppo_runner_cfg(),
+  runner_cls=VelocityFineTuneRunner,
+)
+
+register_mjlab_task(
+  task_id="Mjlab-Velocity-Smooth-Guarded-Unitree-Go1-Perceptive",
+  env_cfg=unitree_go1_guarded_smooth_env_cfg(),
+  play_env_cfg=unitree_go1_guarded_smooth_env_cfg(play=True),
   rl_cfg=unitree_go1_smooth_ppo_runner_cfg(),
   runner_cls=VelocityFineTuneRunner,
 )

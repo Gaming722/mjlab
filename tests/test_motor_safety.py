@@ -14,6 +14,7 @@ from mjlab.sim.sim import Simulation, SimulationCfg
 from mjlab.tasks.velocity.mdp.motor_safety import (
   MonitoredJointPositionActionCfg,
   effort_limit_cost,
+  predicted_effort_guard,
   predicted_pd_effort,
 )
 
@@ -72,6 +73,23 @@ def write_state(entity, positions, velocities):
   entity.data.write_joint_state(
     torch.tensor(positions).reshape(2, 1), torch.tensor(velocities).reshape(2, 1)
   )
+
+
+def test_terminal_guard_uses_sdk_request_tolerance_and_rejects_nonfinite(motor_env):
+  env, _ = motor_env
+  action = make_action(env)
+  wrapped = cast(
+    ManagerBasedRlEnv,
+    SimpleNamespace(action_manager=SimpleNamespace(get_term=lambda name: action)),
+  )
+  action.peak_request_ratio.fill_(3.0)
+  action.peak_guard_ratio.fill_(1.0 + 1e-6)
+  assert not predicted_effort_guard(wrapped, "joint_pos").any()
+  action.peak_guard_ratio[0] = 1.01
+  action.peak_guard_ratio[1] = torch.nan
+  assert predicted_effort_guard(wrapped, "joint_pos").all()
+  action.reset(torch.tensor([0]))
+  assert predicted_effort_guard(wrapped, "joint_pos").tolist() == [False, True]
 
 
 def test_limit_cost_sees_unsaturated_request_and_per_joint_limits():
