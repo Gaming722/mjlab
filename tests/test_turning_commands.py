@@ -3,10 +3,32 @@
 from types import SimpleNamespace
 from typing import cast
 
+import pytest
 import torch
 
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
+
+
+@pytest.mark.parametrize("minimum, expected", [(0.3, 0.3), (0.2, 0.25)])
+def test_forward_sampling_can_retain_slow_commands(minimum, expected):
+  env = cast(
+    ManagerBasedRlEnv,
+    SimpleNamespace(scene={"robot": SimpleNamespace()}, num_envs=8, device="cpu"),
+  )
+  cfg = UniformVelocityCommandCfg(
+    entity_name="robot",
+    resampling_time_range=(4.0, 8.0),
+    rel_forward_envs=1.0,
+    forward_min_velocity=minimum,
+    ranges=UniformVelocityCommandCfg.Ranges(
+      lin_vel_x=(0.25, 0.25), lin_vel_y=(0.1, 0.1), ang_vel_z=(0.8, 0.8)
+    ),
+  )
+  term = cfg.build(env)
+  term._resample_command(torch.arange(8))
+  torch.testing.assert_close(term.command[:, 0], torch.full((8,), expected))
+  torch.testing.assert_close(term.command[:, 1:], torch.zeros(8, 2))
 
 
 def test_turning_preserves_sampled_yaw_and_zeroes_planar_velocity():

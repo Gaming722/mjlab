@@ -363,7 +363,17 @@ def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
     cfg = unitree_go1_motor_rehearsal_env_cfg(play=play)
     assert cfg.observations == original.observations
     assert cfg.actions == original.actions
-    assert cfg.commands == original.commands
+    command = cfg.commands["twist"]
+    previous_command = original.commands["twist"]
+    assert isinstance(command, UniformVelocityCommandCfg)
+    assert isinstance(previous_command, UniformVelocityCommandCfg)
+    assert command.ranges == previous_command.ranges
+    assert command.forward_min_velocity == 0.2
+    assert previous_command.forward_min_velocity == 0.3
+    assert command.rel_standing_envs == 0.15
+    assert command.resampling_time_range == (4.0, 8.0)
+    assert cfg.rewards["track_linear_velocity"].params["std"] == 0.15
+    assert cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] == 0.8
     assert cfg.sim == original.sim
     assert "predicted_effort_guard" not in cfg.terminations
     assert "predicted_effort_guard" in original.terminations

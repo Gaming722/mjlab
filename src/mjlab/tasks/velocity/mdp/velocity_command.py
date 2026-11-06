@@ -99,7 +99,7 @@ class UniformVelocityCommand(CommandTerm):
     fwd_ids = env_ids[self.is_forward_env[env_ids]]
     if len(fwd_ids) > 0:
       self.vel_command_b[fwd_ids, 0] = (
-        self.vel_command_b[fwd_ids, 0].abs().clamp(min=0.3)
+        self.vel_command_b[fwd_ids, 0].abs().clamp(min=self.cfg.forward_min_velocity)
       )
       self.vel_command_b[fwd_ids, 1] = 0.0
       self.vel_command_b[fwd_ids, 2] = 0.0
@@ -346,6 +346,8 @@ class UniformVelocityCommandCfg(CommandTermCfg):
   """Fraction of environments that receive forward-only commands (positive
   lin_vel_x, zero lin_vel_y and ang_vel_z). Increases training coverage for
   straight-line walking, which is important for stair climbing."""
+  forward_min_velocity: float = 0.3
+  """Minimum speed for forward-only samples, in m/s."""
   init_velocity_prob: float = 0.0
   """Probability that an env starts its episode already moving at its sampled
   planar command velocity. Applied on reset only."""
@@ -373,6 +375,8 @@ class UniformVelocityCommandCfg(CommandTermCfg):
     return UniformVelocityCommand(self, env)
 
   def __post_init__(self):
+    if not np.isfinite(self.forward_min_velocity) or self.forward_min_velocity < 0:
+      raise ValueError("forward_min_velocity must be finite and nonnegative.")
     if self.heading_command and self.ranges.heading is None:
       raise ValueError(
         "The velocity command has heading commands active (heading_command=True) but "
