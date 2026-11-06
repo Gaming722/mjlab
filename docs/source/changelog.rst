@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 motor rehearsal task with full-range terrain levels,
+  stronger short effort-violation costs, and broader slope practice.
 - Added per-trial traversal records and joint guard-free crossing scores so
   unsafe traversal or stationary survival cannot count as usable locomotion.
 - Added an opt-in Go1 guarded smooth-motion task that ends episodes on predicted

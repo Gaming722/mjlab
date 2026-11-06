@@ -759,6 +759,38 @@ def unitree_go1_guarded_smooth_env_cfg(play: bool = False) -> ManagerBasedRlEnvC
   return cfg
 
 
+def unitree_go1_motor_rehearsal_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Rehearse the full terrain range with torque margins and recovery practice."""
+  cfg = unitree_go1_guarded_smooth_env_cfg(play=play)
+  # Preserve recovery examples while making even short effort violations costly.
+  # The continuous evaluator still counts every deployment guard trip as failure.
+  cfg.terminations.pop("predicted_effort_guard")
+  cfg.rewards["torque_limit"].params["hard_violation_cost"] = 10.0
+  cfg.rewards["termination"].weight = -200.0
+  cfg.rewards["track_angular_velocity"].weight = 3.0
+  # Do not let an already capable policy forget hard cases as the new costs
+  # demote their curriculum levels. Keep the initial full-range level samples.
+  cfg.curriculum.pop("terrain_levels", None)
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  cfg.scene.terrain.max_init_terrain_level = terrain.num_rows - 1
+  for name, sub in terrain.sub_terrains.items():
+    if name.startswith("pyramid_stairs_inv_w"):
+      sub.proportion = 0.30 / 3
+    elif name.startswith("pyramid_stairs_w"):
+      sub.proportion = 0.20 / 3
+    else:
+      sub.proportion = {
+        "flat": 0.15,
+        "random_rough": 0.10,
+        "wave_terrain": 0.05,
+        "hf_pyramid_slope": 0.10,
+        "hf_pyramid_slope_inv": 0.10,
+      }[name]
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

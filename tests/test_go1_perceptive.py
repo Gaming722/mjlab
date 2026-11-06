@@ -24,6 +24,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_blind_env_cfg,
   unitree_go1_edge_perceptive_env_cfg,
   unitree_go1_guarded_smooth_env_cfg,
+  unitree_go1_motor_rehearsal_env_cfg,
   unitree_go1_perceptive_env_cfg,
   unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
@@ -354,3 +355,45 @@ def test_guarded_smooth_profile_preserves_safety_costs_and_demands_progress():
     assert "predicted_effort_guard" not in original.terminations
     assert cfg.rewards["motion_deficit"].weight == -3.0
     assert cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] == 0.5
+
+
+def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
+  for play in (False, True):
+    original = unitree_go1_guarded_smooth_env_cfg(play=play)
+    cfg = unitree_go1_motor_rehearsal_env_cfg(play=play)
+    assert cfg.observations == original.observations
+    assert cfg.actions == original.actions
+    assert cfg.commands == original.commands
+    assert cfg.sim == original.sim
+    assert "predicted_effort_guard" not in cfg.terminations
+    assert "predicted_effort_guard" in original.terminations
+    assert "terrain_levels" not in cfg.curriculum
+    assert cfg.scene.terrain is not None
+    assert original.scene.terrain is not None
+    terrain = cfg.scene.terrain.terrain_generator
+    previous = original.scene.terrain.terrain_generator
+    assert terrain is not None and previous is not None
+    assert terrain.curriculum
+    assert cfg.scene.terrain.max_init_terrain_level == terrain.num_rows - 1
+    assert sum(s.proportion for s in terrain.sub_terrains.values()) == pytest.approx(1)
+    for name in ("hf_pyramid_slope", "hf_pyramid_slope_inv"):
+      assert terrain.sub_terrains[name].proportion == 0.1
+      assert previous.sub_terrains[name].proportion == 0.025
+    for name, sub in terrain.sub_terrains.items():
+      # Only the sampling weights change; difficulty and geometry stay intact.
+      expected = dict(vars(previous.sub_terrains[name]))
+      actual = dict(vars(sub))
+      expected.pop("proportion")
+      actual.pop("proportion")
+      assert actual == expected
+    for name in (
+      "joint_acc_l2",
+      "base_lin_acc_l2",
+      "base_ang_acc_l2",
+      "lin_vel_z",
+      "ang_vel_xy",
+      "actual_torque_limit",
+      "feet_edge",
+    ):
+      assert cfg.rewards[name] == original.rewards[name]
+    assert cfg.rewards["torque_limit"].params["hard_violation_cost"] == 10

@@ -252,6 +252,18 @@ This is the intersection for the same trial, rather than the combination of
 separately aggregated crossing and guard-free survival counts. Standing safely
 and crossing with an effort violation both fail this joint score.
 
+``Mjlab-Velocity-Smooth-Rehearsal-Unitree-Go1-Perceptive`` retains full-range
+initial terrain levels during training instead of demoting them after failed
+episodes. The terrain generator keeps its graded columns and unchanged geometry.
+Both slope families receive 10% of environments, ascent stairs retain 30%, descent
+stairs receive 20%, flat receives 15%, rough 10%, and waves 5%. Tread widths remain
+27, 30, and 33 cm. The preset strengthens angular tracking to 3, failure cost to
+-200, and the any-joint hard effort-violation cost to 10 inside the existing
+weight -20 torque reward. It uses penalties instead of the optional simulated
+guard termination so recovery examples remain available. Evaluation still counts
+every guard-tripped trial as a failure. Delivered torque and physical acceleration
+costs, actor inputs, PD gains, and effort caps are unchanged.
+
 Continuous evaluation
 ---------------------
 
