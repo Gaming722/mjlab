@@ -62,6 +62,13 @@ def test_exact_stair_edge_distance_includes_euclidean_corners():
   torch.testing.assert_close(result, torch.tensor([[0.1, 0.05, 0.0]]))
 
 
+def test_stair_stop_profile_holds_then_resumes_long_flight():
+  for elapsed in (0.0, 7.99, 16.0, 35.99, 40.0):
+    assert scheduled_command("stair_stop", elapsed) == (0.25, 0.0, 0.0)
+  for elapsed in (8.0, 15.99, 36.0, 39.99, 48.0):
+    assert scheduled_command("stair_stop", elapsed) == (0.0, 0.0, 0.0)
+
+
 def test_late_fall_is_latched_even_if_robot_recovers():
   failed = torch.tensor([False, False])
   failed = update_failure(failed, torch.tensor([0.0, -1.0]), torch.zeros(2), 0.02)

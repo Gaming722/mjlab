@@ -318,6 +318,11 @@ survival, and base-motion metrics.
 Use ``--stair-step-width`` and ``--stair-platform-width`` to check alternate
 stair geometry; omitting them retains the task defaults. Exact edge locations
 are recomputed for that geometry rather than assuming a 30 cm tread.
+For training's longer flights, use ``--stair-platform-width 1`` and check the
+27, 30, and 33 cm tread widths. The optional ``--profiles stair_stop`` commands
+0.25 m/s for eight seconds, holds for eight seconds, resumes for twenty seconds,
+then holds for four seconds. It repeats every forty seconds and leaves travel time
+to complete the flight after stopping, including diagonal initial headings.
 For repeated flights and neighboring terrain transitions, combine
 ``--tile-spacing 8 --terrain-rows 8``. Scan metrics and failure checks follow the
 entire route; exact geometric stair counts remain restricted to the original

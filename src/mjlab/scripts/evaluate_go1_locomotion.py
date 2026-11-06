@@ -101,6 +101,11 @@ def scheduled_command(profile: str, elapsed: float) -> tuple[float, float, float
   if profile == "medium":
     return (0.6, 0.0, 0.0)
   elapsed %= 40.0
+  if profile == "stair_stop":
+    # Stop partway through a long flight, then allow enough travel to finish
+    # even when the robot initially faces a diagonal of the square stair patch.
+    moving = elapsed < 8.0 or 16.0 <= elapsed < 36.0
+    return (0.25 if moving else 0.0, 0.0, 0.0)
   if profile == "maneuver":
     stages = (
       (0.35, 0.0, 0.0),

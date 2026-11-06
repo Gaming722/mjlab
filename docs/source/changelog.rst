@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a stair evaluation command profile that stops mid-flight, holds, and
+  resumes walking to check effort safety across start/stop transitions.
 - Added an opt-in Go1 motor rehearsal task with full-range terrain levels,
   stronger short effort-violation costs, and broader slope practice.
 - Added per-trial traversal records and joint guard-free crossing scores so
