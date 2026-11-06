@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added per-trial traversal records and joint guard-free crossing scores so
+  unsafe traversal or stationary survival cannot count as usable locomotion.
 - Added an opt-in Go1 guarded smooth-motion task that ends episodes on predicted
   deployment PD effort violations while strengthening commanded progress.
 - Added matched Go1 checkpoint evaluation of deployment PD guard violations,

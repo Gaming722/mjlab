@@ -179,9 +179,16 @@ class MotorObserver:
         record["guard_free_survived"] = (
           record["survived"] and record["guard_violation_steps"] == 0
         )
+        record["crossed"] = row["trial_crossed"][trial_id]
+        record["guard_free_crossed_survived"] = (
+          record["guard_free_survived"] and record["crossed"]
+        )
         records.append(record)
       row["motor"] = {
         "guard_free_survivors": sum(r["guard_free_survived"] for r in records),
+        "guard_free_crossed_survivors": sum(
+          r["guard_free_crossed_survived"] for r in records
+        ),
         "guard_violating_trials": sum(r["guard_violation_steps"] > 0 for r in records),
         "trials": records,
       }
@@ -217,6 +224,9 @@ def evaluate_motors(args: MotorEvaluationConfig) -> None:
         ),
         "guard_violating_trials": sum(
           r["motor"]["guard_violating_trials"] for r in data["results"]
+        ),
+        "guard_free_crossed_survivors": sum(
+          r["motor"]["guard_free_crossed_survivors"] for r in data["results"]
         ),
       }
     )

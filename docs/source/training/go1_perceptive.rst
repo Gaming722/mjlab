@@ -246,6 +246,12 @@ training command above to opt in. Evaluate it with the same continuous benchmark
 the benchmark removes reset terminations and separately records every guard
 violation, physical fall, and stall for the entire trial.
 
+Motor reports also record ``guard_free_crossed_survivors``: a trial must cross
+the patch, remain physically safe for its full duration, and never trip the guard.
+This is the intersection for the same trial, rather than the combination of
+separately aggregated crossing and guard-free survival counts. Standing safely
+and crossing with an effort violation both fail this joint score.
+
 Continuous evaluation
 ---------------------
 

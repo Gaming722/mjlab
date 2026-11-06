@@ -448,6 +448,7 @@ def evaluate(
             "survivors": int(survived.sum()),
             "survival_rate": float(survived.float().mean()),
             "trial_survived": survived.tolist(),
+            "trial_crossed": crossed[mask].tolist(),
             "trial_failure_or_end_s": failure_time[mask].tolist(),
             "trial_failure_position": [
               None if alive else xyz
