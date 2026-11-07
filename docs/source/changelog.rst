@@ -74,6 +74,8 @@ Added
 Changed
 ^^^^^^^
 
+- Increased Go1 motor rehearsal's angular tracking weight to retain yaw-command
+  response during effort- and edge-aware refinement.
 - Increased Go1 motor rehearsal's edge touchdown cost to preserve foot placement
   while adapting the policy to motor effort margins, and documented its slow
   command and stop/resume sampling settings.

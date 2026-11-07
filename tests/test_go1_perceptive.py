@@ -374,6 +374,7 @@ def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
     assert command.resampling_time_range == (4.0, 8.0)
     assert cfg.rewards["track_linear_velocity"].params["std"] == 0.15
     assert cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] == 0.8
+    assert cfg.rewards["track_angular_velocity"].weight == 3.5
     assert cfg.sim == original.sim
     assert "predicted_effort_guard" not in cfg.terminations
     assert "predicted_effort_guard" in original.terminations
