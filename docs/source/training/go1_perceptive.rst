@@ -264,6 +264,20 @@ guard termination so recovery examples remain available. Evaluation still counts
 every guard-tripped trial as a failure. Delivered torque and physical acceleration
 costs, actor inputs, PD gains, and effort caps are unchanged.
 
+The rehearsal preset also covers slow approaches and stop/resume transitions.
+Forward-only commands have a 0.2 m/s minimum, standing-command probability is 15%,
+and commands resample every 4--8 seconds. Other tasks retain the default
+0.3 m/s forward minimum unless explicitly configured. The command ranges remain
+unchanged, including yaw commands from -1 to +1 rad/s. The linear tracking kernel
+uses ``std=0.15``, and motion deficit targets 80% of commanded speed.
+
+Edge touchdown weight is 30, while ongoing support weight remains 1 and the
+edge margin remains 7 cm. This preserves foot placement while adapting to effort
+margins without increasing the cost of ongoing support. Use the Rehearsal task
+name in the training command above to select this preset. Its actor, 263-input
+critic, gains, effort limits, and requested/delivered effort costs are compatible
+with the Smooth and Guarded presets; preserve the training YAML alongside exports.
+
 Continuous evaluation
 ---------------------
 

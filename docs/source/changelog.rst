@@ -75,7 +75,8 @@ Changed
 ^^^^^^^
 
 - Increased Go1 motor rehearsal's edge touchdown cost to preserve foot placement
-  while adapting the policy to motor effort margins.
+  while adapting the policy to motor effort margins, and documented its slow
+  command and stop/resume sampling settings.
 - Go1 edge fine-tuning now samples 60% stairs and 20% flat terrain, includes
   more turning practice, and uses the balanced run's edge-contact weights.
 - Refined Go1 edge scans to 2.5 cm while preserving critic samples, and added
