@@ -777,6 +777,9 @@ def unitree_go1_motor_rehearsal_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   command.resampling_time_range = (4.0, 8.0)
   cfg.rewards["track_linear_velocity"].params["std"] = 0.15
   cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] = 0.8
+  # Retain edge placement while adapting to torque margins. Increase touchdown
+  # cost only; do not make ongoing support or slow forward progress costlier.
+  cfg.rewards["feet_edge"].params["landing_weight"] = 30.0
   # Do not let an already capable policy forget hard cases as the new costs
   # demote their curriculum levels. Keep the initial full-range level samples.
   cfg.curriculum.pop("terrain_levels", None)

@@ -403,7 +403,11 @@ def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
       "lin_vel_z",
       "ang_vel_xy",
       "actual_torque_limit",
-      "feet_edge",
     ):
       assert cfg.rewards[name] == original.rewards[name]
+    previous_edge = original.rewards["feet_edge"]
+    edge = cfg.rewards["feet_edge"]
+    assert edge.weight == previous_edge.weight
+    assert edge.func == previous_edge.func
+    assert edge.params == {**previous_edge.params, "landing_weight": 30.0}
     assert cfg.rewards["torque_limit"].params["hard_violation_cost"] == 10
