@@ -74,6 +74,8 @@ Added
 Changed
 ^^^^^^^
 
+- Increased Go1 motor rehearsal's joint acceleration cost to retain leg smoothness
+  while preserving its yaw tracking, effort margins, and control contract.
 - Increased Go1 motor rehearsal's angular tracking weight to retain yaw-command
   response during effort- and edge-aware refinement.
 - Increased Go1 motor rehearsal's edge touchdown cost to preserve foot placement

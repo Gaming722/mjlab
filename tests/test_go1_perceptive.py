@@ -398,7 +398,6 @@ def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
       actual.pop("proportion")
       assert actual == expected
     for name in (
-      "joint_acc_l2",
       "base_lin_acc_l2",
       "base_ang_acc_l2",
       "lin_vel_z",
@@ -406,6 +405,11 @@ def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
       "actual_torque_limit",
     ):
       assert cfg.rewards[name] == original.rewards[name]
+    joint_acc = cfg.rewards["joint_acc_l2"]
+    previous_joint_acc = original.rewards["joint_acc_l2"]
+    assert joint_acc.weight == -2.5e-6
+    assert joint_acc.func == previous_joint_acc.func
+    assert joint_acc.params == previous_joint_acc.params
     previous_edge = original.rewards["feet_edge"]
     edge = cfg.rewards["feet_edge"]
     assert edge.weight == previous_edge.weight

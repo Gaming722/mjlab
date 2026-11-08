@@ -768,6 +768,8 @@ def unitree_go1_motor_rehearsal_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   cfg.rewards["torque_limit"].params["hard_violation_cost"] = 10.0
   cfg.rewards["termination"].weight = -200.0
   cfg.rewards["track_angular_velocity"].weight = 3.5
+  # Retain leg smoothness as the policy restores full-range yaw tracking.
+  cfg.rewards["joint_acc_l2"].weight = -2.5e-6
   # Practice slow approaches and stop/resume transitions without rewarding
   # stationary stair poses as a close approximation to a small forward command.
   command = cfg.commands["twist"]

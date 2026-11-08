@@ -261,8 +261,10 @@ stairs receive 20%, flat receives 15%, rough 10%, and waves 5%. Tread widths rem
 -200, and the any-joint hard effort-violation cost to 10 inside the existing
 weight -20 torque reward. It uses penalties instead of the optional simulated
 guard termination so recovery examples remain available. Evaluation still counts
-every guard-tripped trial as a failure. Delivered torque and physical acceleration
-costs, actor inputs, PD gains, and effort caps are unchanged.
+every guard-tripped trial as a failure. Delivered torque and base acceleration
+costs, actor inputs, PD gains, and effort caps are unchanged. Joint acceleration
+weight is ``-2.5e-6``, retaining the Smooth preset's physical-substep measurement
+while placing more emphasis on leg smoothness during yaw refinement.
 
 The rehearsal preset also covers slow approaches and stop/resume transitions.
 Forward-only commands have a 0.2 m/s minimum, standing-command probability is 15%,
