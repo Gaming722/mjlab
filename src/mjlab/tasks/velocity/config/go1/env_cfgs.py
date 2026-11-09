@@ -766,10 +766,11 @@ def unitree_go1_motor_rehearsal_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   # The continuous evaluator still counts every deployment guard trip as failure.
   cfg.terminations.pop("predicted_effort_guard")
   cfg.rewards["torque_limit"].params["hard_violation_cost"] = 10.0
-  cfg.rewards["termination"].weight = -200.0
-  cfg.rewards["track_angular_velocity"].weight = 3.5
+  cfg.rewards["termination"].weight = -400.0
+  cfg.rewards["track_angular_velocity"].weight = 4.0
+  cfg.rewards["track_angular_velocity"].params["turning_std"] = 0.225
   # Retain leg smoothness as the policy restores full-range yaw tracking.
-  cfg.rewards["joint_acc_l2"].weight = -2.5e-6
+  cfg.rewards["joint_acc_l2"].weight = -2.75e-6
   # Practice slow approaches and stop/resume transitions without rewarding
   # stationary stair poses as a close approximation to a small forward command.
   command = cfg.commands["twist"]
@@ -779,6 +780,7 @@ def unitree_go1_motor_rehearsal_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   command.resampling_time_range = (4.0, 8.0)
   cfg.rewards["track_linear_velocity"].params["std"] = 0.15
   cfg.rewards["motion_deficit"].params["minimum_speed_fraction"] = 0.8
+  cfg.rewards["motion_deficit"].weight = -4.0
   # Retain edge placement while adapting to torque margins. Increase touchdown
   # cost only; do not make ongoing support or slow forward progress costlier.
   cfg.rewards["feet_edge"].params["landing_weight"] = 30.0

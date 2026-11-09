@@ -257,27 +257,31 @@ initial terrain levels during training instead of demoting them after failed
 episodes. The terrain generator keeps its graded columns and unchanged geometry.
 Both slope families receive 10% of environments, ascent stairs retain 30%, descent
 stairs receive 20%, flat receives 15%, rough 10%, and waves 5%. Tread widths remain
-27, 30, and 33 cm. The preset strengthens angular tracking to 3.5, failure cost to
--200, and the any-joint hard effort-violation cost to 10 inside the existing
+27, 30, and 33 cm. The preset strengthens angular tracking to 4, failure cost to
+-400, and the any-joint hard effort-violation cost to 10 inside the existing
 weight -20 torque reward. It uses penalties instead of the optional simulated
 guard termination so recovery examples remain available. Evaluation still counts
 every guard-tripped trial as a failure. Delivered torque and base acceleration
 costs, actor inputs, PD gains, and effort caps are unchanged. Joint acceleration
-weight is ``-2.5e-6``, retaining the Smooth preset's physical-substep measurement
+weight is ``-2.75e-6``, retaining the Smooth preset's physical-substep measurement
 while placing more emphasis on leg smoothness during yaw refinement.
 
 The angular tracking reward also accepts optional ``turning_std`` and
 ``turning_command_threshold`` parameters. When enabled, the alternate tolerance
 applies only when the absolute yaw command exceeds the threshold (0.1 rad/s by
-default). Straight walking and standing retain ``std``. These options do not
-change the default presets, observations, actuator gains, or effort limits.
+default). Rehearsal uses ``turning_std=0.225`` and retains ``std=0.25`` for straight
+walking and standing. Other presets, observations, actuator gains, and effort
+limits are unchanged.
 
 The rehearsal preset also covers slow approaches and stop/resume transitions.
 Forward-only commands have a 0.2 m/s minimum, standing-command probability is 15%,
 and commands resample every 4--8 seconds. Other tasks retain the default
 0.3 m/s forward minimum unless explicitly configured. The command ranges remain
 unchanged, including yaw commands from -1 to +1 rad/s. The linear tracking kernel
-uses ``std=0.15``, and motion deficit targets 80% of commanded speed.
+uses ``std=0.15``, and motion deficit targets 80% of commanded speed with weight -4.
+Its runner uses a fixed learning rate of ``1e-5``, 2000 additional iterations,
+and checkpoint saves every 250 iterations. The validated refinement used 2048
+parallel environments explicitly; the global environment default remains 4096.
 
 Edge touchdown weight is 30, while ongoing support weight remains 1 and the
 edge margin remains 7 cm. This preserves foot placement while adapting to effort

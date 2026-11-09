@@ -76,6 +76,9 @@ Added
 Changed
 ^^^^^^^
 
+- Aligned the optional Go1 motor rehearsal preset with the validated refinement:
+  stronger recovery and progress costs, tighter turning precision, and prolonged
+  fixed-rate PPO updates while retaining the actuator and observation contract.
 - Increased Go1 motor rehearsal's joint acceleration cost to retain leg smoothness
   while preserving its yaw tracking, effort margins, and control contract.
 - Increased Go1 motor rehearsal's angular tracking weight to retain yaw-command

@@ -87,3 +87,12 @@ def unitree_go1_smooth_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
   cfg.algorithm.learning_rate = 2e-5
   cfg.max_iterations = 600
   return cfg
+
+
+def unitree_go1_motor_rehearsal_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Use prolonged, small fixed updates for motor-margin refinement."""
+  cfg = unitree_go1_smooth_ppo_runner_cfg()
+  cfg.algorithm.learning_rate = 1e-5
+  cfg.max_iterations = 2000
+  cfg.save_interval = 250
+  return cfg
