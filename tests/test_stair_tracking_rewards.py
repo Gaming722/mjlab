@@ -48,6 +48,30 @@ def test_tracking_optional_stair_transients(include_transients):
   )
 
 
+def test_tighter_turn_tracking_preserves_straight_motion_tolerance():
+  command = torch.tensor([[0.3, 0.0, yaw] for yaw in (-1.0, 0.0, 1.0, 0.05)])
+  actual = command.clone()
+  actual[:, :2] = 0
+  actual[:, 2] += 0.1
+  env = cast(
+    ManagerBasedRlEnv,
+    SimpleNamespace(
+      scene={
+        "robot": SimpleNamespace(data=SimpleNamespace(root_link_ang_vel_b=actual))
+      },
+      command_manager=SimpleNamespace(get_command=lambda _: command),
+    ),
+  )
+  original = track_angular_velocity(env, std=0.25, command_name="twist")
+  refined = track_angular_velocity(
+    env, std=0.25, command_name="twist", turning_std=0.225
+  )
+  torch.testing.assert_close(refined[[1, 3]], original[[1, 3]])
+  expected_turn = torch.exp(torch.tensor(-(0.1**2) / 0.225**2))
+  torch.testing.assert_close(refined[[0, 2]], expected_turn.expand(2))
+  assert torch.all(refined[[0, 2]] < original[[0, 2]])
+
+
 def test_motion_deficit_requires_progress_along_command():
   command = torch.tensor(
     [

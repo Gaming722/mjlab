@@ -156,6 +156,8 @@ def track_angular_velocity(
   asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
   include_roll_pitch: bool = True,
   yaw_in_heading_frame: bool = False,
+  turning_std: float | None = None,
+  turning_command_threshold: float = 0.1,
 ) -> torch.Tensor:
   """Reward tracking commanded angular velocity.
 
@@ -163,6 +165,8 @@ def track_angular_velocity(
   Set ``include_roll_pitch=False`` to track yaw without suppressing stair motion.
   ``yaw_in_heading_frame`` tracks the rate of the horizontal heading rather than
   body-axis spin, which differs when the base rolls or pitches on stairs.
+  Optional ``turning_std`` changes precision only for nonzero yaw commands,
+  preserving the original tolerance while walking straight or standing.
   """
   asset: Entity = env.scene[asset_cfg.name]
   command = env.command_manager.get_command(command_name)
@@ -182,7 +186,19 @@ def track_angular_velocity(
   z_error = torch.square(command[:, 2] - yaw_rate)
   xy_error = torch.sum(torch.square(actual[:, :2]), dim=1)
   ang_vel_error = z_error + xy_error if include_roll_pitch else z_error
-  return torch.exp(-ang_vel_error / std**2)
+  variance: float | torch.Tensor = std**2
+  if turning_std is not None:
+    if (
+      not np.isfinite(turning_std)
+      or turning_std <= 0
+      or not np.isfinite(turning_command_threshold)
+      or turning_command_threshold < 0
+    ):
+      raise ValueError("Require positive turning_std and nonnegative threshold")
+    variance = torch.where(
+      command[:, 2].abs() > turning_command_threshold, turning_std**2, std**2
+    )
+  return torch.exp(-ang_vel_error / variance)
 
 
 class upright:

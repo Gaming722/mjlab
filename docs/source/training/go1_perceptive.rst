@@ -266,6 +266,12 @@ costs, actor inputs, PD gains, and effort caps are unchanged. Joint acceleration
 weight is ``-2.5e-6``, retaining the Smooth preset's physical-substep measurement
 while placing more emphasis on leg smoothness during yaw refinement.
 
+The angular tracking reward also accepts optional ``turning_std`` and
+``turning_command_threshold`` parameters. When enabled, the alternate tolerance
+applies only when the absolute yaw command exceeds the threshold (0.1 rad/s by
+default). Straight walking and standing retain ``std``. These options do not
+change the default presets, observations, actuator gains, or effort limits.
+
 The rehearsal preset also covers slow approaches and stop/resume transitions.
 Forward-only commands have a 0.2 m/s minimum, standing-command probability is 15%,
 and commands resample every 4--8 seconds. Other tasks retain the default
