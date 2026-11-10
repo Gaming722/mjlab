@@ -12,6 +12,7 @@ from .env_cfgs import (
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_rough_env_cfg,
   unitree_go1_smooth_perceptive_env_cfg,
+  unitree_go1_stair_depth_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
@@ -21,6 +22,14 @@ from .rl_cfg import (
   unitree_go1_perceptive_ppo_runner_cfg,
   unitree_go1_ppo_runner_cfg,
   unitree_go1_smooth_ppo_runner_cfg,
+)
+
+register_mjlab_task(
+  task_id="Mjlab-Velocity-Stair-Depth-Unitree-Go1-Perceptive",
+  env_cfg=unitree_go1_stair_depth_env_cfg(),
+  play_env_cfg=unitree_go1_stair_depth_env_cfg(play=True),
+  rl_cfg=unitree_go1_motor_rehearsal_ppo_runner_cfg(),
+  runner_cls=VelocityFineTuneRunner,
 )
 
 register_mjlab_task(

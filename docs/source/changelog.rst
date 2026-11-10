@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 stair-depth refinement task covering 22--33 cm treads,
+  independent height/depth combinations and progressively narrowing stairs,
+  while retaining motor-margin rewards and the existing control contract.
 - Added optional yaw-tracking precision for commanded turns while retaining the
   original tolerance during straight walking and standing.
 - Added a configurable forward-command minimum speed; Go1 motor rehearsal now

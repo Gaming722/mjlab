@@ -138,6 +138,45 @@ def test_preset_compiles_across_difficulty(preset_name, difficulty):
   spec.compile()
 
 
+@pytest.mark.parametrize(
+  "cfg_cls", [BoxPyramidStairsTerrainCfg, BoxInvertedPyramidStairsTerrainCfg]
+)
+@pytest.mark.parametrize("difficulty", [0.0, 0.5, 1.0])
+def test_variable_treads_match_fixed_geometry_without_mutating_config(
+  cfg_cls, difficulty
+):
+  kwargs = dict(
+    size=(8.0, 8.0),
+    step_height_range=(0.02, 0.18),
+    platform_width=1.0,
+    border_width=1.0,
+  )
+  variable = cfg_cls(step_width=0.33, step_width_range=(0.30, 0.22), **kwargs)
+  fixed = cfg_cls(step_width=0.30 - 0.08 * difficulty, **kwargs)
+  models = []
+  origins = []
+  for cfg in (variable, fixed):
+    spec = mujoco.MjSpec()
+    spec.worldbody.add_body(name="terrain")
+    output = cfg.function(difficulty, spec, np.random.default_rng(0))
+    origins.append(output.origin)
+    models.append(spec.compile())
+  np.testing.assert_allclose(models[0].geom_pos, models[1].geom_pos)
+  np.testing.assert_allclose(models[0].geom_size, models[1].geom_size)
+  np.testing.assert_allclose(origins[0], origins[1])
+  assert variable.step_width == 0.33
+  assert variable.step_width_range == (0.30, 0.22)
+
+
+@pytest.mark.parametrize("widths", [(0.3, 0.0), (-0.1, 0.22), (0.3, float("nan"))])
+def test_variable_treads_reject_invalid_depths(widths):
+  cfg = BoxPyramidStairsTerrainCfg(
+    step_height_range=(0.02, 0.18), step_width=0.3, step_width_range=widths
+  )
+  with pytest.raises(ValueError, match="finite and positive"):
+    cfg.width_at_difficulty(0.5)
+
+
 @dataclass(kw_only=True)
 class _BoxesTerrainCfg(SubTerrainCfg):
   """Test terrain that emits two boxes, named per `names` (None leaves unnamed)."""

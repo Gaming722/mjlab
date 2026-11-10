@@ -293,6 +293,18 @@ with the Smooth and Guarded presets; preserve the training YAML alongside export
 Continuous evaluation
 ---------------------
 
+``Mjlab-Velocity-Stair-Depth-Unitree-Go1-Perceptive`` extends Rehearsal with
+22, 22.5, 24, 27, 30, and 33 cm fixed treads, each spanning the original 2--18 cm
+height range. An additional stair variant narrows linearly from 30 to 22 cm as
+difficulty increases. Each flight remains uniform. Fixed narrow variants retain
+low/narrow combinations that coupled height/depth difficulty alone would omit.
+Stair-family exposure, other terrain families, rewards, observations, actuator
+parameters, and the fixed-rate refinement runner are inherited unchanged.
+
+Pyramid stair generators accept optional ``step_width_range=(start, end)``;
+depth is interpolated by difficulty without modifying the stored configuration.
+Omitting it retains the existing fixed ``step_width`` behavior.
+
 Robust training also penalizes new contacts and loaded support within 5 cm of
 terrain edges extracted from neighboring ``terrain_scan`` scandots. The scan
 spacing is 2.5 cm; the critic

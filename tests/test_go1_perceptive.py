@@ -29,6 +29,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_smooth_perceptive_env_cfg,
+  unitree_go1_stair_depth_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
@@ -420,3 +421,45 @@ def test_motor_rehearsal_preserves_control_and_revisits_all_difficulty_levels():
     assert edge.func == previous_edge.func
     assert edge.params == {**previous_edge.params, "landing_weight": 30.0}
     assert cfg.rewards["torque_limit"].params["hard_violation_cost"] == 10
+
+
+def test_stair_depth_preserves_rewards_and_covers_independent_height_depth():
+  for play in (False, True):
+    base = unitree_go1_motor_rehearsal_env_cfg(play=play)
+    cfg = unitree_go1_stair_depth_env_cfg(play=play)
+    assert cfg.rewards == base.rewards
+    assert cfg.actions == base.actions
+    assert cfg.observations == base.observations
+    assert cfg.commands == base.commands
+    assert cfg.sim == base.sim
+    assert cfg.scene.terrain is not None
+    assert base.scene.terrain is not None
+    terrain = cfg.scene.terrain.terrain_generator
+    previous = base.scene.terrain.terrain_generator
+    assert terrain is not None and previous is not None
+    assert terrain.num_cols == len(terrain.sub_terrains) == 19
+    assert sum(s.proportion for s in terrain.sub_terrains.values()) == pytest.approx(1)
+    for family in ("pyramid_stairs", "pyramid_stairs_inv"):
+      stairs = [
+        s
+        for n, s in terrain.sub_terrains.items()
+        if n.startswith(family + "_d") or n == family + "_adaptive"
+      ]
+      assert len(stairs) == 7
+      fixed = [
+        s
+        for s in stairs
+        if isinstance(s, BoxPyramidStairsTerrainCfg) and s.step_width_range is None
+      ]
+      assert {s.step_width for s in fixed} == {0.22, 0.225, 0.24, 0.27, 0.30, 0.33}
+      for s in stairs:
+        assert isinstance(s, BoxPyramidStairsTerrainCfg)
+        assert s.step_height_range == (0.02, 0.18)
+        assert s.platform_width == 1.0
+      adaptive = terrain.sub_terrains[family + "_adaptive"]
+      assert isinstance(adaptive, BoxPyramidStairsTerrainCfg)
+      assert adaptive.width_at_difficulty(0) == 0.30
+      assert adaptive.width_at_difficulty(1) == pytest.approx(0.22)
+    for name, sub in previous.sub_terrains.items():
+      if not isinstance(sub, BoxPyramidStairsTerrainCfg):
+        assert terrain.sub_terrains[name] == sub

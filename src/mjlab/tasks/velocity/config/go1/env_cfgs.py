@@ -807,6 +807,43 @@ def unitree_go1_motor_rehearsal_env_cfg(play: bool = False) -> ManagerBasedRlEnv
   return cfg
 
 
+def unitree_go1_stair_depth_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
+  """Rehearse narrow treads independently of height, plus coupled difficulty."""
+  cfg = unitree_go1_motor_rehearsal_env_cfg(play=play)
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  variants: dict[str, SubTerrainCfg] = {
+    name: deepcopy(sub)
+    for name, sub in terrain.sub_terrains.items()
+    if not isinstance(sub, BoxPyramidStairsTerrainCfg)
+  }
+  # Keep the original terrain-family exposure and all existing reward weights.
+  # Fixed narrow treads cover low/narrow cases that a coupled curve would miss.
+  for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+    template = terrain.sub_terrains[f"{family}_w30"]
+    assert isinstance(template, BoxPyramidStairsTerrainCfg)
+    for width, fraction in (
+      (0.22, 0.25),
+      (0.225, 0.15),
+      (0.24, 0.15),
+      (0.27, 0.15),
+      (0.30, 0.10),
+      (0.33, 0.10),
+    ):
+      variant = deepcopy(template)
+      variant.step_width = width
+      variant.proportion = total * fraction
+      variants[f"{family}_d{round(width * 1000)}"] = variant
+    coupled = deepcopy(template)
+    coupled.step_width_range = (0.30, 0.22)
+    coupled.proportion = total * 0.10
+    variants[f"{family}_adaptive"] = coupled
+  terrain.sub_terrains = variants
+  terrain.num_cols = len(variants)
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)
