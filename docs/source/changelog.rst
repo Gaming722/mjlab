@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added opt-in forward command cycles that pause and resume the same speed,
+  preserving standing/turning priority and per-environment reset timing.
 - Added an opt-in Go1 stair-depth refinement task covering 22--33 cm treads,
   independent height/depth combinations and progressively narrowing stairs,
   while retaining motor-margin rewards and the existing control contract.
