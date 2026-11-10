@@ -300,6 +300,10 @@ difficulty increases. Each flight remains uniform. Fixed narrow variants retain
 low/narrow combinations that coupled height/depth difficulty alone would omit.
 Stair-family exposure, other terrain families, rewards, observations, actuator
 parameters, and the fixed-rate refinement runner are inherited unchanged.
+The enlarged atlas explicitly selects filtered NXN collision detection, avoiding
+32-bit overlap-scan overflow in Warp's automatic SAP path at training scale.
+The physical contact model and solver settings remain unchanged. Use 2048
+environments explicitly for the refinement on a 24 GB GPU.
 
 Pyramid stair generators accept optional ``step_width_range=(start, end)``;
 depth is interpolated by difficulty without modifying the stored configuration.

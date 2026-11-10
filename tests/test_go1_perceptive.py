@@ -1,5 +1,6 @@
 """Tests for the Go1 D435-like perceptive locomotion configuration."""
 
+from dataclasses import replace
 from types import SimpleNamespace
 from typing import cast
 
@@ -431,7 +432,7 @@ def test_stair_depth_preserves_rewards_and_covers_independent_height_depth():
     assert cfg.actions == base.actions
     assert cfg.observations == base.observations
     assert cfg.commands == base.commands
-    assert cfg.sim == base.sim
+    assert cfg.sim == replace(base.sim, broadphase="nxn")
     assert cfg.scene.terrain is not None
     assert base.scene.terrain is not None
     terrain = cfg.scene.terrain.terrain_generator

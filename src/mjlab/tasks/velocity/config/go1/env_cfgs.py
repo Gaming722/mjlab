@@ -841,6 +841,10 @@ def unitree_go1_stair_depth_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     variants[f"{family}_adaptive"] = coupled
   terrain.sub_terrains = variants
   terrain.num_cols = len(variants)
+  # The larger atlas crosses Warp's automatic SAP threshold. Its batched
+  # overlap scan can overflow at training scale and silently miss contacts.
+  # Use filtered pair checking, as in the smaller Rehearsal atlas.
+  cfg.sim.broadphase = "nxn"
   return cfg
 
 

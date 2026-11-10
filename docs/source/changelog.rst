@@ -130,6 +130,9 @@ Changed
 Fixed
 ^^^^^
 
+- Kept Go1 stair-depth training on filtered NXN collision detection, avoiding
+  overflowing batched SAP overlap scans when the enlarged atlas is simulated
+  with thousands of environments.
 - Feet-edge elevation matching includes the riser span between adjacent treads,
   avoiding a gap in penalties for contacts midway up a high step.
 - Wave terrain spawn origins now clear central crests instead of placing feet
