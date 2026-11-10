@@ -309,6 +309,15 @@ Pyramid stair generators accept optional ``step_width_range=(start, end)``;
 depth is interpolated by difficulty without modifying the stored configuration.
 Omitting it retains the existing fixed ``step_width`` behavior.
 
+``Mjlab-Velocity-Stair-Depth-Rehearsal-Unitree-Go1-Perceptive`` retains the same
+geometry and rewards while increasing 27/30/33 cm replay from 35% to 50% of stair
+samples. During training, 75% of eligible forward-only samples use a 0.2--0.35 m/s
+approach for 3--6 seconds, a 2--4 second stop, then the same forward speed for
+12--18 seconds. Standing and pure-turn samples keep their priority. Play retains
+ordinary commands and manual control. Its runner uses fixed learning rate
+``5e-6``, 400 additional iterations and saves every 100 iterations. Actor inputs,
+PD gains, effort limits, and physical-motion penalties are unchanged.
+
 Robust training also penalizes new contacts and loaded support within 5 cm of
 terrain edges extracted from neighboring ``terrain_scan`` scandots. The scan
 spacing is 2.5 cm; the critic

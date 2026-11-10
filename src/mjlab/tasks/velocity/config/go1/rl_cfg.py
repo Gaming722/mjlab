@@ -96,3 +96,12 @@ def unitree_go1_motor_rehearsal_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
   cfg.max_iterations = 2000
   cfg.save_interval = 250
   return cfg
+
+
+def unitree_go1_stair_depth_rehearsal_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Make short, conservative refinements after depth adaptation."""
+  cfg = unitree_go1_motor_rehearsal_ppo_runner_cfg()
+  cfg.algorithm.learning_rate = 5e-6
+  cfg.max_iterations = 400
+  cfg.save_interval = 100
+  return cfg

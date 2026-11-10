@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a Go1 stair-depth rehearsal task with explicit stop/resume practice,
+  more wide-tread replay, and short conservative PPO refinement; its rewards,
+  actor inputs, and actuator contract are unchanged.
 - Added opt-in forward command cycles that pause and resume the same speed,
   preserving standing/turning priority and per-environment reset timing.
 - Added an opt-in Go1 stair-depth refinement task covering 22--33 cm treads,

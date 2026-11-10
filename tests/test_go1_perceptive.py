@@ -31,6 +31,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_smooth_perceptive_env_cfg,
   unitree_go1_stair_depth_env_cfg,
+  unitree_go1_stair_depth_rehearsal_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
@@ -40,6 +41,7 @@ from mjlab.tasks.velocity.config.go1.rl_cfg import (
 )
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.mdp.observations import depth_camera
+from mjlab.tasks.velocity.mdp.stop_resume_command import StopResumeVelocityCommandCfg
 from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG
 from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
 
@@ -464,3 +466,40 @@ def test_stair_depth_preserves_rewards_and_covers_independent_height_depth():
     for name, sub in previous.sub_terrains.items():
       if not isinstance(sub, BoxPyramidStairsTerrainCfg):
         assert terrain.sub_terrains[name] == sub
+
+
+def test_stair_depth_rehearsal_keeps_control_and_increases_wide_replay():
+  for play in (False, True):
+    base = unitree_go1_stair_depth_env_cfg(play=play)
+    cfg = unitree_go1_stair_depth_rehearsal_env_cfg(play=play)
+    assert cfg.rewards == base.rewards
+    assert cfg.observations == base.observations
+    assert cfg.actions == base.actions
+    assert cfg.sim == base.sim
+    assert cfg.events == base.events
+    assert cfg.terminations == base.terminations
+    command = cfg.commands["twist"]
+    previous = base.commands["twist"]
+    if play:
+      assert command == previous
+      assert not isinstance(command, StopResumeVelocityCommandCfg)
+    else:
+      assert isinstance(command, StopResumeVelocityCommandCfg)
+      assert command.forward_stop_fraction == 0.75
+      assert command.resume_speed_range == (0.2, 0.35)
+      assert {k: vars(command)[k] for k in vars(previous)} == vars(previous)
+    assert cfg.scene.terrain is not None and base.scene.terrain is not None
+    terrain = cfg.scene.terrain.terrain_generator
+    old = base.scene.terrain.terrain_generator
+    assert terrain is not None and old is not None
+    assert sum(x.proportion for x in terrain.sub_terrains.values()) == pytest.approx(1)
+    for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+      wide = sum(
+        terrain.sub_terrains[f"{family}_d{w}"].proportion for w in (270, 300, 330)
+      )
+      assert wide == pytest.approx(total * 0.50)
+    for name, value in terrain.sub_terrains.items():
+      a, b = dict(vars(value)), dict(vars(old.sub_terrains[name]))
+      a.pop("proportion")
+      b.pop("proportion")
+      assert a == b

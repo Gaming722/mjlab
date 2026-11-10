@@ -30,6 +30,7 @@ from mjlab.sensor import (
 )
 from mjlab.tasks.velocity import mdp
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
+from mjlab.tasks.velocity.mdp.stop_resume_command import StopResumeVelocityCommandCfg
 from mjlab.tasks.velocity.velocity_env_cfg import make_velocity_env_cfg
 from mjlab.terrains.config import GO1_STAIRS_TERRAINS_CFG, ROUGH_TERRAINS_CFG
 from mjlab.terrains.primitive_terrains import BoxPyramidStairsTerrainCfg
@@ -845,6 +846,37 @@ def unitree_go1_stair_depth_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   # overlap scan can overflow at training scale and silently miss contacts.
   # Use filtered pair checking, as in the smaller Rehearsal atlas.
   cfg.sim.broadphase = "nxn"
+  return cfg
+
+
+def unitree_go1_stair_depth_rehearsal_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Retain wide treads while explicitly practicing interrupted stair progress."""
+  cfg = unitree_go1_stair_depth_env_cfg(play=play)
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+    for width, fraction in (
+      (0.22, 0.20),
+      (0.225, 0.10),
+      (0.24, 0.10),
+      (0.27, 0.20),
+      (0.30, 0.15),
+      (0.33, 0.15),
+    ):
+      terrain.sub_terrains[f"{family}_d{round(width * 1000)}"].proportion = (
+        total * fraction
+      )
+  if not play:
+    command = cfg.commands["twist"]
+    assert isinstance(command, UniformVelocityCommandCfg)
+    cfg.commands["twist"] = StopResumeVelocityCommandCfg(
+      **vars(command),
+      forward_stop_fraction=0.75,
+      resume_speed_range=(0.2, 0.35),
+    )
   return cfg
 
 
