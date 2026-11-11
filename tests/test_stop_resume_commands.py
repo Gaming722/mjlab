@@ -3,6 +3,7 @@
 from dataclasses import replace
 from types import SimpleNamespace
 from typing import cast
+from unittest.mock import MagicMock
 
 import pytest
 import torch
@@ -132,3 +133,48 @@ def test_disabled_cycles_preserve_uniform_rng_and_command_sequence():
 def test_invalid_cycle_configuration_fails_early(kwargs):
   with pytest.raises(ValueError):
     replace(_cfg(), **kwargs)
+
+
+def _terrain_env(curriculum=True):
+  env = cast(SimpleNamespace, _env(4))
+  scene = MagicMock()
+  scene.__getitem__.side_effect = env.scene.__getitem__
+  scene.terrain = SimpleNamespace(
+    cfg=SimpleNamespace(
+      terrain_generator=SimpleNamespace(
+        curriculum=curriculum, sub_terrains={"flat": None, "stairs": None}
+      )
+    ),
+    terrain_types=torch.tensor([0, 1, 0, 1]),
+  )
+  env.scene = scene
+  return cast(ManagerBasedRlEnv, env)
+
+
+def test_terrain_cycles_keep_other_columns_uniform_and_follow_reassignment():
+  env = _terrain_env()
+  term = replace(_cfg(), terrain_names=("stairs",)).build(env)
+  ids = torch.arange(4)
+  term.reset(ids)
+  assert term.is_stop_resume_env.tolist() == [False, True, False, True]
+  assert ((term.time_left[[0, 2]] >= 4) & (term.time_left[[0, 2]] <= 8)).all()
+  term.compute(1.0)
+  assert term.is_paused.tolist() == [False, True, False, True]
+  assert (term.command[[0, 2], 0] > 0).all()
+  assert env.scene.terrain is not None
+  env.scene.terrain.terrain_types[:] = torch.tensor([1, 0, 1, 0])
+  term.reset(ids)
+  assert term.is_stop_resume_env.tolist() == [True, False, True, False]
+
+
+@pytest.mark.parametrize("names", [(), ("",), ("stairs", "stairs")])
+def test_invalid_terrain_cycle_names_fail_early(names):
+  with pytest.raises(ValueError, match="terrain_names"):
+    replace(_cfg(), terrain_names=names)
+
+
+def test_terrain_cycles_reject_unknown_names_and_random_grids():
+  with pytest.raises(ValueError, match="Unknown"):
+    replace(_cfg(), terrain_names=("absent",)).build(_terrain_env())
+  with pytest.raises(ValueError, match="curriculum"):
+    replace(_cfg(), terrain_names=("stairs",)).build(_terrain_env(False))

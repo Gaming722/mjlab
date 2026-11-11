@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added optional terrain scoping for stop/resume commands so other terrain
+  columns retain ordinary command durations and motion coverage.
 - Added a versioned Go1 stair-depth warm-start checkpoint, its training
   configuration and lineage, and remote continuation instructions.
 - Added an opt-in Go1 stair-depth long-stop task with native wide-platform

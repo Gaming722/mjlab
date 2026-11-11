@@ -12,6 +12,7 @@ from .velocity_command import UniformVelocityCommand, UniformVelocityCommandCfg
 
 if TYPE_CHECKING:
   from mjlab.envs import ManagerBasedRlEnv
+  from mjlab.terrains import TerrainEntity
 
 __all__ = ["StopResumeVelocityCommand", "StopResumeVelocityCommandCfg"]
 
@@ -25,6 +26,22 @@ class StopResumeVelocityCommand(UniformVelocityCommand):
     self.resume_command_b = torch.zeros_like(self.vel_command_b)
     self.pause_begin_time_left = torch.zeros_like(self.time_left)
     self.pause_end_time_left = torch.zeros_like(self.time_left)
+    self._cycle_terrain: TerrainEntity | None = None
+    self._cycle_columns: torch.Tensor | None = None
+    if cfg.terrain_names is not None:
+      terrain = env.scene.terrain
+      generator = terrain.cfg.terrain_generator if terrain is not None else None
+      if generator is None or not generator.curriculum:
+        raise ValueError("Terrain-filtered cycles require a curriculum terrain grid.")
+      names = list(generator.sub_terrains)
+      missing = set(cfg.terrain_names) - set(names)
+      if missing:
+        raise ValueError(f"Unknown stop/resume terrain names: {sorted(missing)}")
+      # Curriculum grids have exactly one column per named sub-terrain.
+      self._cycle_terrain = terrain
+      self._cycle_columns = torch.tensor(
+        [names.index(name) for name in cfg.terrain_names], device=self.device
+      )
 
   def _resample_command(self, env_ids: torch.Tensor) -> None:
     super()._resample_command(env_ids)
@@ -33,6 +50,11 @@ class StopResumeVelocityCommand(UniformVelocityCommand):
     if self._cycle_cfg.forward_stop_fraction == 0.0:
       return
     eligible = self.is_forward_env[env_ids] & ~self.is_standing_env[env_ids]
+    if self._cycle_terrain is not None:
+      assert self._cycle_columns is not None
+      eligible &= torch.isin(
+        self._cycle_terrain.terrain_types[env_ids], self._cycle_columns
+      )
     selected = eligible & (
       torch.rand(len(env_ids), device=self.device)
       < self._cycle_cfg.forward_stop_fraction
@@ -73,6 +95,10 @@ class StopResumeVelocityCommandCfg(UniformVelocityCommandCfg):
   """Fraction of non-standing forward samples assigned a stop/resume cycle.
   Pure turns, heading/world commands, and standing commands keep their priority.
   Zero retains ordinary uniform sampling without extra random draws."""
+  terrain_names: tuple[str, ...] | None = None
+  """Restrict cycles to named curriculum-grid terrain columns. Other columns
+  retain ordinary commands and resampling durations. None enables all terrains.
+  Eligibility is checked again at each resample to follow terrain reassignment."""
   approach_duration: tuple[float, float] = (3.0, 6.0)
   pause_duration: tuple[float, float] = (2.0, 4.0)
   resume_duration: tuple[float, float] = (12.0, 18.0)
@@ -81,6 +107,12 @@ class StopResumeVelocityCommandCfg(UniformVelocityCommandCfg):
 
   def __post_init__(self):
     super().__post_init__()
+    if self.terrain_names is not None and (
+      not self.terrain_names
+      or any(not name for name in self.terrain_names)
+      or len(set(self.terrain_names)) != len(self.terrain_names)
+    ):
+      raise ValueError("terrain_names must contain distinct, nonempty names.")
     if not np.isfinite(self.forward_stop_fraction) or not (
       0.0 <= self.forward_stop_fraction <= 1.0
     ):
