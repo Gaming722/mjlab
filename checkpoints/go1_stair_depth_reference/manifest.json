@@ -7,11 +7,11 @@
   "reference_checkpoint": "model_14500.pt",
   "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
   "next_task": "Mjlab-Velocity-Stair-Depth-Reference-Unitree-Go1-Perceptive",
-  "recipe_commit": "3ad4525384b9995a8a1a35069271744f42e2a178",
+  "recipe_commit": "8252808524ccf6ccd72c305a106c774209eac65f",
   "files_sha256": {
     "agent.yaml": "f3fa51049a1897b59697782349c5ba1c9db614ec06b9e04a8582c223315c9647",
     "env.yaml": "2adfeb09847ce81a04c46d96218b8188ebfcec3666dd337828bd3fe2ef03ef1b",
-    "evaluation_summary.json": "adefc6045d87ddf79575af50ac3b51ad0b169ffae27c004144cb0e643177ac7e",
+    "evaluation_summary.json": "a443443176d8560ca0a28a4c7260789374da63282ca50916fc54bad06335565d",
     "lineage.json": "43cfc2e672a9ba6234711f8922ae368bc9b9f98800bbfaaea775774cccd45c1b",
     "model_14500.pt": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
     "model_15200.pt": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",

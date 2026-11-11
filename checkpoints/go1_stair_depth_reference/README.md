@@ -15,9 +15,9 @@ reference during training. The new opt-in task adds this loss to PPO:
 loss = PPO_loss + 5 * mean_replay(mean_joint((actor_mean - reference_mean)^2))
 ```
 
-Replay samples are the five non-stair terrain types and two native-platform
-stair columns. The loss does not constrain the other 14 stair columns to the
-old policy. It does not replace any torque, acceleration, edge, or tracking
+Replay samples are the five non-stair terrain types, the six original
+27/30/33 cm stair columns, and the two native-platform stair columns. The loss
+does not constrain the eight narrow/adaptive stair columns to the old policy. It does not replace any torque, acceleration, edge, or tracking
 reward. It clips the combined actor gradient using the existing norm limit.
 The reference network is frozen, including its normalizer; it is excluded
 from the optimizer. This is a retention hypothesis, not demonstrated success.
