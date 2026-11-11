@@ -140,6 +140,8 @@ Changed
 Fixed
 ^^^^^
 
+- Corrected center-spawn stair direction labels in Go1 warm-start provenance;
+  numerical evaluation results, selection gates, and policy weights are unchanged.
 - Kept Go1 stair-depth training on filtered NXN collision detection, avoiding
   overflowing batched SAP overlap scans when the enlarged atlas is simulated
   with thousands of environments.

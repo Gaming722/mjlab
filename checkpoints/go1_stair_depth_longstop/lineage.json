@@ -170,10 +170,15 @@
         5e-06
       ],
       "source_commit": "7b516252",
-      "selection_status": "Rejected as final policy: native ascent crossing retention55/57 is below0.97; usable as next fine-tuning parent"
+      "selection_status": "Rejected as final policy: native pyramid_stairs (center-spawn first-descent group) crossing retention55/57 is below0.97; usable as next fine-tuning parent"
     }
   ],
   "total_verified_new_updates_since_9200": 6212,
   "selection_status": "Training warm-start only; no candidate passed every original behavior gate",
-  "cumulative_new_learning_updates_after_9200": 6212
+  "cumulative_new_learning_updates_after_9200": 6212,
+  "terrain_direction_convention": {
+    "pyramid_stairs": "center-top spawn; first outward flight descends",
+    "pyramid_stairs_inv": "center-bottom spawn; first outward flight ascends",
+    "scope": "Initial outward flight only; maneuver trials may include both directions"
+  }
 }
