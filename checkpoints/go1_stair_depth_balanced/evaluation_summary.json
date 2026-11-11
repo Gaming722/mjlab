@@ -1,0 +1,499 @@
+{
+  "full": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "physical_survival_drop",
+        "value": -0.0125,
+        "maximum": 0.02,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "guard_trial_fraction_increase",
+        "value": -0.00625,
+        "maximum": 0.02,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "mean_velocity_xy_rmse_ratio",
+        "value": 0.9475125614357808,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "mean_yaw_rate_rmse_ratio",
+        "value": 0.9588043915470299,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pure_yaw_profile_rmse_ratio",
+        "value": 0.9415357806274269,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "joint_acc_rms_ratio",
+        "value": 1.0140194263571538,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "base_lin_acc_rms_ratio",
+        "value": 1.0152377983228147,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "base_ang_acc_rms_ratio",
+        "value": 1.0281909355001215,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "stair3cm_support_fraction_increase",
+        "value": -0.005569578367350558,
+        "maximum": 0.015,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "stair3cm_landing_fraction_increase",
+        "value": -0.02036486499689527,
+        "maximum": 0.025,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_physical_drop",
+        "value": -0.01875,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_inv_physical_drop",
+        "value": -0.00625,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "narrow_forward_crossed_gain_or_ceiling",
+        "value": 0.07291666666666674,
+        "maximum": null,
+        "minimum": -0.013194444444444398,
+        "passed": true
+      },
+      {
+        "name": "narrow_forward_guardfree_crossed_gain_or_ceiling",
+        "value": 0.07986111111111116,
+        "maximum": null,
+        "minimum": -0.006249999999999978,
+        "passed": true
+      },
+      {
+        "name": "18cm_narrow_stop_crossing_fraction",
+        "value": 0.8333333333333334,
+        "maximum": null,
+        "minimum": 0.7,
+        "passed": true
+      },
+      {
+        "name": "18cm_narrow_stop_absolute_crossing_gain",
+        "value": 0.5416666666666666,
+        "maximum": null,
+        "minimum": 0.2,
+        "passed": true
+      },
+      {
+        "name": "18cm_stop_width220_pyramid_stairs_crossing_fraction",
+        "value": 1.0,
+        "maximum": null,
+        "minimum": 0.5,
+        "passed": true
+      },
+      {
+        "name": "18cm_stop_width220_pyramid_stairs_inv_crossing_fraction",
+        "value": 1.0,
+        "maximum": null,
+        "minimum": 0.5,
+        "passed": true
+      },
+      {
+        "name": "18cm_stop_width225_pyramid_stairs_crossing_fraction",
+        "value": 0.75,
+        "maximum": null,
+        "minimum": 0.5,
+        "passed": true
+      },
+      {
+        "name": "18cm_stop_width225_pyramid_stairs_inv_crossing_fraction",
+        "value": 0.5,
+        "maximum": null,
+        "minimum": 0.5,
+        "passed": true
+      },
+      {
+        "name": "18cm_stop_width240_pyramid_stairs_crossing_fraction",
+        "value": 1.0,
+        "maximum": null,
+        "minimum": 0.5,
+        "passed": true
+      },
+      {
+        "name": "18cm_stop_width240_pyramid_stairs_inv_crossing_fraction",
+        "value": 0.75,
+        "maximum": null,
+        "minimum": 0.5,
+        "passed": true
+      },
+      {
+        "name": "width_270_crossing_ratio",
+        "value": 1.0465116279069768,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "width_300_crossing_ratio",
+        "value": 1.0384615384615385,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "width_330_crossing_ratio",
+        "value": 1.054263565891473,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      }
+    ],
+    "source_sha256": "108ddfb4aca559c133b5533e4a60baa478da3ecaf9be1acd6aa5885984288e72"
+  },
+  "retention": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "physical_survival_drop",
+        "value": 0.002232142857142857,
+        "maximum": 0.02,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "guard_trial_fraction_increase",
+        "value": 0.015625,
+        "maximum": 0.02,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "crossing_ratio",
+        "value": 1.042296072507553,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "mean_velocity_xy_rmse_ratio",
+        "value": 0.9812808254071075,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "mean_yaw_rate_rmse_ratio",
+        "value": 1.0287158461192052,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pure_yaw_profile_rmse_ratio",
+        "value": 1.022413031055627,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "joint_acc_rms_ratio",
+        "value": 1.0099363240532624,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "base_lin_acc_rms_ratio",
+        "value": 1.01221712926924,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "base_ang_acc_rms_ratio",
+        "value": 1.0214784873790173,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "flat_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_physical_drop",
+        "value": -0.015625,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_crossing_ratio",
+        "value": 0.9824561403508771,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_inv_physical_drop",
+        "value": 0.015625,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_inv_crossing_ratio",
+        "value": 1.0930232558139534,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "hf_pyramid_slope_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "hf_pyramid_slope_inv_physical_drop",
+        "value": 0.015625,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "random_rough_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "wave_terrain_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      }
+    ],
+    "source_sha256": "cc6b0d94efebbb90c8d503b91c3b183beb8c657bbcd300f21b2f87f8e559d584"
+  },
+  "continuous": {
+    "passed": false,
+    "checks": [
+      {
+        "name": "physical_survival_drop",
+        "value": 0.0,
+        "maximum": 0.02,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "guard_trial_fraction_increase",
+        "value": 0.008928571428571428,
+        "maximum": 0.02,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "crossing_ratio",
+        "value": 1.03125,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "mean_velocity_xy_rmse_ratio",
+        "value": 0.955988938373962,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "mean_yaw_rate_rmse_ratio",
+        "value": 0.9424956098821657,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pure_yaw_profile_rmse_ratio",
+        "value": 0.9423543529231426,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "joint_acc_rms_ratio",
+        "value": 0.9969665228460559,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "base_lin_acc_rms_ratio",
+        "value": 0.9893120355286942,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "base_ang_acc_rms_ratio",
+        "value": 0.9909558810613576,
+        "maximum": 1.1,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "flat_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_physical_drop",
+        "value": 0.1875,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": false
+      },
+      {
+        "name": "pyramid_stairs_crossing_ratio",
+        "value": 0.9285714285714286,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": false
+      },
+      {
+        "name": "pyramid_stairs_inv_physical_drop",
+        "value": -0.125,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "pyramid_stairs_inv_crossing_ratio",
+        "value": 1.2307692307692308,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": true
+      },
+      {
+        "name": "hf_pyramid_slope_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "hf_pyramid_slope_inv_physical_drop",
+        "value": -0.0625,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "random_rough_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      },
+      {
+        "name": "wave_terrain_physical_drop",
+        "value": 0.0,
+        "maximum": 0.05,
+        "minimum": null,
+        "passed": true
+      }
+    ],
+    "source_sha256": "35e416bd28479f223f5bab4904fe8b62bb2de6eaea2204829503e15c6407fca0"
+  },
+  "scope_note": "Summaries of original unchanged gates; raw evaluation files remain local. Parent was never selected for deployment.",
+  "v32_rejection_summary": {
+    "15500": false,
+    "15600": true,
+    "15700": false,
+    "15798": false,
+    "15600_full_hard_case": "22.5cm/18cm inverse stop-resume1/4 below minimum2/4"
+  },
+  "command_coverage_diagnostic": {
+    "scope": "Command-only coverage diagnostic; not locomotion evaluation or reward causality proof",
+    "num_envs": 2048,
+    "seed": 109,
+    "duration_s": 180,
+    "command_dt_s": 0.1,
+    "simplifications": "Fixed heading, no physics/falls; reset commands at configured timeout; init velocity writes disabled",
+    "results": {
+      "baseline_uniform": {
+        "time_fraction": {
+          "scripted_cycle": 0.0,
+          "pure_turn": 0.2147309027777778,
+          "standing": 0.1495562065972222,
+          "forward_only": 0.3162546115451389,
+          "other_motion": 0.31945827907986113
+        },
+        "episode_s": 30.0,
+        "forward_stop_fraction": 0
+      },
+      "v31_stop_resume": {
+        "time_fraction": {
+          "scripted_cycle": 0.47946967230902776,
+          "pure_turn": 0.14656087239583335,
+          "standing": 0.17838650173611112,
+          "forward_only": 0.4587158203125,
+          "other_motion": 0.21633680555555557
+        },
+        "episode_s": 30.0,
+        "forward_stop_fraction": 0.75
+      },
+      "v32_long_stop": {
+        "time_fraction": {
+          "scripted_cycle": 0.5407164171006944,
+          "pure_turn": 0.13005479600694445,
+          "standing": 0.21426703559027777,
+          "forward_only": 0.4646845160590278,
+          "other_motion": 0.19099365234375
+        },
+        "episode_s": 45.0,
+        "forward_stop_fraction": 0.75
+      }
+    },
+    "implication": "Longer scripted cycles can reduce time coverage of pure turns and ordinary mixed commands despite unchanged per-draw command probabilities"
+  }
+}

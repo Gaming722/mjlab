@@ -1,0 +1,16 @@
+{
+  "purpose": "V33 remote balanced stair-depth warm-start; not selected for deployment",
+  "source_run": "2026-11-10_20-42-37_stair_depth_rehearsal_v31",
+  "iteration": 15100,
+  "common_step_counter": 363096,
+  "new_updates_after14500": 602,
+  "next_task": "Mjlab-Velocity-Stair-Depth-Balanced-Unitree-Go1-Perceptive",
+  "recipe_commit": "65d10c4506b49e95ff20eb3908e6e2e70c5e0004",
+  "files_sha256": {
+    "agent.yaml": "d8f72faa68d70dab29b59e183d15de643fe55222869478d4e30b34492563836c",
+    "env.yaml": "b18258bf55ddebecbaf459e4902ff4cbcbbc0a4dba38a91b461ad3072b2a8f31",
+    "evaluation_summary.json": "431ae7dccf6ab06a4d3faa49c2f49442fda622bdfe936c41f1bb381354e7a43e",
+    "lineage.json": "ea52688de529fde7564f1511d4f5afbd2a1f37c1ae80cc479f668b3054c2c35a",
+    "model_15100.pt": "414e6e749af21f882b789953646f3e9038ba4630d96610dcb6a1141b80618260"
+  }
+}

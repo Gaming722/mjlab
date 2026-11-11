@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a versioned balanced stair-depth training parent with original
+  evaluation summaries, verified ancestry, and remote continuation commands.
 - Added an opt-in Go1 balanced stair-depth task that scopes interrupted walking
   to stair columns, increases native-platform replay, and preserves ordinary
   motion on other terrain without changing rewards or motor constraints.
