@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a versioned Go1 stair-depth warm-start checkpoint, its training
+  configuration and lineage, and remote continuation instructions.
 - Added an opt-in Go1 stair-depth long-stop task with native wide-platform
   replay, longer interrupted walking cycles, and a conservative refinement
   runner; rewards and the policy/control contract remain unchanged.

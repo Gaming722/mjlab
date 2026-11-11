@@ -1,0 +1,179 @@
+{
+  "num_envs": 2048,
+  "steps_per_learning_update": 24,
+  "chain": [
+    {
+      "checkpoint": "artifacts/go1_torque_smooth/baseline/model_9200.pt",
+      "sha256": "c2b8ca26a40bc9a418b1f9e1ea7615b0cc5a147f5bc8c23ede194ca13d4d7e57",
+      "iteration": 9200,
+      "common_step_counter": 221184,
+      "actor_normalizer_count": 600489984.0,
+      "optimizer_lrs": [
+        5e-05
+      ]
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-04_21-54-01_torque_smooth_v17/model_9799.pt",
+      "sha256": "47a6ffb6a1f97a2eb35c9f145b447dd8614e332f310bc3113b15636f142e1b55",
+      "iteration": 9799,
+      "common_step_counter": 235584,
+      "actor_normalizer_count": 629981184.0,
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "verified_new_learning_updates": 600,
+      "verified_new_actor_samples": 29491200.0
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-06_16-40-19_guarded_smooth_v18/model_10200.pt",
+      "sha256": "d79a7812525637b2cac054f87acfde77707bc9ec7ee6ff1a270a022c45dd3619",
+      "iteration": 10200,
+      "common_step_counter": 245232,
+      "actor_normalizer_count": 649740288.0,
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "verified_new_learning_updates": 402,
+      "verified_new_actor_samples": 19759104.0
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-06_18-15-41_motor_rehearsal_v19/model_10799.pt",
+      "sha256": "5b7b051768a541a400a7d36868e1613befd4406ab109351ea0dedbfef6442b59",
+      "iteration": 10799,
+      "common_step_counter": 259632,
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "verified_new_learning_updates": 600,
+      "source_commit": "57292cbb",
+      "selection_status": "Not selected; full screen fails stall and stair-edge landing"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-06_19-43-44_motor_low_speed_v20/model_11398.pt",
+      "sha256": "a34ac2965184647fa927951696b43d50d147fa6f0aa577e37080b10fa4b213c2",
+      "iteration": 11398,
+      "common_step_counter": 274032,
+      "verified_new_learning_updates": 600,
+      "source_commit": "2b389d0b",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Not selected; edge landing regression, additional tests pending"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-07_16-43-55_motor_edge_v21/model_11500.pt",
+      "sha256": "e6a4721f0f68a440b775cdd2f1c8ed44083fc2eaeb461a35e11c58f136dd6bf5",
+      "iteration": 11500,
+      "common_step_counter": 276504,
+      "verified_new_learning_updates": 103,
+      "source_commit": "1b732297",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Unselected intermediate; complete validation pending"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-07_18-20-25_motor_yaw_v22/model_11650.pt",
+      "sha256": "2965fad014451d4a171a432ee89caedf1cf2375bc30d94141a89c77573fa67a8",
+      "iteration": 11650,
+      "common_step_counter": 280128,
+      "verified_new_learning_updates": 151,
+      "source_commit": "b5fab33a",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Parent candidate; only joint-acceleration core criterion unmet, flat and continuous passed"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-08_16-22-08_motor_joint_smooth_v23/model_11800.pt",
+      "sha256": "078677027bfa4ff5bad43344f36ed430424b5c2271051946971a8ae57f6d163e",
+      "iteration": 11800,
+      "common_step_counter": 283752,
+      "verified_new_learning_updates": 151,
+      "source_commit": "ac4deb0f",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Not selected: full core physical survival and inverted-slope retention gates failed"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-08_17-16-21_motor_survival_v24/model_11900.pt",
+      "sha256": "37784597cd801c81b789d3ffd62fc0ab4a0967c52728c17834aec74682e5d1f1",
+      "iteration": 11900,
+      "common_step_counter": 286176,
+      "verified_new_learning_updates": 101,
+      "source_commit": "ac4deb0f",
+      "experiment_override": "termination reward weight -1000; see v24_experiment_provenance.json",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Rejected: pure-yaw tracking and stall retention gates failed in full two-seed core"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-08_17-45-18_motor_balanced_v25/model_12199.pt",
+      "sha256": "6cc221545d459db030abfd1b14d5fa6b6cdc85fe4c782ac325c2d378631d0167",
+      "iteration": 12199,
+      "common_step_counter": 293376,
+      "verified_new_learning_updates": 300,
+      "source_commit": "ac4deb0f",
+      "experiment_override": "termination reward -400; see v25_experiment_provenance.json",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Rejected: full two-seed core pure-yaw tracking, stall and joint acceleration gates failed"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-08_18-23-52_motor_balance_v26/model_12598.pt",
+      "sha256": "6682b7f863446c7485fc7f50d932a57a4da43d25aa022fada4a0c87053216942",
+      "iteration": 12598,
+      "common_step_counter": 302976,
+      "verified_new_learning_updates": 400,
+      "source_commit": "ac4deb0f",
+      "experiment_override": "motion_deficit -4, yaw tracking 4, joint acceleration -2.75e-6, termination -400; see v26_experiment_provenance.json",
+      "optimizer_lrs": [
+        2e-05
+      ],
+      "selection_status": "Unselected: yaw-profile core gate fails; independent continuous and flat gates passed; actual three-width stair validation pending"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-09_13-33-15_motor_convergence_v29/model_14500.pt",
+      "sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+      "iteration": 14500,
+      "common_step_counter": 348648,
+      "verified_new_learning_updates": 1903,
+      "source_commit": "fff5b89d",
+      "experiment_override": "V28 reward configuration held fixed; fixed learning rate1e-5",
+      "optimizer_lrs": [
+        1e-05
+      ],
+      "selection_status": "SELECTED; full original goal audit passed"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-10_15-57-27_stair_depth_v30b/model_15000.pt",
+      "sha256": "a8c36a90b27ac8df3a64ef222546713609ca71f7686fb9727639f7230ca8b786",
+      "iteration": 15000,
+      "common_step_counter": 360672,
+      "verified_new_learning_updates": 501,
+      "optimizer_lrs": [
+        1e-05
+      ],
+      "source_commit": "d04d776f",
+      "selection_status": "Rejected as final policy: full 30cm crossing retention failed; retained as V31 training parent"
+    },
+    {
+      "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-10_20-42-37_stair_depth_rehearsal_v31/model_15399.pt",
+      "sha256": "6ec5539167f5b07265db8c345ef98d411e6a547973b12b52dd150cdb98f50ae8",
+      "iteration": 15399,
+      "common_step_counter": 370272,
+      "verified_new_learning_updates": 400,
+      "optimizer_lrs": [
+        5e-06
+      ],
+      "source_commit": "7b516252",
+      "selection_status": "Rejected as final policy: native ascent crossing retention55/57 is below0.97; usable as next fine-tuning parent"
+    }
+  ],
+  "total_verified_new_updates_since_9200": 6212,
+  "selection_status": "Training warm-start only; no candidate passed every original behavior gate",
+  "cumulative_new_learning_updates_after_9200": 6212
+}

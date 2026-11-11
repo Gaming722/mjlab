@@ -1,0 +1,47 @@
+{
+  "full": {
+    "passed": true,
+    "failed_checks": [],
+    "baseline": {
+      "trials": 960,
+      "physical_survivors": 932,
+      "crossed_and_survived": 730,
+      "guard_violating_trials": 30
+    },
+    "candidate": {
+      "trials": 960,
+      "physical_survivors": 943,
+      "crossed_and_survived": 762,
+      "guard_violating_trials": 37
+    }
+  },
+  "retention": {
+    "passed": false,
+    "failed_checks": [
+      {
+        "name": "pyramid_stairs_crossing_ratio",
+        "value": 0.9649122807017544,
+        "maximum": null,
+        "minimum": 0.97,
+        "passed": false
+      }
+    ],
+    "baseline": {
+      "trials": 448,
+      "physical_survivors": 441,
+      "crossed_and_survived": 336,
+      "guard_violating_trials": 53
+    },
+    "candidate": {
+      "trials": 448,
+      "physical_survivors": 436,
+      "crossed_and_survived": 337,
+      "guard_violating_trials": 61
+    }
+  },
+  "critical18cm_narrow_stop_resume": {
+    "crossed_and_survived": 21,
+    "trials": 24
+  },
+  "continuous_and_holdout": "Not run for15399 after retention gate failed"
+}
