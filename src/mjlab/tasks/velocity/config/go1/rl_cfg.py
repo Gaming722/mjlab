@@ -1,5 +1,7 @@
 """RL configuration for Unitree Go1 velocity task."""
 
+from dataclasses import dataclass
+
 from mjlab.rl import (
   RslRlModelCfg,
   RslRlOnPolicyRunnerCfg,
@@ -119,4 +121,23 @@ def unitree_go1_stair_depth_balanced_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
   cfg = unitree_go1_stair_depth_long_stop_ppo_runner_cfg()
   cfg.max_iterations = 1200
   cfg.save_interval = 200
+  return cfg
+
+
+@dataclass
+class Go1ReferencePpoCfg(RslRlPpoAlgorithmCfg):
+  reference_coefficient: float = 5.0
+  reference_checkpoint: str = "checkpoints/go1_stair_depth_reference/model_14500.pt"
+  reference_sha256: str = (
+    "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded"
+  )
+  reference_mask_key: str = "reference_mask"
+
+
+def unitree_go1_stair_depth_reference_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Retain verified actions on old terrain while refining narrow treads."""
+  cfg = unitree_go1_stair_depth_balanced_ppo_runner_cfg()
+  cfg.algorithm = Go1ReferencePpoCfg(**vars(cfg.algorithm))
+  cfg.algorithm.class_name = "mjlab.tasks.velocity.rl.reference_ppo:ReferencePolicyPPO"
+  cfg.save_interval = 100
   return cfg

@@ -33,15 +33,18 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_stair_depth_balanced_env_cfg,
   unitree_go1_stair_depth_env_cfg,
   unitree_go1_stair_depth_long_stop_env_cfg,
+  unitree_go1_stair_depth_reference_env_cfg,
   unitree_go1_stair_depth_rehearsal_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
+  Go1ReferencePpoCfg,
   unitree_go1_edge_ppo_runner_cfg,
   unitree_go1_perceptive_ppo_runner_cfg,
   unitree_go1_stair_depth_balanced_ppo_runner_cfg,
   unitree_go1_stair_depth_long_stop_ppo_runner_cfg,
+  unitree_go1_stair_depth_reference_ppo_runner_cfg,
   unitree_go1_stair_depth_rehearsal_ppo_runner_cfg,
 )
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
@@ -648,3 +651,56 @@ def test_balanced_stair_depth_runner_preserves_learning_rate_and_allows_consolid
   assert unitree_go1_stair_depth_balanced_ppo_runner_cfg() == replace(
     base, max_iterations=1200, save_interval=200
   )
+
+
+@pytest.mark.parametrize("play", [False, True])
+def test_reference_task_keeps_policy_inputs_rewards_and_physics(play):
+  base = unitree_go1_stair_depth_balanced_env_cfg(play=play)
+  cfg = unitree_go1_stair_depth_reference_env_cfg(play=play)
+  for name in (
+    "rewards",
+    "actions",
+    "sim",
+    "commands",
+    "events",
+    "terminations",
+    "curriculum",
+    "episode_length_s",
+  ):
+    assert getattr(cfg, name) == getattr(base, name)
+  assert replace(cfg.scene, terrain=base.scene.terrain) == base.scene
+  assert cfg.scene.terrain is not None and base.scene.terrain is not None
+  # Each terrain cfg owns a fresh default empty-spec factory.
+  assert (
+    replace(cfg.scene.terrain, spec_fn=base.scene.terrain.spec_fn) == base.scene.terrain
+  )
+  for name in base.observations:
+    assert cfg.observations[name] == base.observations[name]
+  if play:
+    assert cfg.observations == base.observations
+  else:
+    assert set(cfg.observations) - set(base.observations) == {"reference_mask"}
+    group = cfg.observations["reference_mask"]
+    assert not group.enable_corruption
+    assert set(group.terms["replay"].params["terrain_names"]) == {
+      "flat",
+      "random_rough",
+      "wave_terrain",
+      "hf_pyramid_slope",
+      "hf_pyramid_slope_inv",
+      "pyramid_stairs_native",
+      "pyramid_stairs_inv_native",
+    }
+
+
+def test_reference_runner_has_no_added_actor_or_critic_inputs():
+  base = unitree_go1_stair_depth_balanced_ppo_runner_cfg()
+  cfg = unitree_go1_stair_depth_reference_ppo_runner_cfg()
+  assert cfg.actor == base.actor and cfg.critic == base.critic
+  assert cfg.obs_groups == base.obs_groups
+  assert cfg.save_interval == 100 and cfg.max_iterations == 1200
+  assert isinstance(cfg.algorithm, Go1ReferencePpoCfg)
+  assert cfg.algorithm.reference_coefficient == 5
+  for name, value in vars(base.algorithm).items():
+    if name != "class_name":
+      assert getattr(cfg.algorithm, name) == value

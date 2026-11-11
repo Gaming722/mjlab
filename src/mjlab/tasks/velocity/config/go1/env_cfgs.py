@@ -932,6 +932,31 @@ def unitree_go1_stair_depth_balanced_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_reference_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Provide a training-only replay mask for fixed-reference policy retention."""
+  cfg = unitree_go1_stair_depth_balanced_env_cfg(play=play)
+  if not play:
+    assert cfg.scene.terrain is not None
+    terrain = cfg.scene.terrain.terrain_generator
+    assert terrain is not None
+    names = tuple(
+      name
+      for name in terrain.sub_terrains
+      if not name.startswith("pyramid_stairs") or name.endswith("_native")
+    )
+    cfg.observations["reference_mask"] = ObservationGroupCfg(
+      terms={
+        "replay": ObservationTermCfg(
+          func=mdp.reference_terrain_mask, params={"terrain_names": names}
+        )
+      },
+      enable_corruption=False,
+    )
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)
