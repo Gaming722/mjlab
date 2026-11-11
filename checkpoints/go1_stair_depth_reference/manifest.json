@@ -1,0 +1,21 @@
+{
+  "purpose": "V34 reference-retention warm-start and frozen teacher; no new selected policy",
+  "source_run": "2026-11-11_12-36-03_stair_depth_balanced_v33_remote",
+  "iteration": 15200,
+  "common_step_counter": 365520,
+  "new_updates_after14500": 703,
+  "reference_checkpoint": "model_14500.pt",
+  "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+  "next_task": "Mjlab-Velocity-Stair-Depth-Reference-Unitree-Go1-Perceptive",
+  "recipe_commit": "3ad4525384b9995a8a1a35069271744f42e2a178",
+  "files_sha256": {
+    "agent.yaml": "f3fa51049a1897b59697782349c5ba1c9db614ec06b9e04a8582c223315c9647",
+    "env.yaml": "2adfeb09847ce81a04c46d96218b8188ebfcec3666dd337828bd3fe2ef03ef1b",
+    "evaluation_summary.json": "adefc6045d87ddf79575af50ac3b51ad0b169ffae27c004144cb0e643177ac7e",
+    "lineage.json": "43cfc2e672a9ba6234711f8922ae368bc9b9f98800bbfaaea775774cccd45c1b",
+    "model_14500.pt": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+    "model_15200.pt": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",
+    "reference_agent.yaml": "144f3ff4b304c6026e9d01c5cd60315c9d20677d6db4233c2a2b22408bd433b7",
+    "reference_env.yaml": "a09cf4992644d3d9cb6a8dee9f93f0c15e3f870cce66e2fc211a01da0bbad426"
+  }
+}

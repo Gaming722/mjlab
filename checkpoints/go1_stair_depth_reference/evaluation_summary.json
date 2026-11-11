@@ -1,0 +1,544 @@
+{
+  "parent_status": "Training warm-start only; never selected for deployment",
+  "parent_evaluations": {
+    "full": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "physical_survival_drop",
+          "value": -0.008333333333333333,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": 0.0010416666666666667,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "mean_velocity_xy_rmse_ratio",
+          "value": 0.9655065600890995,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "mean_yaw_rate_rmse_ratio",
+          "value": 0.942690419159385,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pure_yaw_profile_rmse_ratio",
+          "value": 0.9395843548482397,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "joint_acc_rms_ratio",
+          "value": 0.9995687706203262,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "base_lin_acc_rms_ratio",
+          "value": 1.001819008978788,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "base_ang_acc_rms_ratio",
+          "value": 1.0122417095208316,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "stair3cm_support_fraction_increase",
+          "value": -0.0012305745281978864,
+          "maximum": 0.015,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "stair3cm_landing_fraction_increase",
+          "value": -0.01168692827908363,
+          "maximum": 0.025,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_physical_drop",
+          "value": -0.01875,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_inv_physical_drop",
+          "value": 0.0020833333333333333,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "narrow_forward_crossed_gain_or_ceiling",
+          "value": 0.05902777777777779,
+          "maximum": null,
+          "minimum": -0.013194444444444398,
+          "passed": true
+        },
+        {
+          "name": "narrow_forward_guardfree_crossed_gain_or_ceiling",
+          "value": 0.0625,
+          "maximum": null,
+          "minimum": -0.006249999999999978,
+          "passed": true
+        },
+        {
+          "name": "18cm_narrow_stop_crossing_fraction",
+          "value": 0.75,
+          "maximum": null,
+          "minimum": 0.7,
+          "passed": true
+        },
+        {
+          "name": "18cm_narrow_stop_absolute_crossing_gain",
+          "value": 0.4583333333333333,
+          "maximum": null,
+          "minimum": 0.2,
+          "passed": true
+        },
+        {
+          "name": "18cm_stop_width220_pyramid_stairs_crossing_fraction",
+          "value": 1.0,
+          "maximum": null,
+          "minimum": 0.5,
+          "passed": true
+        },
+        {
+          "name": "18cm_stop_width220_pyramid_stairs_inv_crossing_fraction",
+          "value": 0.5,
+          "maximum": null,
+          "minimum": 0.5,
+          "passed": true
+        },
+        {
+          "name": "18cm_stop_width225_pyramid_stairs_crossing_fraction",
+          "value": 1.0,
+          "maximum": null,
+          "minimum": 0.5,
+          "passed": true
+        },
+        {
+          "name": "18cm_stop_width225_pyramid_stairs_inv_crossing_fraction",
+          "value": 0.5,
+          "maximum": null,
+          "minimum": 0.5,
+          "passed": true
+        },
+        {
+          "name": "18cm_stop_width240_pyramid_stairs_crossing_fraction",
+          "value": 1.0,
+          "maximum": null,
+          "minimum": 0.5,
+          "passed": true
+        },
+        {
+          "name": "18cm_stop_width240_pyramid_stairs_inv_crossing_fraction",
+          "value": 0.5,
+          "maximum": null,
+          "minimum": 0.5,
+          "passed": true
+        },
+        {
+          "name": "width_270_crossing_ratio",
+          "value": 1.0465116279069768,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "width_300_crossing_ratio",
+          "value": 1.023076923076923,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "width_330_crossing_ratio",
+          "value": 1.0232558139534884,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        }
+      ],
+      "source_sha256": "c1899b58df34d5de0cd5152df9f6d2760ee1ee9bd3d6a2d3025e0197ddcffc04"
+    },
+    "retention": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "physical_survival_drop",
+          "value": -0.004464285714285714,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": -0.024553571428571428,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "crossing_ratio",
+          "value": 1.036697247706422,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "mean_velocity_xy_rmse_ratio",
+          "value": 1.0260137426377396,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "mean_yaw_rate_rmse_ratio",
+          "value": 1.0350606932783712,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pure_yaw_profile_rmse_ratio",
+          "value": 1.0600254308398878,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "joint_acc_rms_ratio",
+          "value": 1.0009167766966074,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "base_lin_acc_rms_ratio",
+          "value": 1.0032021091157064,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "base_ang_acc_rms_ratio",
+          "value": 1.0140258897342438,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "flat_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 1.0,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_inv_physical_drop",
+          "value": 0.015625,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 1.0681818181818181,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "hf_pyramid_slope_physical_drop",
+          "value": -0.03125,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "hf_pyramid_slope_inv_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "random_rough_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "wave_terrain_physical_drop",
+          "value": -0.015625,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        }
+      ],
+      "source_sha256": "d63eca267b91715e9cdd51025154cd11a389fd27fae7793a21e5a122623c18c7"
+    },
+    "continuous": {
+      "passed": false,
+      "checks": [
+        {
+          "name": "physical_survival_drop",
+          "value": 0.017857142857142856,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": -0.017857142857142856,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "crossing_ratio",
+          "value": 0.9702970297029703,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "mean_velocity_xy_rmse_ratio",
+          "value": 0.966359160510842,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "mean_yaw_rate_rmse_ratio",
+          "value": 1.0199390850428838,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pure_yaw_profile_rmse_ratio",
+          "value": 0.9989059323257254,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "joint_acc_rms_ratio",
+          "value": 0.9914993814706804,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "base_lin_acc_rms_ratio",
+          "value": 0.9863965828690975,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "base_ang_acc_rms_ratio",
+          "value": 0.9840587002554455,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "flat_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 1.0,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_inv_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 1.0,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": true
+        },
+        {
+          "name": "hf_pyramid_slope_physical_drop",
+          "value": 0.1875,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": false
+        },
+        {
+          "name": "hf_pyramid_slope_inv_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "random_rough_physical_drop",
+          "value": 0.0,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        },
+        {
+          "name": "wave_terrain_physical_drop",
+          "value": -0.0625,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": true
+        }
+      ],
+      "source_sha256": "36581091dd6994657879a154125650bf58b17d9f98394e2710623b3aed9acb80"
+    }
+  },
+  "v33_candidate_failures": {
+    "15200": {
+      "scope": "continuous",
+      "failed_checks": [
+        {
+          "name": "hf_pyramid_slope_physical_drop",
+          "value": 0.1875,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": false
+        }
+      ]
+    },
+    "15400": {
+      "scope": "retention",
+      "failed_checks": [
+        {
+          "name": "pure_yaw_profile_rmse_ratio",
+          "value": 1.1142397128824848,
+          "maximum": 1.1,
+          "minimum": null,
+          "passed": false
+        },
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9454545454545454,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ]
+    },
+    "15600": {
+      "scope": "retention",
+      "failed_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9636363636363636,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ]
+    },
+    "15800": {
+      "scope": "retention",
+      "failed_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9629629629629629,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ]
+    },
+    "16000": {
+      "scope": "retention",
+      "failed_checks": [
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": 0.020089285714285716,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": false
+        }
+      ]
+    },
+    "16200": {
+      "scope": "retention",
+      "failed_checks": [
+        {
+          "name": "hf_pyramid_slope_physical_drop",
+          "value": 0.0625,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": false
+        }
+      ]
+    },
+    "16299": {
+      "scope": "retention",
+      "failed_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9473684210526315,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ]
+    }
+  },
+  "hypothesis": "A frozen verified14500 action reference on native/other terrain may limit forgetting while narrow-stair actor actions remain unconstrained by this loss. Not yet behaviorally proven."
+}
