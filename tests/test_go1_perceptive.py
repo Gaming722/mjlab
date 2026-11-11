@@ -690,6 +690,12 @@ def test_reference_task_keeps_policy_inputs_rewards_and_physics(play):
       "hf_pyramid_slope_inv",
       "pyramid_stairs_native",
       "pyramid_stairs_inv_native",
+      "pyramid_stairs_d270",
+      "pyramid_stairs_d300",
+      "pyramid_stairs_d330",
+      "pyramid_stairs_inv_d270",
+      "pyramid_stairs_inv_d300",
+      "pyramid_stairs_inv_d330",
     }
 
 

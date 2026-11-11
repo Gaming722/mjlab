@@ -11,7 +11,8 @@ Added
 - Added versioned Go1 reference-retention training weights, a frozen verified
   reference, actual configurations, ancestry and reproduction instructions.
 - Added a Go1 stair-depth reference task that retains the verified policy on
-  old-terrain replay while leaving narrow-stair adaptation unanchored. Rewards,
+  old-terrain replay, including 27--33 cm treads, while leaving narrow-stair
+  adaptation unanchored. Rewards,
   physics, and actor/critic inputs remain unchanged.
 - Added opt-in fixed-reference PPO action regularization on selected replay
   terrain, with a frozen checkpoint and a training-only mask outside policy inputs.

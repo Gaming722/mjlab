@@ -943,8 +943,9 @@ def unitree_go1_stair_depth_reference_env_cfg(
     assert terrain is not None
     names = tuple(
       name
-      for name in terrain.sub_terrains
-      if not name.startswith("pyramid_stairs") or name.endswith("_native")
+      for name, sub in terrain.sub_terrains.items()
+      if not isinstance(sub, BoxPyramidStairsTerrainCfg)
+      or (sub.step_width_range is None and sub.step_width >= 0.27)
     )
     cfg.observations["reference_mask"] = ObservationGroupCfg(
       terms={
