@@ -1,0 +1,33 @@
+{
+  "experiment": "V35 verified-parent restart",
+  "task": "Mjlab-Velocity-Stair-Depth-Reference-Unitree-Go1-Perceptive",
+  "parent_run": "2026-11-09_13-33-15_motor_convergence_v29",
+  "parent_checkpoint": "model_14500.pt",
+  "parent_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+  "parent_counter": 348648,
+  "reference_coefficient": 25.0,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 3000,
+  "save_interval": 250,
+  "seed": 42,
+  "evaluation_candidates": [
+    14750,
+    15000,
+    15500,
+    16000,
+    16500,
+    17000,
+    17499
+  ],
+  "reason": "All7 V34 candidates rejected. V34 warm-start inherited rejected V33 slope behavior. Restart verified14500 rather than extend that chain; stronger frozen-reference anchor on13 old columns;8 narrow/adaptive columns remain unmasked.",
+  "unchanged": [
+    "rewards",
+    "torque and smoothness constraints",
+    "actor critic depth inputs",
+    "physical controller",
+    "original four-scope acceptance gates"
+  ],
+  "training_location": "ltr only; local edits and commit before synchronization",
+  "selection_status": "UNSELECTED; hypothesis requires actual behavior evaluation"
+}

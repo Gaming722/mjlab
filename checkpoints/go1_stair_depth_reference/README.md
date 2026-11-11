@@ -59,3 +59,5 @@ Predeclared candidates 15300/15500/15700/15900/16100/16300/final16399 correspond
 to 101/301/501/701/901/1101/1200 new updates. Verify actual counters, parent
 and reference hashes, not filenames alone. Required validation includes the
 original full-depth, native-terrain, continuous and second-seed matrices.
+
+V35 restart recipe is recorded in `restart_recipe.json`. It starts directly from the verified14500 checkpoint already stored here, uses its `reference_env.yaml` and `reference_agent.yaml` as parent configuration, and raises the reference coefficient to25 for a finite3000-update experiment. All seven V34 candidates failed original acceptance gates; none is selected or a V35 parent. Rewards, motor constraints and original behavioral acceptance gates remain unchanged.
