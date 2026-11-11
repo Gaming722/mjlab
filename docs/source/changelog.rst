@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 stair-depth long-stop task with native wide-platform
+  replay, longer interrupted walking cycles, and a conservative refinement
+  runner; rewards and the policy/control contract remain unchanged.
 - Added a Go1 stair-depth rehearsal task with explicit stop/resume practice,
   more wide-tread replay, and short conservative PPO refinement; its rewards,
   actor inputs, and actuator contract are unchanged.

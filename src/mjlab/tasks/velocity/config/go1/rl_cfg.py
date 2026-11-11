@@ -105,3 +105,10 @@ def unitree_go1_stair_depth_rehearsal_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg
   cfg.max_iterations = 400
   cfg.save_interval = 100
   return cfg
+
+
+def unitree_go1_stair_depth_long_stop_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Refine coverage conservatively while retaining the existing policy contract."""
+  cfg = unitree_go1_stair_depth_rehearsal_ppo_runner_cfg()
+  cfg.algorithm.learning_rate = 2.5e-6
+  return cfg

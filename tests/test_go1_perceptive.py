@@ -31,6 +31,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_smooth_perceptive_env_cfg,
   unitree_go1_stair_depth_env_cfg,
+  unitree_go1_stair_depth_long_stop_env_cfg,
   unitree_go1_stair_depth_rehearsal_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
@@ -38,6 +39,8 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
   unitree_go1_edge_ppo_runner_cfg,
   unitree_go1_perceptive_ppo_runner_cfg,
+  unitree_go1_stair_depth_long_stop_ppo_runner_cfg,
+  unitree_go1_stair_depth_rehearsal_ppo_runner_cfg,
 )
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.mdp.observations import depth_camera
@@ -503,3 +506,75 @@ def test_stair_depth_rehearsal_keeps_control_and_increases_wide_replay():
       a.pop("proportion")
       b.pop("proportion")
       assert a == b
+
+
+def test_stair_depth_long_stop_retains_contract_and_native_platform_coverage():
+  for play in (False, True):
+    base = unitree_go1_stair_depth_rehearsal_env_cfg(play=play)
+    cfg = unitree_go1_stair_depth_long_stop_env_cfg(play=play)
+    for field in (
+      "rewards",
+      "observations",
+      "actions",
+      "sim",
+      "events",
+      "terminations",
+      "curriculum",
+    ):
+      assert getattr(cfg, field) == getattr(base, field)
+    assert cfg.scene.entities == base.scene.entities
+    assert cfg.scene.sensors == base.scene.sensors
+    assert cfg.scene.num_envs == base.scene.num_envs
+    assert cfg.scene.terrain is not None and base.scene.terrain is not None
+    terrain = cfg.scene.terrain.terrain_generator
+    old = base.scene.terrain.terrain_generator
+    assert terrain is not None and old is not None
+    assert terrain.num_cols == len(terrain.sub_terrains) == 21
+    assert sum(x.proportion for x in terrain.sub_terrains.values()) == pytest.approx(1)
+    for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+      names = [f"{family}_d{w}" for w in (220, 225, 240, 270, 300, 330)]
+      names.append(f"{family}_adaptive")
+      assert sum(terrain.sub_terrains[n].proportion for n in names) == pytest.approx(
+        total * 0.90
+      )
+      for name in names:
+        previous = old.sub_terrains[name]
+        assert terrain.sub_terrains[name] == replace(
+          previous, proportion=previous.proportion * 0.90
+        )
+      assert terrain.sub_terrains[f"{family}_native"] == replace(
+        old.sub_terrains[f"{family}_d300"],
+        platform_width=3.0,
+        proportion=total * 0.10,
+      )
+    for name, previous in old.sub_terrains.items():
+      if not isinstance(previous, BoxPyramidStairsTerrainCfg):
+        assert terrain.sub_terrains[name] == previous
+    command = cfg.commands["twist"]
+    if play:
+      assert command == base.commands["twist"]
+      assert not isinstance(command, StopResumeVelocityCommandCfg)
+      assert cfg.episode_length_s == base.episode_length_s
+    else:
+      assert isinstance(command, StopResumeVelocityCommandCfg)
+      assert command.approach_duration == (3, 9)
+      assert command.pause_duration == (2, 10)
+      assert command.resume_duration == (12, 22)
+      assert cfg.episode_length_s >= sum(
+        r[1]
+        for r in (
+          command.approach_duration,
+          command.pause_duration,
+          command.resume_duration,
+        )
+      )
+      assert command.resume_speed_range == (0.2, 0.35)
+      previous = base.commands["twist"]
+      assert isinstance(previous, StopResumeVelocityCommandCfg)
+      assert previous.pause_duration == (2, 4)
+
+
+def test_stair_depth_long_stop_runner_only_changes_learning_rate():
+  base = unitree_go1_stair_depth_rehearsal_ppo_runner_cfg()
+  cfg = unitree_go1_stair_depth_long_stop_ppo_runner_cfg()
+  assert cfg == replace(base, algorithm=replace(base.algorithm, learning_rate=2.5e-6))

@@ -318,6 +318,20 @@ ordinary commands and manual control. Its runner uses fixed learning rate
 ``5e-6``, 400 additional iterations and saves every 100 iterations. Actor inputs,
 PD gains, effort limits, and physical-motion penalties are unchanged.
 
+``Mjlab-Velocity-Stair-Depth-LongStop-Unitree-Go1-Perceptive`` adds the original
+30 cm tread / 3 m platform stairs in both directions, alongside the existing
+1 m platform variants. Ten percent of each stair family's sampling goes to
+these native stairs; other terrain-family weights stay unchanged. During
+training, interrupted approaches span 3--9 seconds, stops 2--10 seconds, and
+resumed walking 12--22 seconds. The 45-second episode can contain a full longest
+41-second cycle. Play still uses manual commands. This opt-in runner uses fixed
+learning rate ``2.5e-6``, 400 additional iterations and 100-iteration saves.
+Rewards, observations, actions, PD gains, and effort limits are inherited.
+This is a training-coverage recipe, not a validated policy or a guarantee of
+improved performance. Evaluate traversal, native terrain retention, prolonged
+walking, and additional geometry/seed combinations before selecting a model.
+Use 21 play environments to place at least one robot on each terrain type.
+
 Robust training also penalizes new contacts and loaded support within 5 cm of
 terrain edges extracted from neighboring ``terrain_scan`` scandots. The scan
 spacing is 2.5 cm; the critic

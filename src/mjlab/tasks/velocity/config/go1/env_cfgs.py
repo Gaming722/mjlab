@@ -880,6 +880,35 @@ def unitree_go1_stair_depth_rehearsal_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_long_stop_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Cover longer interruptions and retain the original wide stair platforms."""
+  cfg = unitree_go1_stair_depth_rehearsal_env_cfg(play=play)
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+    for name, sub in terrain.sub_terrains.items():
+      if name.startswith(family + "_d") or name == family + "_adaptive":
+        sub.proportion *= 0.90
+    native = deepcopy(terrain.sub_terrains[f"{family}_d300"])
+    assert isinstance(native, BoxPyramidStairsTerrainCfg)
+    native.platform_width = 3.0
+    native.proportion = total * 0.10
+    terrain.sub_terrains[f"{family}_native"] = native
+  terrain.num_cols = len(terrain.sub_terrains)
+  if not play:
+    command = cfg.commands["twist"]
+    assert isinstance(command, StopResumeVelocityCommandCfg)
+    command.approach_duration = (3.0, 9.0)
+    command.pause_duration = (2.0, 10.0)
+    command.resume_duration = (12.0, 22.0)
+    # A full longest cycle takes 41 s, including its recovery after the stop.
+    cfg.episode_length_s = 45.0
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)
