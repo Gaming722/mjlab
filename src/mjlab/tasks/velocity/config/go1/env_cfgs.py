@@ -909,6 +909,29 @@ def unitree_go1_stair_depth_long_stop_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_balanced_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Practice interrupted stairs while retaining ordinary motion elsewhere."""
+  cfg = unitree_go1_stair_depth_long_stop_env_cfg(play=play)
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  cycle_names: list[str] = []
+  for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+    for name, sub in terrain.sub_terrains.items():
+      if name.startswith(family + "_d") or name == family + "_adaptive":
+        sub.proportion *= 0.75 / 0.90
+        cycle_names.append(name)
+    terrain.sub_terrains[f"{family}_native"].proportion = total * 0.25
+  if not play:
+    command = cfg.commands["twist"]
+    assert isinstance(command, StopResumeVelocityCommandCfg)
+    command.terrain_names = tuple(cycle_names)
+    command.forward_stop_fraction = 0.50
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

@@ -112,3 +112,11 @@ def unitree_go1_stair_depth_long_stop_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg
   cfg = unitree_go1_stair_depth_rehearsal_ppo_runner_cfg()
   cfg.algorithm.learning_rate = 2.5e-6
   return cfg
+
+
+def unitree_go1_stair_depth_balanced_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Allow longer consolidation with small fixed policy updates."""
+  cfg = unitree_go1_stair_depth_long_stop_ppo_runner_cfg()
+  cfg.max_iterations = 1200
+  cfg.save_interval = 200
+  return cfg

@@ -8,6 +8,9 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 balanced stair-depth task that scopes interrupted walking
+  to stair columns, increases native-platform replay, and preserves ordinary
+  motion on other terrain without changing rewards or motor constraints.
 - Added optional terrain scoping for stop/resume commands so other terrain
   columns retain ordinary command durations and motion coverage.
 - Added a versioned Go1 stair-depth warm-start checkpoint, its training

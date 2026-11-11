@@ -30,6 +30,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_precise_edge_perceptive_env_cfg,
   unitree_go1_robust_perceptive_env_cfg,
   unitree_go1_smooth_perceptive_env_cfg,
+  unitree_go1_stair_depth_balanced_env_cfg,
   unitree_go1_stair_depth_env_cfg,
   unitree_go1_stair_depth_long_stop_env_cfg,
   unitree_go1_stair_depth_rehearsal_env_cfg,
@@ -39,6 +40,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
 from mjlab.tasks.velocity.config.go1.rl_cfg import (
   unitree_go1_edge_ppo_runner_cfg,
   unitree_go1_perceptive_ppo_runner_cfg,
+  unitree_go1_stair_depth_balanced_ppo_runner_cfg,
   unitree_go1_stair_depth_long_stop_ppo_runner_cfg,
   unitree_go1_stair_depth_rehearsal_ppo_runner_cfg,
 )
@@ -578,3 +580,71 @@ def test_stair_depth_long_stop_runner_only_changes_learning_rate():
   base = unitree_go1_stair_depth_rehearsal_ppo_runner_cfg()
   cfg = unitree_go1_stair_depth_long_stop_ppo_runner_cfg()
   assert cfg == replace(base, algorithm=replace(base.algorithm, learning_rate=2.5e-6))
+
+
+@pytest.mark.parametrize("play", [False, True])
+def test_balanced_stair_depth_preserves_constraints_and_restores_command_coverage(play):
+  base = unitree_go1_stair_depth_long_stop_env_cfg(play=play)
+  cfg = unitree_go1_stair_depth_balanced_env_cfg(play=play)
+  for name in (
+    "rewards",
+    "observations",
+    "actions",
+    "sim",
+    "events",
+    "terminations",
+    "curriculum",
+    "episode_length_s",
+  ):
+    assert getattr(cfg, name) == getattr(base, name)
+  assert cfg.scene.entities == base.scene.entities
+  assert cfg.scene.sensors == base.scene.sensors
+  assert cfg.scene.terrain is not None and base.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  old = base.scene.terrain.terrain_generator
+  assert terrain is not None and old is not None
+  assert sum(sub.proportion for sub in terrain.sub_terrains.values()) == pytest.approx(
+    1
+  )
+  expected_cycles = set()
+  for family, total in (("pyramid_stairs", 0.20), ("pyramid_stairs_inv", 0.30)):
+    names = [f"{family}_d{w}" for w in (220, 225, 240, 270, 300, 330)]
+    names.append(f"{family}_adaptive")
+    expected_cycles.update(names)
+    assert sum(terrain.sub_terrains[n].proportion for n in names) == pytest.approx(
+      total * 0.75
+    )
+    native = f"{family}_native"
+    assert terrain.sub_terrains[native] == replace(
+      old.sub_terrains[native], proportion=total * 0.25
+    )
+    for name in names:
+      variant = terrain.sub_terrains[name]
+      previous = old.sub_terrains[name]
+      assert replace(variant, proportion=previous.proportion) == previous
+      assert variant.proportion == pytest.approx(previous.proportion * 0.75 / 0.90)
+  for name in (
+    "flat",
+    "random_rough",
+    "wave_terrain",
+    "hf_pyramid_slope",
+    "hf_pyramid_slope_inv",
+  ):
+    assert terrain.sub_terrains[name] == old.sub_terrains[name]
+  command = cfg.commands["twist"]
+  if play:
+    assert command == base.commands["twist"]
+    assert not isinstance(command, StopResumeVelocityCommandCfg)
+  else:
+    assert isinstance(command, StopResumeVelocityCommandCfg)
+    assert command.terrain_names is not None
+    assert set(command.terrain_names) == expected_cycles
+    assert command.forward_stop_fraction == 0.5
+    assert command.resampling_time_range == (4, 8)
+
+
+def test_balanced_stair_depth_runner_preserves_learning_rate_and_allows_consolidation():
+  base = unitree_go1_stair_depth_long_stop_ppo_runner_cfg()
+  assert unitree_go1_stair_depth_balanced_ppo_runner_cfg() == replace(
+    base, max_iterations=1200, save_interval=200
+  )
