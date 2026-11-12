@@ -1,0 +1,182 @@
+{
+  "experiment": "V36",
+  "run": "2026-11-12_04-52-40_stair_depth_targeted_v36_remote",
+  "source_commit": "df45657ff6d5f7bfad2a58884e6ed923a29cc359",
+  "training_completed": true,
+  "verified_new_updates": 2000,
+  "final_sha256": "1d0d7c9ca7ab3c3494a1e2ca76e38d27b11eb48dbf561aff55a4d59c00f43d03",
+  "candidates": [
+    {
+      "iteration": 15250,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9649122807017544,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "hard_22cm18cm_stop_resume": []
+    },
+    {
+      "iteration": 15500,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "hard_22cm18cm_stop_resume": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed_and_survived": 1,
+          "survivors": 4,
+          "trials": 4,
+          "mean_stall_s": 16.370197296142578
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed_and_survived": 0,
+          "survivors": 4,
+          "trials": 4,
+          "mean_stall_s": 12.075098991394043
+        }
+      ]
+    },
+    {
+      "iteration": 15750,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "hard_22cm18cm_stop_resume": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed_and_survived": 1,
+          "survivors": 3,
+          "trials": 4,
+          "mean_stall_s": 10.08011245727539
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed_and_survived": 1,
+          "survivors": 4,
+          "trials": 4,
+          "mean_stall_s": 11.950090408325195
+        }
+      ]
+    },
+    {
+      "iteration": 16000,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "hard_22cm18cm_stop_resume": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed_and_survived": 1,
+          "survivors": 3,
+          "trials": 4,
+          "mean_stall_s": 10.515096664428711
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed_and_survived": 0,
+          "survivors": 4,
+          "trials": 4,
+          "mean_stall_s": 14.560152053833008
+        }
+      ]
+    },
+    {
+      "iteration": 16250,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": 0.024553571428571428,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": false
+        }
+      ],
+      "hard_22cm18cm_stop_resume": []
+    },
+    {
+      "iteration": 16500,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 0.9565217391304348,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "hard_22cm18cm_stop_resume": []
+    },
+    {
+      "iteration": 16750,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "hard_22cm18cm_stop_resume": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4,
+          "mean_stall_s": 8.795072555541992
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed_and_survived": 0,
+          "survivors": 4,
+          "trials": 4,
+          "mean_stall_s": 15.58016586303711
+        }
+      ]
+    },
+    {
+      "iteration": 17000,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9642857142857143,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "hard_22cm18cm_stop_resume": []
+    },
+    {
+      "iteration": 17199,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "hard_22cm18cm_stop_resume": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed_and_survived": 0,
+          "survivors": 1,
+          "trials": 4,
+          "mean_stall_s": 6.270022392272949
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed_and_survived": 1,
+          "survivors": 4,
+          "trials": 4,
+          "mean_stall_s": 14.320160865783691
+        }
+      ]
+    }
+  ],
+  "selected_checkpoint": null,
+  "acceptance_gates_changed": false
+}

@@ -12,13 +12,14 @@
   "save_interval": 250,
   "seed": 42,
   "evaluation_candidates": [
-    15450,
-    15700,
-    15950,
-    16200,
-    16450,
-    16700,
-    16950,
+    15250,
+    15500,
+    15750,
+    16000,
+    16250,
+    16500,
+    16750,
+    17000,
     17199
   ],
   "rationale": "V33parent passed full stair960 and native448 but failed continuous slope;warmstartonly. V35all7rejected,mostly hardnarrow restart stalling. Rehearse narrowinterruptions only;strongreferenceoldterrain with ordinarycommands aimsrepairretention. Hypothesis,notselectedpolicy.",
@@ -38,5 +39,6 @@
     "physical controller",
     "four original acceptance scopes"
   ],
-  "selection_status": "UNSELECTED;training parent is rejected finalpolicy;all original gates required"
+  "selection_status": "UNSELECTED;training parent is rejected finalpolicy;all original gates required",
+  "save_schedule_note": "RSL uses global iteration modulo250,not offsets from resumed15200. Actual corrected queue used these9 candidates;all rejected."
 }
