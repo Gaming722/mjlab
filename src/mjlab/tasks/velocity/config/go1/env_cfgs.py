@@ -958,6 +958,33 @@ def unitree_go1_stair_depth_reference_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_restart_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Practice restarting on narrow steps while replay uses ordinary commands."""
+  cfg = unitree_go1_stair_depth_reference_env_cfg(play=play)
+  if not play:
+    assert cfg.scene.terrain is not None
+    terrain = cfg.scene.terrain.terrain_generator
+    assert terrain is not None
+    command = cfg.commands["twist"]
+    assert isinstance(command, StopResumeVelocityCommandCfg)
+    command.terrain_names = tuple(
+      name
+      for name, sub in terrain.sub_terrains.items()
+      if isinstance(sub, BoxPyramidStairsTerrainCfg)
+      and (sub.step_width_range is not None or sub.step_width < 0.27)
+    )
+    # All eligible forward draws rehearse a long interruption on narrow stairs.
+    # Standing and pure turning retain their existing sampling priority.
+    command.forward_stop_fraction = 1.0
+    command.approach_duration = (6.0, 9.0)
+    command.pause_duration = (6.0, 10.0)
+    command.resume_duration = (18.0, 24.0)
+    command.resume_speed_range = (0.25, 0.35)
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

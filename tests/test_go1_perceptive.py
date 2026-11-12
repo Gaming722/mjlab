@@ -35,6 +35,7 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
   unitree_go1_stair_depth_long_stop_env_cfg,
   unitree_go1_stair_depth_reference_env_cfg,
   unitree_go1_stair_depth_rehearsal_env_cfg,
+  unitree_go1_stair_depth_restart_env_cfg,
   unitree_go1_stairs_low_speed_env_cfg,
   unitree_go1_stairs_perceptive_env_cfg,
 )
@@ -46,6 +47,7 @@ from mjlab.tasks.velocity.config.go1.rl_cfg import (
   unitree_go1_stair_depth_long_stop_ppo_runner_cfg,
   unitree_go1_stair_depth_reference_ppo_runner_cfg,
   unitree_go1_stair_depth_rehearsal_ppo_runner_cfg,
+  unitree_go1_stair_depth_restart_ppo_runner_cfg,
 )
 from mjlab.tasks.velocity.mdp import UniformVelocityCommandCfg
 from mjlab.tasks.velocity.mdp.observations import depth_camera
@@ -710,3 +712,73 @@ def test_reference_runner_has_no_added_actor_or_critic_inputs():
   for name, value in vars(base.algorithm).items():
     if name != "class_name":
       assert getattr(cfg.algorithm, name) == value
+
+
+@pytest.mark.parametrize("play", [False, True])
+def test_restart_task_changes_only_narrow_stair_command_practice(play):
+  base = unitree_go1_stair_depth_reference_env_cfg(play=play)
+  cfg = unitree_go1_stair_depth_restart_env_cfg(play=play)
+  for name in (
+    "rewards",
+    "actions",
+    "sim",
+    "events",
+    "terminations",
+    "curriculum",
+    "observations",
+    "episode_length_s",
+  ):
+    assert getattr(cfg, name) == getattr(base, name)
+  assert replace(cfg.scene, terrain=base.scene.terrain) == base.scene
+  assert cfg.scene.terrain is not None and base.scene.terrain is not None
+  assert (
+    replace(cfg.scene.terrain, spec_fn=base.scene.terrain.spec_fn) == base.scene.terrain
+  )
+  if play:
+    assert cfg.commands == base.commands
+    return
+  command = cfg.commands["twist"]
+  assert isinstance(command, StopResumeVelocityCommandCfg)
+  assert set(command.terrain_names or ()) == {
+    f"{family}_{variant}"
+    for family in ("pyramid_stairs", "pyramid_stairs_inv")
+    for variant in ("d220", "d225", "d240", "adaptive")
+  }
+  replay = cfg.observations["reference_mask"].terms["replay"].params["terrain_names"]
+  assert not set(command.terrain_names or ()).intersection(replay)
+  assert (
+    sum(
+      duration[1]
+      for duration in (
+        command.approach_duration,
+        command.pause_duration,
+        command.resume_duration,
+      )
+    )
+    < cfg.episode_length_s
+  )
+  original = base.commands["twist"]
+  assert isinstance(original, StopResumeVelocityCommandCfg)
+  assert (
+    replace(
+      command,
+      terrain_names=original.terrain_names,
+      forward_stop_fraction=original.forward_stop_fraction,
+      approach_duration=original.approach_duration,
+      pause_duration=original.pause_duration,
+      resume_duration=original.resume_duration,
+      resume_speed_range=original.resume_speed_range,
+    )
+    == original
+  )
+
+
+def test_restart_runner_retains_optimizer_and_policy_contract():
+  base = unitree_go1_stair_depth_reference_ppo_runner_cfg()
+  cfg = unitree_go1_stair_depth_restart_ppo_runner_cfg()
+  assert cfg.actor == base.actor and cfg.critic == base.critic
+  assert cfg.obs_groups == base.obs_groups
+  assert isinstance(cfg.algorithm, Go1ReferencePpoCfg)
+  assert replace(cfg.algorithm, reference_coefficient=5.0) == base.algorithm
+  assert cfg.algorithm.reference_coefficient == 25.0
+  assert cfg.max_iterations == 2000 and cfg.save_interval == 250

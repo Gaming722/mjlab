@@ -1,0 +1,42 @@
+{
+  "experiment": "V36 terrain-scoped narrow restart",
+  "task": "Mjlab-Velocity-Stair-Depth-Restart-Unitree-Go1-Perceptive",
+  "parent_run": "2026-11-11_12-36-03_stair_depth_balanced_v33_remote",
+  "parent_checkpoint": "model_15200.pt",
+  "parent_sha256": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",
+  "parent_counter": 365520,
+  "reference_coefficient": 25.0,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 2000,
+  "save_interval": 250,
+  "seed": 42,
+  "evaluation_candidates": [
+    15450,
+    15700,
+    15950,
+    16200,
+    16450,
+    16700,
+    16950,
+    17199
+  ],
+  "rationale": "V33parent passed full stair960 and native448 but failed continuous slope;warmstartonly. V35all7rejected,mostly hardnarrow restart stalling. Rehearse narrowinterruptions only;strongreferenceoldterrain with ordinarycommands aimsrepairretention. Hypothesis,notselectedpolicy.",
+  "command_only_exposure": {
+    "previous_narrow_pause": 0.0959411,
+    "new_narrow_pause": 0.1632453,
+    "previous_narrow_cycle": 0.4107954,
+    "new_narrow_cycle": 0.6868109,
+    "previous_narrow_turn": 0.1518746,
+    "new_narrow_turn": 0.0996736,
+    "new_replay_cycle": 0
+  },
+  "unchanged": [
+    "rewards",
+    "torque and smoothness constraints",
+    "policy observations",
+    "physical controller",
+    "four original acceptance scopes"
+  ],
+  "selection_status": "UNSELECTED;training parent is rejected finalpolicy;all original gates required"
+}

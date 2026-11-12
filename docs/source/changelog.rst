@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 narrow-stair restart task with longer interruptions and
+  ordinary commands on replay terrain, preserving rewards and motor constraints.
 - Added versioned Go1 reference-retention training weights, a frozen verified
   reference, actual configurations, ancestry and reproduction instructions.
 - Added a Go1 stair-depth reference task that retains the verified policy on

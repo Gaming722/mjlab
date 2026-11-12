@@ -141,3 +141,13 @@ def unitree_go1_stair_depth_reference_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg
   cfg.algorithm.class_name = "mjlab.tasks.velocity.rl.reference_ppo:ReferencePolicyPPO"
   cfg.save_interval = 100
   return cfg
+
+
+def unitree_go1_stair_depth_restart_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Keep the verified replay anchor while concentrating restart practice."""
+  cfg = unitree_go1_stair_depth_reference_ppo_runner_cfg()
+  assert isinstance(cfg.algorithm, Go1ReferencePpoCfg)
+  cfg.algorithm.reference_coefficient = 25.0
+  cfg.max_iterations = 2000
+  cfg.save_interval = 250
+  return cfg
