@@ -6,6 +6,7 @@ import numpy as np
 import torch
 
 from mjlab.entity import Entity
+from mjlab.managers.manager_base import ManagerTermBase
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.sensor import BuiltinSensor, ContactSensor
@@ -91,6 +92,38 @@ def commanded_motion_deficit(
   target = (speed * minimum_speed_fraction).clamp_min(1e-6)
   deficit = (1.0 - progress / target).clamp(0.0, 1.0)
   return deficit * (speed > command_threshold)
+
+
+class terrain_motion_deficit(ManagerTermBase):
+  """Apply the existing directional motion cost on named terrain columns only."""
+
+  def __init__(self, cfg: RewardTermCfg, env: ManagerBasedRlEnv):
+    super().__init__(env)
+    terrain = env.scene.terrain
+    generator = terrain.cfg.terrain_generator if terrain is not None else None
+    if terrain is None or generator is None or not generator.curriculum:
+      raise ValueError("Scoped motion deficit requires a curriculum terrain grid.")
+    names = list(generator.sub_terrains)
+    selected = cfg.params["terrain_names"]
+    if not selected or set(selected) - set(names):
+      raise ValueError("Scoped motion terrain names must exist in the terrain grid.")
+    self.terrain = terrain
+    self.columns = torch.tensor([names.index(n) for n in selected], device=env.device)
+
+  def __call__(
+    self,
+    env: ManagerBasedRlEnv,
+    terrain_names: tuple[str, ...],
+    command_name: str,
+    minimum_speed_fraction: float = 0.8,
+    command_threshold: float = 0.1,
+    asset_cfg: SceneEntityCfg = _DEFAULT_ASSET_CFG,
+  ) -> torch.Tensor:
+    del terrain_names
+    selected = torch.isin(self.terrain.terrain_types, self.columns)
+    return selected * commanded_motion_deficit(
+      env, command_name, minimum_speed_fraction, command_threshold, asset_cfg
+    )
 
 
 def _rough_turn_mask(

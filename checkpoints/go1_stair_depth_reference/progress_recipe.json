@@ -1,0 +1,40 @@
+{
+  "experiment": "V37 narrow-stair motion pressure",
+  "task": "Mjlab-Velocity-Stair-Depth-Progress-Unitree-Go1-Perceptive",
+  "parent_run": "2026-11-11_12-36-03_stair_depth_balanced_v33_remote",
+  "parent_checkpoint": "model_15200.pt",
+  "parent_sha256": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",
+  "parent_counter": 365520,
+  "reference_coefficient": 25.0,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 2000,
+  "save_interval": 250,
+  "seed": 42,
+  "evaluation_candidates": [
+    15250,
+    15500,
+    15750,
+    16000,
+    16250,
+    16500,
+    16750,
+    17000,
+    17199
+  ],
+  "rationale": "V36all9rejected;more scoped restart exposure did not escape hardstair stalling. Controlled comparison: sameV33parent,commands,reference25,LR,budget,oldrewardterms and motor constraints;only add narrow motion-deficit weight-8. Not proof of improvement.",
+  "unchanged": [
+    "rewards",
+    "torque and smoothness constraints",
+    "policy observations",
+    "physical controller",
+    "four original acceptance scopes"
+  ],
+  "selection_status": "UNSELECTED;all original behavior scopes and effort/smoothness gates remain required",
+  "new_reward": {
+    "name": "narrow_motion_deficit",
+    "weight": -8.0,
+    "minimum_speed_fraction": 0.8,
+    "standing_and_pure_turn_exempt": true
+  }
+}

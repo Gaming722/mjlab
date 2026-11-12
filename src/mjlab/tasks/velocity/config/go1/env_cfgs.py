@@ -985,6 +985,34 @@ def unitree_go1_stair_depth_restart_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_progress_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Increase narrow-stair motion pressure without relaxing motor constraints."""
+  cfg = unitree_go1_stair_depth_restart_env_cfg(play=play)
+  if play:
+    return cfg
+  assert cfg.scene.terrain is not None
+  terrain = cfg.scene.terrain.terrain_generator
+  assert terrain is not None
+  names = tuple(
+    name
+    for name, sub in terrain.sub_terrains.items()
+    if isinstance(sub, BoxPyramidStairsTerrainCfg)
+    and (sub.step_width_range is not None or sub.step_width < 0.27)
+  )
+  cfg.rewards["narrow_motion_deficit"] = RewardTermCfg(
+    func=mdp.terrain_motion_deficit,
+    weight=-8.0,
+    params={
+      "terrain_names": names,
+      "command_name": "twist",
+      "minimum_speed_fraction": 0.8,
+    },
+  )
+  return cfg
+
+
 def unitree_go1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   """Create Unitree Go1 flat terrain velocity configuration."""
   cfg = unitree_go1_rough_env_cfg(play=play)

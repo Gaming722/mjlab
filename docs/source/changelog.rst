@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 narrow-stair progress task with terrain-scoped motion
+  deficit costs, preserving existing rewards, torque limits and smoothness costs.
 - Added an opt-in Go1 narrow-stair restart task with longer interruptions and
   ordinary commands on replay terrain, preserving rewards and motor constraints.
 - Added versioned Go1 reference-retention training weights, a frozen verified
