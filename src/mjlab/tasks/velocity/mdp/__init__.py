@@ -7,4 +7,5 @@ from .reference_policy import *  # noqa: F403
 from .rewards import *  # noqa: F403
 from .terminations import *  # noqa: F403
 from .terrain_edges import *  # noqa: F403
+from .terrain_sampling import *  # noqa: F403
 from .velocity_command import *  # noqa: F403

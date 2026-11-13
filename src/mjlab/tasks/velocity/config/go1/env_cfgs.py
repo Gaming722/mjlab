@@ -985,6 +985,22 @@ def unitree_go1_stair_depth_restart_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_stratified_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Cover every narrow-stair level and increase high-step replay exposure."""
+  cfg = unitree_go1_stair_depth_progress_env_cfg(play=play)
+  if not play:
+    command = cfg.commands["twist"]
+    assert isinstance(command, StopResumeVelocityCommandCfg)
+    cfg.events["stratify_narrow_levels"] = EventTermCfg(
+      func=mdp.stratify_narrow_terrain_levels,
+      mode="startup",
+      params={"terrain_names": command.terrain_names},
+    )
+  return cfg
+
+
 def unitree_go1_stair_depth_progress_env_cfg(
   play: bool = False,
 ) -> ManagerBasedRlEnvCfg:

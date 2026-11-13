@@ -1,0 +1,47 @@
+{
+  "experiment": "V39 stratified narrow-stair difficulty allocation",
+  "task": "Mjlab-Velocity-Stair-Depth-Stratified-Unitree-Go1-Perceptive",
+  "parent_run": "2026-11-11_12-36-03_stair_depth_balanced_v33_remote",
+  "parent_checkpoint": "model_15200.pt",
+  "parent_sha256": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",
+  "parent_counter": 365520,
+  "reference_coefficient": 25.0,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 2000,
+  "save_interval": 250,
+  "seed": 42,
+  "evaluation_candidates": [
+    15250,
+    15500,
+    15750,
+    16000,
+    16250,
+    16500,
+    16750,
+    17000,
+    17199
+  ],
+  "rationale": "Zero-update2048env seed42 census found7 of128 narrow terrain/level cells empty and only19 narrow envs at level15. Test fixed initialization coverage as a hypothesis; no claim it is the sole cause. Same V37 parent,rewards,commands,reference25,LR,budget. Only narrow initial level allocation changes; V38 exploration floor is not used.",
+  "unchanged": [
+    "rewards",
+    "torque and smoothness constraints",
+    "policy observations",
+    "physical controller",
+    "four original acceptance scopes"
+  ],
+  "selection_status": "UNSELECTED;all original behavior scopes and effort/smoothness gates remain required",
+  "new_reward": {
+    "name": "narrow_motion_deficit",
+    "weight": -8.0,
+    "minimum_speed_fraction": 0.8,
+    "standing_and_pure_turn_exempt": true
+  },
+  "allocation": {
+    "scope": "Eight narrow/adaptive stair columns only",
+    "full_range": "At least half of each column and at least one per row when env count permits",
+    "remaining": "Highest difficulty quartile",
+    "old_terrain_columns": "Unchanged levels, types and origins",
+    "play": "Unchanged; training startup event omitted"
+  }
+}

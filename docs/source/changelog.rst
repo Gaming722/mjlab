@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 stair-depth task with stratified narrow-stair difficulty
+  allocation, retaining old-terrain allocation and existing safety rewards.
 - Added an opt-in Go1 stair-depth exploration task with a sampling standard
   deviation floor that survives checkpoint loading and preserves action means.
 - Added an opt-in Go1 narrow-stair progress task with terrain-scoped motion
