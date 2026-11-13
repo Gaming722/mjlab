@@ -1,0 +1,168 @@
+{
+  "experiment": "V37",
+  "run": "/home/wangjiaming/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-12_10-42-46_stair_depth_progress_v37_remote",
+  "source_commit": "275145c03eb42e57544fa6cdf55a28fc17b60435",
+  "parent_sha256": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",
+  "final_sha256": "a3fec819a2fc63abb47b7bfa21a87fdfb7d46a5a517e9c2540f12d3818b30e36",
+  "new_updates": 2000,
+  "selection_status": "REJECTED; all nine candidates failed unchanged original gates",
+  "candidates": [
+    {
+      "iteration": 15250,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 0.9555555555555556,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v37_15250_retention_audit.json",
+      "evidence_sha256": "e9920d019dc572aa5fb00a48ebe001603649a92bb93cc74a2b5ca6e6e7704fd3"
+    },
+    {
+      "iteration": 15500,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v37_15500_early_rejection.json",
+      "evidence_sha256": "246fd71802fdb3a7fc8a5a8c81fe611856abb629097541884a736c291aff12c1",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 2
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 15750,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9473684210526315,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v37_15750_retention_audit.json",
+      "evidence_sha256": "6b335f7def7da0c835fedc337f67b5e27b221bc8a359f723b5e209cbfb8ff6d9"
+    },
+    {
+      "iteration": 16000,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v37_16000_early_rejection.json",
+      "evidence_sha256": "a14beab310de999bd4b207cb1c6d458b3540e6c3a42cdbf26435413faa868332",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 16250,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": 0.022321428571428572,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v37_16250_retention_audit.json",
+      "evidence_sha256": "280fc166f503e15a9d4cac20d3eabe7a508d46bc650417c060d034689cfd9df7"
+    },
+    {
+      "iteration": 16500,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v37_16500_early_rejection.json",
+      "evidence_sha256": "cf946c2952be7cf822cf44434de34c5d100c2919813983e6112b4153d76287eb",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 3
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 0,
+          "trials": 4,
+          "survivors": 3
+        }
+      ]
+    },
+    {
+      "iteration": 16750,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v37_16750_early_rejection.json",
+      "evidence_sha256": "f226b2db534e48b2793931695215a86b2a5007aff5c01f73966a0ee0fdc4ed30",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 17000,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v37_17000_early_rejection.json",
+      "evidence_sha256": "a24b695533517ceded5108ef8c207ac019bfae6848692e3e2dc16177ee6fa693",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 17199,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v37_17199_early_rejection.json",
+      "evidence_sha256": "c9ceaf72473f5ea227171dac71d5796a278b1de680156d57f94b230847072d25",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    }
+  ],
+  "goal_complete": false
+}

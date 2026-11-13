@@ -1,0 +1,190 @@
+{
+  "experiment": "V38",
+  "run": "/home/wangjiaming/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_03-03-08_stair_depth_exploration_v38_remote",
+  "source_commit": "03769fe4f10043aa529514395e35dee6138fbc58",
+  "parent_sha256": "a7c38c253ef698554a08aaabae5b2c6edb842e7b24b459529f777fcefee98bcc",
+  "final_sha256": "93c90c2ddb9273a0725a50dd5fc9418446645f1cec4c57b0755e4167d1ee14ce",
+  "new_updates": 2000,
+  "selection_status": "REJECTED; all nine candidates failed unchanged original gates",
+  "candidates": [
+    {
+      "iteration": 15250,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v38_15250_early_rejection.json",
+      "evidence_sha256": "37455bf48c27df72145343d64576a7ee446c652061f30311c91d021a2a168896",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 15500,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "physical_survival_drop",
+          "value": 0.029017857142857144,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": false
+        },
+        {
+          "name": "hf_pyramid_slope_physical_drop",
+          "value": 0.09375,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": false
+        },
+        {
+          "name": "hf_pyramid_slope_inv_physical_drop",
+          "value": 0.0625,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v38_15500_retention_audit.json",
+      "evidence_sha256": "abe9b71240cdfd434f014c356ca0249f0109cc26340d3612908be1c9e8a77bb2"
+    },
+    {
+      "iteration": 15750,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v38_15750_early_rejection.json",
+      "evidence_sha256": "82dc30b003da16be885dbe295b133802e2261fc845d127341a2909718c548088",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 0,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 16000,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 0.9333333333333333,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        },
+        {
+          "name": "hf_pyramid_slope_inv_physical_drop",
+          "value": 0.078125,
+          "maximum": 0.05,
+          "minimum": null,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v38_16000_retention_audit.json",
+      "evidence_sha256": "3bd7a69594af22f30c59d65ffbc344a2068dd3bebe8447a90e4cc885a09f01c2"
+    },
+    {
+      "iteration": 16250,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v38_16250_early_rejection.json",
+      "evidence_sha256": "9bd40a9d477e93cc25c770e6e7cceb03cb94ba6e4d18e01021d937b09a8c7f42",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs",
+          "crossed": 1,
+          "trials": 4,
+          "survivors": 3
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 0,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 16500,
+      "selection_status": "REJECTED",
+      "native_passed": true,
+      "failed_native_checks": [],
+      "evidence_file": "artifacts/go1_stair_depth/v38_16500_early_rejection.json",
+      "evidence_sha256": "261fe6aa6b61efd9b10c40a268b61e528db9f02e8328974de8e56fd49951e774",
+      "failed_hard_cases": [
+        {
+          "terrain": "pyramid_stairs_inv",
+          "crossed": 0,
+          "trials": 4,
+          "survivors": 4
+        }
+      ]
+    },
+    {
+      "iteration": 16750,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_crossing_ratio",
+          "value": 0.9642857142857143,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        },
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 0.9361702127659575,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v38_16750_retention_audit.json",
+      "evidence_sha256": "5ab98e88b1ad0ea85a443f7bd369956b195c28c0fe63913210e509b4a36d52e0"
+    },
+    {
+      "iteration": 17000,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "pyramid_stairs_inv_crossing_ratio",
+          "value": 0.9347826086956522,
+          "maximum": null,
+          "minimum": 0.97,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v38_17000_retention_audit.json",
+      "evidence_sha256": "2ff02ed1ffe53cd26b25538207a72f52f25e965e1f463c1eed8d22cc23d8e124"
+    },
+    {
+      "iteration": 17199,
+      "selection_status": "REJECTED",
+      "native_passed": false,
+      "failed_native_checks": [
+        {
+          "name": "guard_trial_fraction_increase",
+          "value": 0.024553571428571428,
+          "maximum": 0.02,
+          "minimum": null,
+          "passed": false
+        }
+      ],
+      "evidence_file": "artifacts/go1_stair_depth/v38_17199_retention_audit.json",
+      "evidence_sha256": "28dc8943011f5fde846fe40821cb7131a77b22622d707ede939d0de34cb50cdf"
+    }
+  ],
+  "goal_complete": false
+}
