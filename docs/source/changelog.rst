@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 stair-depth exploration task with a sampling standard
+  deviation floor that survives checkpoint loading and preserves action means.
 - Added an opt-in Go1 narrow-stair progress task with terrain-scoped motion
   deficit costs, preserving existing rewards, torque limits and smoothness costs.
 - Added an opt-in Go1 narrow-stair restart task with longer interruptions and

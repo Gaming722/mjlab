@@ -151,3 +151,13 @@ def unitree_go1_stair_depth_restart_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
   cfg.max_iterations = 2000
   cfg.save_interval = 250
   return cfg
+
+
+def unitree_go1_stair_depth_exploration_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Increase stochastic exploration without changing deterministic actions."""
+  cfg = unitree_go1_stair_depth_restart_ppo_runner_cfg()
+  assert cfg.actor.distribution_cfg is not None
+  # A resumed checkpoint restores std parameters, so init_std alone has no effect.
+  # The distribution clamps sampling std; deterministic inference stays the mean.
+  cfg.actor.distribution_cfg["std_range"] = (0.55, 1e6)
+  return cfg
