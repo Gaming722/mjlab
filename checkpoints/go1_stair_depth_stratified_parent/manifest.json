@@ -1,0 +1,18 @@
+{
+  "purpose": "Rejected V39 warm-start for extended same-task training; no selected policy",
+  "source_run": "2026-11-13_05-45-52_stair_depth_stratified_v39_remote",
+  "iteration": 16750,
+  "common_step_counter": 402744,
+  "reference_checkpoint": "../go1_stair_depth_reference/model_14500.pt",
+  "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+  "files_sha256": {
+    "agent.yaml": "94f768e8a3722eba5932d09bb0fca3164bff5a5edcfff74909674471bd00b6ec",
+    "narrow_rejection.json": "67ff1d1357bf6da781012e6e32ca7ea0cba93fc5074cf985c520efc7a9c80690",
+    "extended_recipe.json": "8bdd8a959f8941f5403bdbb55370e4e74e00546500e2bfc002d7d256a3e36f6c",
+    "README.md": "50a0ceace8a0d4c3a65c8b68b96fce34f7dd753a4ec07607fc9520981d4c8bef",
+    "env.yaml": "ea217fbbc38bcbd279c22caca4fb4cb1afd8c53cb51ca46dac495b95fb78704c",
+    "native_evaluation.json": "ac01975587cdf215e68b54218626bc646aa6efd17fd45ac0bc22c897186fd804",
+    "model_16750.pt": "8c189ac81263c15e79153c1319bc697a3d6017d7fa6c7a0168539ce87cde5a31",
+    "lineage.json": "4b8449aa25c864ffbd8a824a0c20a12092598f4ab3073febe6677bf5c3381788"
+  }
+}

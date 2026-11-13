@@ -1,0 +1,51 @@
+{
+  "experiment": "V40 extended stratified replay",
+  "task": "Mjlab-Velocity-Stair-Depth-Stratified-Unitree-Go1-Perceptive",
+  "parent_run": "2026-11-13_05-45-52_stair_depth_stratified_v39_remote",
+  "parent_checkpoint": "model_16750.pt",
+  "parent_sha256": "8c189ac81263c15e79153c1319bc697a3d6017d7fa6c7a0168539ce87cde5a31",
+  "parent_counter": 402744,
+  "reference_coefficient": 25.0,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 6000,
+  "save_interval": 500,
+  "seed": 42,
+  "evaluation_candidates": [
+    17000,
+    17500,
+    18000,
+    18500,
+    19000,
+    19500,
+    20000,
+    20500,
+    21000,
+    21500,
+    22000,
+    22500,
+    22749
+  ],
+  "rationale": "V39 all nine rejected.16750 passed native448 and both hard22cm stop cases2/4 but failed22.5cm ascent1/4. Warm-start only; continue same stratified task,reference25,LR2.5e-6 and rewards for6000updates to test learning duration. No acceptance relaxation.",
+  "unchanged": [
+    "rewards",
+    "torque and smoothness constraints",
+    "policy observations",
+    "physical controller",
+    "four original acceptance scopes"
+  ],
+  "selection_status": "UNSELECTED;all original behavior scopes and effort/smoothness gates remain required",
+  "new_reward": {
+    "name": "narrow_motion_deficit",
+    "weight": -8.0,
+    "minimum_speed_fraction": 0.8,
+    "standing_and_pure_turn_exempt": true
+  },
+  "allocation": {
+    "scope": "Eight narrow/adaptive stair columns only",
+    "full_range": "At least half of each column and at least one per row when env count permits",
+    "remaining": "Highest difficulty quartile",
+    "old_terrain_columns": "Unchanged levels, types and origins",
+    "play": "Unchanged; training startup event omitted"
+  }
+}
