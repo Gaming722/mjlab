@@ -1,0 +1,14 @@
+{
+  "purpose": "Rejected V40 warm-start for retention experiment",
+  "files_sha256": {
+    "model_20500.pt": "941a6a0952110a0755072a87128c9c0a0d81fba332e71452d06df89bd8efcc02",
+    "agent.yaml": "4ce608defca12cf746cf51905e654385a9629891a3945904f260b2f0691aca4c",
+    "continuous_rejection.json": "6afe658fbe4fa6698796156fabc26af6c4b879f59244296a2d691b8ba8be912b",
+    "README.md": "e7fca6eb46c5b757a0650fcf54dee9f2482c1bc75c1b71a4525821bfe8e2489d",
+    "env.yaml": "ea217fbbc38bcbd279c22caca4fb4cb1afd8c53cb51ca46dac495b95fb78704c",
+    "native_evaluation.json": "7d879b70f8269784509d211cfe18afffcdcffa71bea401a73c88950b80e92f2f",
+    "full_evaluation.json": "8514d4e944c688fbbf30b9fc67e14258093b6c13e7f3bf8b94637e9d58a1c435",
+    "recipe.json": "03e979bc525b14cfb9b2ec64d795111d84c8d80c92e8b8be58d3a23ac806cc99",
+    "lineage.json": "b4e9285562544cd19e13150e354dab1bda3b6bcd24fdec5471affeb32af020ab"
+  }
+}

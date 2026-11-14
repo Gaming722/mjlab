@@ -1,0 +1,16 @@
+{
+  "experiment": "V41 stronger old-terrain reference",
+  "task": "Mjlab-Velocity-Stair-Depth-Stratified-Unitree-Go1-Perceptive",
+  "parent_run": "2026-11-13_09-22-48_stair_depth_stratified_v40_remote",
+  "parent_checkpoint": "model_20500.pt",
+  "parent_sha256": "941a6a0952110a0755072a87128c9c0a0d81fba332e71452d06df89bd8efcc02",
+  "parent_counter": 492768,
+  "reference_coefficient": 100.0,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 2000,
+  "save_interval": 250,
+  "seed": 42,
+  "rationale": "V40model20500 passed native and full960, rejected continuous112. Increase frozen14500 old-terrain action reference25to100 only; retain all rewards, commands, terrain sampling, controller and original acceptance. Hypothesis, no guarantee.",
+  "selection_status": "UNSELECTED; behavior validation required"
+}
