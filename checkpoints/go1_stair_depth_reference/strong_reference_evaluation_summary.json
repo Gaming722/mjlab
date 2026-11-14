@@ -1,0 +1,189 @@
+{
+  "all_8_candidates_rejected": true,
+  "goal_complete": false,
+  "training_terminal_state": "completed",
+  "reference_coefficient": 100,
+  "interpretation": "No evidence this stronger reference yields an acceptable narrow-stair policy. Do not select any candidate.",
+  "candidates": [
+    {
+      "iteration": 20750,
+      "scopes": {
+        "retention": {
+          "passed": true,
+          "failed_checks": []
+        }
+      },
+      "hard22cm_stop": [
+        {
+          "terrain": "pyramid_stairs",
+          "survivors": 4,
+          "crossed_and_survived": 4
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "survivors": 4,
+          "crossed_and_survived": 0
+        }
+      ],
+      "evidence": "artifacts/go1_stair_depth/v41_20750_early_rejection.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 21000,
+      "scopes": {
+        "retention": {
+          "passed": false,
+          "failed_checks": [
+            {
+              "name": "guard_trial_fraction_increase",
+              "value": 0.022321428571428572,
+              "maximum": 0.02,
+              "minimum": null,
+              "passed": false
+            }
+          ]
+        }
+      },
+      "hard22cm_stop": [],
+      "evidence": "artifacts/go1_stair_depth/v41_21000_retention_audit.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 21250,
+      "scopes": {
+        "retention": {
+          "passed": true,
+          "failed_checks": []
+        }
+      },
+      "hard22cm_stop": [
+        {
+          "terrain": "pyramid_stairs",
+          "survivors": 3,
+          "crossed_and_survived": 3
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "survivors": 4,
+          "crossed_and_survived": 1
+        }
+      ],
+      "evidence": "artifacts/go1_stair_depth/v41_21250_early_rejection.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 21500,
+      "scopes": {
+        "retention": {
+          "passed": true,
+          "failed_checks": []
+        }
+      },
+      "hard22cm_stop": [
+        {
+          "terrain": "pyramid_stairs",
+          "survivors": 3,
+          "crossed_and_survived": 1
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "survivors": 4,
+          "crossed_and_survived": 1
+        }
+      ],
+      "evidence": "artifacts/go1_stair_depth/v41_21500_early_rejection.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 21750,
+      "scopes": {
+        "retention": {
+          "passed": true,
+          "failed_checks": []
+        }
+      },
+      "hard22cm_stop": [
+        {
+          "terrain": "pyramid_stairs",
+          "survivors": 3,
+          "crossed_and_survived": 1
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "survivors": 4,
+          "crossed_and_survived": 1
+        }
+      ],
+      "evidence": "artifacts/go1_stair_depth/v41_21750_early_rejection.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 22000,
+      "scopes": {
+        "retention": {
+          "passed": true,
+          "failed_checks": []
+        }
+      },
+      "hard22cm_stop": [
+        {
+          "terrain": "pyramid_stairs",
+          "survivors": 2,
+          "crossed_and_survived": 1
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "survivors": 3,
+          "crossed_and_survived": 0
+        }
+      ],
+      "evidence": "artifacts/go1_stair_depth/v41_22000_early_rejection.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 22250,
+      "scopes": {
+        "retention": {
+          "passed": false,
+          "failed_checks": [
+            {
+              "name": "pyramid_stairs_crossing_ratio",
+              "value": 0.9655172413793104,
+              "maximum": null,
+              "minimum": 0.97,
+              "passed": false
+            }
+          ]
+        }
+      },
+      "hard22cm_stop": [],
+      "evidence": "artifacts/go1_stair_depth/v41_22250_retention_audit.json",
+      "selection_status": "REJECTED"
+    },
+    {
+      "iteration": 22499,
+      "scopes": {
+        "retention": {
+          "passed": true,
+          "failed_checks": []
+        }
+      },
+      "hard22cm_stop": [
+        {
+          "terrain": "pyramid_stairs",
+          "survivors": 3,
+          "crossed_and_survived": 2
+        },
+        {
+          "terrain": "pyramid_stairs_inv",
+          "survivors": 4,
+          "crossed_and_survived": 0
+        }
+      ],
+      "evidence": "artifacts/go1_stair_depth/v41_22499_early_rejection.json",
+      "selection_status": "REJECTED"
+    }
+  ],
+  "training_exit_code": 0,
+  "original_trainer_pid_absent": 2909502
+}

@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an opt-in Go1 stair-depth retention task with more high-difficulty native
+  stair and slope replay, preserving narrow-stair practice and safety rewards.
 - Added an explicit previous reference coefficient for PPO fine-tuning resumes,
   retaining strict reference checkpoint and replay-mask verification.
 - Added an opt-in Go1 stair-depth task with stratified narrow-stair difficulty

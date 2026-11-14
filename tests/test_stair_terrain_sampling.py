@@ -16,6 +16,28 @@ from mjlab.tasks.velocity.config.go1.env_cfgs import (
 from mjlab.tasks.velocity.mdp.terrain_sampling import stratify_narrow_terrain_levels
 
 
+def test_retention_task_only_adds_native_and_slope_startup_replay(monkeypatch):
+  base = unitree_go1_stair_depth_stratified_env_cfg()
+  play_base = unitree_go1_stair_depth_stratified_env_cfg(play=True)
+  monkeypatch.setattr(
+    env_cfgs,
+    "unitree_go1_stair_depth_stratified_env_cfg",
+    lambda play=False: deepcopy(play_base if play else base),
+  )
+  cfg = env_cfgs.unitree_go1_stair_depth_retention_env_cfg()
+  event = cfg.events.pop("stratify_retention_levels")
+  assert event.mode == "startup"
+  assert event.func is stratify_narrow_terrain_levels
+  assert event.params["terrain_names"] == (
+    "pyramid_stairs_native",
+    "pyramid_stairs_inv_native",
+    "hf_pyramid_slope",
+    "hf_pyramid_slope_inv",
+  )
+  assert cfg == base
+  assert env_cfgs.unitree_go1_stair_depth_retention_env_cfg(play=True) == play_base
+
+
 def test_narrow_levels_cover_full_range_and_emphasize_hard_rows():
   types = torch.tensor([0] * 64 + [1] * 64 + [2] * 3)
   levels = torch.full_like(types, 5)

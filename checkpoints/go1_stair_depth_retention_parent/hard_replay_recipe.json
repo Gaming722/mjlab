@@ -1,0 +1,16 @@
+{
+  "experiment": "V42 hard native replay",
+  "task": "Mjlab-Velocity-Stair-Depth-Retention-Unitree-Go1-Perceptive",
+  "parent_checkpoint": "checkpoints/go1_stair_depth_retention_parent/model_20500.pt",
+  "parent_sha256": "941a6a0952110a0755072a87128c9c0a0d81fba332e71452d06df89bd8efcc02",
+  "parent_counter": 492768,
+  "reference_coefficient": 25.0,
+  "reference_resume_coefficient": null,
+  "num_envs": 2048,
+  "learning_rate": 2.5e-06,
+  "max_new_updates": 2000,
+  "save_interval": 250,
+  "seed": 42,
+  "only_environment_change": "startup stratification of two native stair and two slope columns: full-range baseline plus highest-quartile replay; narrow allocation unchanged",
+  "selection_status": "UNSELECTED; preflight and original four behavior scopes required"
+}

@@ -9,6 +9,7 @@
     "native_evaluation.json": "7d879b70f8269784509d211cfe18afffcdcffa71bea401a73c88950b80e92f2f",
     "full_evaluation.json": "8514d4e944c688fbbf30b9fc67e14258093b6c13e7f3bf8b94637e9d58a1c435",
     "recipe.json": "072197a028fa40a4a09468cfb9f9c21b479afb993bafc50d09c6dd150acd6854",
-    "lineage.json": "b4e9285562544cd19e13150e354dab1bda3b6bcd24fdec5471affeb32af020ab"
+    "lineage.json": "b4e9285562544cd19e13150e354dab1bda3b6bcd24fdec5471affeb32af020ab",
+    "hard_replay_recipe.json": "54f579706acadfec23f72f11c28ee20e2bb7b20714e178410eacce400d68280b"
   }
 }

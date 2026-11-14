@@ -1001,6 +1001,27 @@ def unitree_go1_stair_depth_stratified_env_cfg(
   return cfg
 
 
+def unitree_go1_stair_depth_retention_env_cfg(
+  play: bool = False,
+) -> ManagerBasedRlEnvCfg:
+  """Increase hard native-stair and slope replay alongside narrow-step practice."""
+  cfg = unitree_go1_stair_depth_stratified_env_cfg(play=play)
+  if not play:
+    cfg.events["stratify_retention_levels"] = EventTermCfg(
+      func=mdp.stratify_narrow_terrain_levels,
+      mode="startup",
+      params={
+        "terrain_names": (
+          "pyramid_stairs_native",
+          "pyramid_stairs_inv_native",
+          "hf_pyramid_slope",
+          "hf_pyramid_slope_inv",
+        )
+      },
+    )
+  return cfg
+
+
 def unitree_go1_stair_depth_progress_env_cfg(
   play: bool = False,
 ) -> ManagerBasedRlEnvCfg:
