@@ -47,12 +47,19 @@ class ReferencePolicyPPO(PPO):
     reference_checkpoint: str | None = None,
     reference_sha256: str | None = None,
     reference_mask_key: str = "reference_mask",
+    reference_resume_coefficient: float | None = None,
     **kwargs: Any,
   ) -> None:
     super().__init__(actor, critic, storage, **kwargs)
     if not math.isfinite(reference_coefficient) or reference_coefficient < 0:
       raise ValueError("reference_coefficient must be finite and nonnegative.")
     self.reference_coefficient = reference_coefficient
+    if reference_resume_coefficient is not None and (
+      not math.isfinite(reference_resume_coefficient)
+      or reference_resume_coefficient < 0
+    ):
+      raise ValueError("reference_resume_coefficient must be finite and nonnegative.")
+    self.reference_resume_coefficient = reference_resume_coefficient
     self.reference_mask_key = reference_mask_key
     self.reference_sha256 = reference_sha256
     self.reference_actor: MLPModel | None = None
@@ -163,6 +170,9 @@ class ReferencePolicyPPO(PPO):
       "reference_policy" in loaded_dict
     ):
       expected = self._reference_contract()
-      if loaded_dict["reference_policy"] != expected:
+      previous = dict(expected)
+      if self.reference_resume_coefficient is not None:
+        previous["coefficient"] = self.reference_resume_coefficient
+      if loaded_dict["reference_policy"] not in (expected, previous):
         raise ValueError("Resume reference policy contract differs from checkpoint.")
     return super().load(loaded_dict, load_cfg, strict)

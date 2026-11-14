@@ -127,6 +127,7 @@ def unitree_go1_stair_depth_balanced_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
 @dataclass
 class Go1ReferencePpoCfg(RslRlPpoAlgorithmCfg):
   reference_coefficient: float = 5.0
+  reference_resume_coefficient: float | None = None
   reference_checkpoint: str = "checkpoints/go1_stair_depth_reference/model_14500.pt"
   reference_sha256: str = (
     "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded"

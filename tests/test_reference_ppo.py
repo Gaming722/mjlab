@@ -21,7 +21,7 @@ from mjlab.tasks.velocity.rl.reference_ppo import (
 )
 
 
-def _algorithm(tmp_path, coefficient=3.0, mask=1.0):
+def _algorithm(tmp_path, coefficient=3.0, mask=1.0, resume_coefficient=None):
   torch.manual_seed(41)
   obs = TensorDict(
     {"actor": torch.randn(8, 3), "reference_mask": torch.full((8, 1), mask)},
@@ -51,6 +51,7 @@ def _algorithm(tmp_path, coefficient=3.0, mask=1.0):
     critic,
     storage,
     reference_coefficient=coefficient,
+    reference_resume_coefficient=resume_coefficient,
     reference_checkpoint=str(path),
     reference_sha256=digest,
     schedule="fixed",
@@ -159,6 +160,25 @@ def test_reference_checkpoint_and_resume_contract_are_verified(tmp_path):
       reference_coefficient=1,
       schedule="adaptive",
     )
+
+
+def test_explicit_reference_coefficient_transition_preserves_other_contracts(tmp_path):
+  algorithm, _ = _algorithm(tmp_path, coefficient=100, resume_coefficient=25)
+  state = algorithm.save()
+  state["reference_policy"]["coefficient"] = 25
+  algorithm.load(state, None, True)
+  assert algorithm.save()["reference_policy"]["coefficient"] == 100
+  algorithm.load(algorithm.save(), None, True)
+  for key, value in (("coefficient", 5), ("sha256", "wrong"), ("mask_key", "wrong")):
+    altered = deepcopy(state)
+    altered["reference_policy"][key] = value
+    with pytest.raises(ValueError, match="contract"):
+      algorithm.load(altered, None, True)
+  strict, _ = _algorithm(tmp_path, coefficient=100)
+  with pytest.raises(ValueError, match="contract"):
+    strict.load(state, None, True)
+  with pytest.raises(ValueError, match="reference_resume_coefficient"):
+    _algorithm(tmp_path, resume_coefficient=float("nan"))
 
 
 def test_reference_mask_tracks_columns_without_policy_inputs():

@@ -8,6 +8,8 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added an explicit previous reference coefficient for PPO fine-tuning resumes,
+  retaining strict reference checkpoint and replay-mask verification.
 - Added an opt-in Go1 stair-depth task with stratified narrow-stair difficulty
   allocation, retaining old-terrain allocation and existing safety rewards.
 - Added an opt-in Go1 stair-depth exploration task with a sampling standard

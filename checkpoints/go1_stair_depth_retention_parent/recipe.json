@@ -12,5 +12,6 @@
   "save_interval": 250,
   "seed": 42,
   "rationale": "V40model20500 passed native and full960, rejected continuous112. Increase frozen14500 old-terrain action reference25to100 only; retain all rewards, commands, terrain sampling, controller and original acceptance. Hypothesis, no guarantee.",
-  "selection_status": "UNSELECTED; behavior validation required"
+  "selection_status": "UNSELECTED; behavior validation required",
+  "reference_resume_coefficient": 25.0
 }
