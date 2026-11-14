@@ -1,0 +1,25 @@
+{
+  "selection_status": "SELECTED_FOR_HARDWARE_TEST_UNDER_REVISED_USER_SCOPE",
+  "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt",
+  "checkpoint_sha256": "941a6a0952110a0755072a87128c9c0a0d81fba332e71452d06df89bd8efcc02",
+  "native_retention_passed": true,
+  "six_width_960_trials_passed": true,
+  "hard18cm_narrow_stop_success": "20/24",
+  "continuous_120s_passed": false,
+  "continuous_limitations": "normal stairs15/16 survival14/16 crossing; inverse stairs15/16; inverse slopes13/16 survival versus16/16 baseline",
+  "holdout": "not_assessed",
+  "hardware_deployed": false,
+  "physical_robot_tested": false,
+  "reason": "User prioritizes promptly testing relatively best available policy over universal terrain acceptance",
+  "local_runtime_verification": {
+    "device": "cpu",
+    "torch": "2.14.0+cu130",
+    "iterations": 100,
+    "parity_max_abs_error": 1.430511474609375e-05,
+    "p50_ms": 0.20592549117282033,
+    "p95_ms": 0.21735683549195528,
+    "p99_ms": 0.22274003247730442,
+    "max_ms": 0.23947807494550943,
+    "all_within_18ms": true
+  }
+}

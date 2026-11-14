@@ -1,0 +1,17 @@
+{
+  "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt",
+  "checkpoint_sha256": "941a6a0952110a0755072a87128c9c0a0d81fba332e71452d06df89bd8efcc02",
+  "onnx": "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_stair_depth/candidates/v40_20500_hardware_candidate/model_20500.onnx",
+  "onnx_sha256": "47faee18fc9d747bcec955c2eba0eb820a5da187ed153ea7ce0bef9c4c4a1de6",
+  "training_env": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/params/env.yaml",
+  "training_env_sha256": "ea217fbbc38bcbd279c22caca4fb4cb1afd8c53cb51ca46dac495b95fb78704c",
+  "unchanged_saved_actor_depth_action_robot_parameters": true,
+  "metadata_contract_template": "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_feet_edge/selected/model_9200.onnx",
+  "full_precision_training_yaml_required_for_deployment": true,
+  "samples": 64,
+  "max_abs_error": 7.62939453125e-06,
+  "rms_error": 8.355726829010224e-07,
+  "reference_onnx": null,
+  "reference_onnx_max_error": null,
+  "passed": true
+}

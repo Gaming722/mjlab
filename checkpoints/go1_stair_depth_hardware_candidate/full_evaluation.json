@@ -1,0 +1,1495 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "physical_survival_drop",
+      "value": -0.004166666666666667,
+      "maximum": 0.02,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "guard_trial_fraction_increase",
+      "value": -0.005208333333333333,
+      "maximum": 0.02,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "mean_velocity_xy_rmse_ratio",
+      "value": 0.9498186114914758,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "mean_yaw_rate_rmse_ratio",
+      "value": 0.9746195875364929,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pure_yaw_profile_rmse_ratio",
+      "value": 0.9476567456136648,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "joint_acc_rms_ratio",
+      "value": 1.0032044901228307,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "base_lin_acc_rms_ratio",
+      "value": 0.9977117947021518,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "base_ang_acc_rms_ratio",
+      "value": 0.998533074187386,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "stair3cm_support_fraction_increase",
+      "value": -0.0029857265404346633,
+      "maximum": 0.015,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "stair3cm_landing_fraction_increase",
+      "value": -0.006956921595952792,
+      "maximum": 0.025,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pyramid_stairs_physical_drop",
+      "value": 0.0,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pyramid_stairs_inv_physical_drop",
+      "value": -0.008333333333333333,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "narrow_forward_crossed_gain_or_ceiling",
+      "value": 0.04861111111111116,
+      "maximum": null,
+      "minimum": -0.013194444444444398,
+      "passed": true
+    },
+    {
+      "name": "narrow_forward_guardfree_crossed_gain_or_ceiling",
+      "value": 0.04166666666666663,
+      "maximum": null,
+      "minimum": -0.006249999999999978,
+      "passed": true
+    },
+    {
+      "name": "18cm_narrow_stop_crossing_fraction",
+      "value": 0.8333333333333334,
+      "maximum": null,
+      "minimum": 0.7,
+      "passed": true
+    },
+    {
+      "name": "18cm_narrow_stop_absolute_crossing_gain",
+      "value": 0.5416666666666666,
+      "maximum": null,
+      "minimum": 0.2,
+      "passed": true
+    },
+    {
+      "name": "18cm_stop_width220_pyramid_stairs_crossing_fraction",
+      "value": 0.75,
+      "maximum": null,
+      "minimum": 0.5,
+      "passed": true
+    },
+    {
+      "name": "18cm_stop_width220_pyramid_stairs_inv_crossing_fraction",
+      "value": 0.75,
+      "maximum": null,
+      "minimum": 0.5,
+      "passed": true
+    },
+    {
+      "name": "18cm_stop_width225_pyramid_stairs_crossing_fraction",
+      "value": 0.75,
+      "maximum": null,
+      "minimum": 0.5,
+      "passed": true
+    },
+    {
+      "name": "18cm_stop_width225_pyramid_stairs_inv_crossing_fraction",
+      "value": 0.75,
+      "maximum": null,
+      "minimum": 0.5,
+      "passed": true
+    },
+    {
+      "name": "18cm_stop_width240_pyramid_stairs_crossing_fraction",
+      "value": 1.0,
+      "maximum": null,
+      "minimum": 0.5,
+      "passed": true
+    },
+    {
+      "name": "18cm_stop_width240_pyramid_stairs_inv_crossing_fraction",
+      "value": 1.0,
+      "maximum": null,
+      "minimum": 0.5,
+      "passed": true
+    },
+    {
+      "name": "width_270_crossing_ratio",
+      "value": 1.0232558139534884,
+      "maximum": null,
+      "minimum": 0.97,
+      "passed": true
+    },
+    {
+      "name": "width_300_crossing_ratio",
+      "value": 1.0,
+      "maximum": null,
+      "minimum": 0.97,
+      "passed": true
+    },
+    {
+      "name": "width_330_crossing_ratio",
+      "value": 1.069767441860465,
+      "maximum": null,
+      "minimum": 0.97,
+      "passed": true
+    }
+  ],
+  "primary_narrow_forward": {
+    "baseline": {
+      "trials": 288,
+      "crossed": 263,
+      "guardfree_crossed": 261
+    },
+    "candidate": {
+      "trials": 288,
+      "crossed": 277,
+      "guardfree_crossed": 273
+    }
+  },
+  "statistics": {
+    "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+      "trials": 960,
+      "physical_survivors": 932,
+      "guard_free_survivors": 912,
+      "guard_free_crossed_and_survived": 723,
+      "guard_free_crossed_lower_bound": 721,
+      "guard_free_crossed_upper_bound": 726,
+      "guard_violating_trials": 30,
+      "guard_violating_steps": 52,
+      "max_guard_ratio": 1.5979291200637817,
+      "max_actual_ratio": 1.0,
+      "crossed_and_survived": 730,
+      "mean_stall_s": 1.6187581074113646,
+      "mean_velocity_xy_rmse": 0.0756223842734471,
+      "mean_yaw_rate_rmse": 0.07968138693831861,
+      "pure_yaw_profile_rmse": 0.14371039221684137,
+      "stair3cm_support_fraction": 0.17700684748620854,
+      "stair3cm_landing_fraction": 0.2795535653009402,
+      "stairs_crossed_and_survived": {
+        "pyramid_stairs": 368,
+        "pyramid_stairs_inv": 362
+      },
+      "terrain_guard_free_crossed_and_survived": {
+        "pyramid_stairs": 363,
+        "pyramid_stairs_inv": 360
+      },
+      "common_survivor_count": 914,
+      "common_survivor_means": {
+        "joint_acc_rms": 51.09674951023294,
+        "base_lin_acc_rms": 1.9384193197381836,
+        "base_ang_acc_rms": 18.252530136567497,
+        "actual_torque_rms": 3.910269087722578,
+        "actual_near90_fraction": 4.47210076856539e-05,
+        "actual_saturation99_fraction": 1.627461734728142e-05,
+        "target_step_rms_rad": 0.05528092893203252,
+        "target_second_rms_rad": 0.04784101869959865
+      },
+      "terrain_guard_violations": {
+        "pyramid_stairs": 18,
+        "pyramid_stairs_inv": 12
+      }
+    },
+    "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+      "trials": 960,
+      "physical_survivors": 936,
+      "guard_free_survivors": 919,
+      "guard_free_crossed_and_survived": 756,
+      "guard_free_crossed_lower_bound": 752,
+      "guard_free_crossed_upper_bound": 758,
+      "guard_violating_trials": 25,
+      "guard_violating_steps": 46,
+      "max_guard_ratio": 1.705739140510559,
+      "max_actual_ratio": 1.0,
+      "crossed_and_survived": 762,
+      "mean_stall_s": 1.1316487785428762,
+      "mean_velocity_xy_rmse": 0.07182754802828034,
+      "mean_yaw_rate_rmse": 0.07765904047215978,
+      "pure_yaw_profile_rmse": 0.13618812259907523,
+      "stair3cm_support_fraction": 0.17402112094577388,
+      "stair3cm_landing_fraction": 0.27259664370498743,
+      "stairs_crossed_and_survived": {
+        "pyramid_stairs": 385,
+        "pyramid_stairs_inv": 377
+      },
+      "terrain_guard_free_crossed_and_survived": {
+        "pyramid_stairs": 384,
+        "pyramid_stairs_inv": 372
+      },
+      "common_survivor_count": 914,
+      "common_survivor_means": {
+        "joint_acc_rms": 51.26048853934724,
+        "base_lin_acc_rms": 1.9339838183813074,
+        "base_ang_acc_rms": 18.225755028964652,
+        "actual_torque_rms": 3.9152258350238758,
+        "actual_near90_fraction": 3.446389555332966e-05,
+        "actual_saturation99_fraction": 9.846827219071222e-06,
+        "target_step_rms_rad": 0.05564150987172609,
+        "target_second_rms_rad": 0.04812657843696471
+      },
+      "terrain_guard_violations": {
+        "pyramid_stairs": 10,
+        "pyramid_stairs_inv": 15
+      }
+    }
+  },
+  "per_width": {
+    "220": {
+      "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+        "trials": 160,
+        "physical_survivors": 154,
+        "guard_free_survivors": 148,
+        "guard_free_crossed_and_survived": 112,
+        "guard_free_crossed_lower_bound": 111,
+        "guard_free_crossed_upper_bound": 112,
+        "guard_violating_trials": 6,
+        "guard_violating_steps": 9,
+        "max_guard_ratio": 1.3632311820983887,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 114,
+        "mean_stall_s": 2.6001438073813916,
+        "mean_velocity_xy_rmse": 0.08963697175495326,
+        "mean_yaw_rate_rmse": 0.08787707025185228,
+        "pure_yaw_profile_rmse": 0.15338165313005447,
+        "stair3cm_support_fraction": 0.2364744948386419,
+        "stair3cm_landing_fraction": 0.3429595795884289,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 58,
+          "pyramid_stairs_inv": 56
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 57,
+          "pyramid_stairs_inv": 55
+        },
+        "common_survivor_count": 146,
+        "common_survivor_means": {
+          "joint_acc_rms": 52.309425732860824,
+          "base_lin_acc_rms": 1.9953157595575672,
+          "base_ang_acc_rms": 18.72975069202789,
+          "actual_torque_rms": 3.9748636190205406,
+          "actual_near90_fraction": 5.222602908049825e-05,
+          "actual_saturation99_fraction": 1.7979452310748756e-05,
+          "target_step_rms_rad": 0.056093590704035266,
+          "target_second_rms_rad": 0.049191003052951536
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 3,
+          "pyramid_stairs_inv": 3
+        }
+      },
+      "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+        "trials": 160,
+        "physical_survivors": 151,
+        "guard_free_survivors": 146,
+        "guard_free_crossed_and_survived": 120,
+        "guard_free_crossed_lower_bound": 118,
+        "guard_free_crossed_upper_bound": 120,
+        "guard_violating_trials": 8,
+        "guard_violating_steps": 11,
+        "max_guard_ratio": 1.6267099380493164,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 120,
+        "mean_stall_s": 1.8512587665580214,
+        "mean_velocity_xy_rmse": 0.08460069992579519,
+        "mean_yaw_rate_rmse": 0.09036357393488288,
+        "pure_yaw_profile_rmse": 0.15072954911738634,
+        "stair3cm_support_fraction": 0.23476133494377016,
+        "stair3cm_landing_fraction": 0.3309313459355412,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 60,
+          "pyramid_stairs_inv": 60
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 60,
+          "pyramid_stairs_inv": 60
+        },
+        "common_survivor_count": 146,
+        "common_survivor_means": {
+          "joint_acc_rms": 52.917432171024686,
+          "base_lin_acc_rms": 2.010749148995909,
+          "base_ang_acc_rms": 18.827415557756815,
+          "actual_torque_rms": 3.9564397106431937,
+          "actual_near90_fraction": 7.534246684023345e-05,
+          "actual_saturation99_fraction": 1.7979452211078105e-05,
+          "target_step_rms_rad": 0.056938020601766566,
+          "target_second_rms_rad": 0.04995478157668489
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 4,
+          "pyramid_stairs_inv": 4
+        }
+      }
+    },
+    "225": {
+      "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+        "trials": 160,
+        "physical_survivors": 152,
+        "guard_free_survivors": 147,
+        "guard_free_crossed_and_survived": 109,
+        "guard_free_crossed_lower_bound": 109,
+        "guard_free_crossed_upper_bound": 110,
+        "guard_violating_trials": 8,
+        "guard_violating_steps": 8,
+        "max_guard_ratio": 1.2666122913360596,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 111,
+        "mean_stall_s": 2.501764977443963,
+        "mean_velocity_xy_rmse": 0.0871311655268073,
+        "mean_yaw_rate_rmse": 0.09836784861981869,
+        "pure_yaw_profile_rmse": 0.2038982082158327,
+        "stair3cm_support_fraction": 0.20562446645479138,
+        "stair3cm_landing_fraction": 0.3262421405947147,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 55,
+          "pyramid_stairs_inv": 56
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 53,
+          "pyramid_stairs_inv": 56
+        },
+        "common_survivor_count": 146,
+        "common_survivor_means": {
+          "joint_acc_rms": 52.417445431016894,
+          "base_lin_acc_rms": 2.0013895598176408,
+          "base_ang_acc_rms": 18.758317176609822,
+          "actual_torque_rms": 3.9350318043199306,
+          "actual_near90_fraction": 9.931506982156114e-05,
+          "actual_saturation99_fraction": 2.996575365190662e-05,
+          "target_step_rms_rad": 0.056336711454269,
+          "target_second_rms_rad": 0.04912599949293757
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 5,
+          "pyramid_stairs_inv": 3
+        }
+      },
+      "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+        "trials": 160,
+        "physical_survivors": 151,
+        "guard_free_survivors": 146,
+        "guard_free_crossed_and_survived": 118,
+        "guard_free_crossed_lower_bound": 118,
+        "guard_free_crossed_upper_bound": 119,
+        "guard_violating_trials": 8,
+        "guard_violating_steps": 15,
+        "max_guard_ratio": 1.122462272644043,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 121,
+        "mean_stall_s": 1.6040046422509477,
+        "mean_velocity_xy_rmse": 0.08169941855594516,
+        "mean_yaw_rate_rmse": 0.08288047262467443,
+        "pure_yaw_profile_rmse": 0.14730393048375845,
+        "stair3cm_support_fraction": 0.2014678962856547,
+        "stair3cm_landing_fraction": 0.31877136537301426,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 61,
+          "pyramid_stairs_inv": 60
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 61,
+          "pyramid_stairs_inv": 57
+        },
+        "common_survivor_count": 146,
+        "common_survivor_means": {
+          "joint_acc_rms": 52.76055701791424,
+          "base_lin_acc_rms": 1.9940298852855212,
+          "base_ang_acc_rms": 18.77772637589337,
+          "actual_torque_rms": 3.9728728696091533,
+          "actual_near90_fraction": 5.736301403113143e-05,
+          "actual_saturation99_fraction": 2.2260274033202495e-05,
+          "target_step_rms_rad": 0.05689292814429492,
+          "target_second_rms_rad": 0.049777369474201166
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 4,
+          "pyramid_stairs_inv": 4
+        }
+      }
+    },
+    "240": {
+      "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+        "trials": 160,
+        "physical_survivors": 151,
+        "guard_free_survivors": 148,
+        "guard_free_crossed_and_survived": 116,
+        "guard_free_crossed_lower_bound": 116,
+        "guard_free_crossed_upper_bound": 117,
+        "guard_violating_trials": 9,
+        "guard_violating_steps": 21,
+        "max_guard_ratio": 1.5979291200637817,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 117,
+        "mean_stall_s": 1.8276367289014162,
+        "mean_velocity_xy_rmse": 0.07889883168973029,
+        "mean_yaw_rate_rmse": 0.07908367686904967,
+        "pure_yaw_profile_rmse": 0.13914874754846096,
+        "stair3cm_support_fraction": 0.19298127347135968,
+        "stair3cm_landing_fraction": 0.29490128939061583,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 59,
+          "pyramid_stairs_inv": 58
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 58,
+          "pyramid_stairs_inv": 58
+        },
+        "common_survivor_count": 149,
+        "common_survivor_means": {
+          "joint_acc_rms": 51.20897289250521,
+          "base_lin_acc_rms": 1.9331158639600612,
+          "base_ang_acc_rms": 18.162033868316037,
+          "actual_torque_rms": 3.9177862685798797,
+          "actual_near90_fraction": 4.6979867417252804e-05,
+          "actual_saturation99_fraction": 1.5100671467527547e-05,
+          "target_step_rms_rad": 0.05538030116250051,
+          "target_second_rms_rad": 0.047934309648187366
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 7,
+          "pyramid_stairs_inv": 2
+        }
+      },
+      "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+        "trials": 160,
+        "physical_survivors": 156,
+        "guard_free_survivors": 152,
+        "guard_free_crossed_and_survived": 119,
+        "guard_free_crossed_lower_bound": 119,
+        "guard_free_crossed_upper_bound": 119,
+        "guard_violating_trials": 6,
+        "guard_violating_steps": 14,
+        "max_guard_ratio": 1.3085027933120728,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 121,
+        "mean_stall_s": 1.3916297190822662,
+        "mean_velocity_xy_rmse": 0.07565315440297127,
+        "mean_yaw_rate_rmse": 0.0856113568879664,
+        "pure_yaw_profile_rmse": 0.15224501211196184,
+        "stair3cm_support_fraction": 0.1945379104761958,
+        "stair3cm_landing_fraction": 0.3004427895743182,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 58,
+          "pyramid_stairs_inv": 63
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 58,
+          "pyramid_stairs_inv": 61
+        },
+        "common_survivor_count": 149,
+        "common_survivor_means": {
+          "joint_acc_rms": 51.8152364308402,
+          "base_lin_acc_rms": 1.9525102852974963,
+          "base_ang_acc_rms": 18.335562206754748,
+          "actual_torque_rms": 3.9259962875571026,
+          "actual_near90_fraction": 3.691275313812239e-05,
+          "actual_saturation99_fraction": 7.550335636099913e-06,
+          "target_step_rms_rad": 0.056080081343850834,
+          "target_second_rms_rad": 0.04842392360204018
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 1,
+          "pyramid_stairs_inv": 5
+        }
+      }
+    },
+    "270": {
+      "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+        "trials": 160,
+        "physical_survivors": 157,
+        "guard_free_survivors": 154,
+        "guard_free_crossed_and_survived": 127,
+        "guard_free_crossed_lower_bound": 127,
+        "guard_free_crossed_upper_bound": 128,
+        "guard_violating_trials": 3,
+        "guard_violating_steps": 10,
+        "max_guard_ratio": 1.4035297632217407,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 129,
+        "mean_stall_s": 1.035251044202596,
+        "mean_velocity_xy_rmse": 0.06871296181343496,
+        "mean_yaw_rate_rmse": 0.0730140212457627,
+        "pure_yaw_profile_rmse": 0.12409000284969807,
+        "stair3cm_support_fraction": 0.14754403711525732,
+        "stair3cm_landing_fraction": 0.24603583196046128,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 65,
+          "pyramid_stairs_inv": 64
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 64,
+          "pyramid_stairs_inv": 63
+        },
+        "common_survivor_count": 156,
+        "common_survivor_means": {
+          "joint_acc_rms": 51.019272633087944,
+          "base_lin_acc_rms": 1.9228132099677355,
+          "base_ang_acc_rms": 18.16182605425517,
+          "actual_torque_rms": 3.9002343981693954,
+          "actual_near90_fraction": 4.086538608997869e-05,
+          "actual_saturation99_fraction": 2.323718012447875e-05,
+          "target_step_rms_rad": 0.05523752465318793,
+          "target_second_rms_rad": 0.047566727663461976
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 1,
+          "pyramid_stairs_inv": 2
+        }
+      },
+      "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+        "trials": 160,
+        "physical_survivors": 159,
+        "guard_free_survivors": 157,
+        "guard_free_crossed_and_survived": 131,
+        "guard_free_crossed_lower_bound": 130,
+        "guard_free_crossed_upper_bound": 132,
+        "guard_violating_trials": 2,
+        "guard_violating_steps": 5,
+        "max_guard_ratio": 1.705739140510559,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 132,
+        "mean_stall_s": 0.7258746805833652,
+        "mean_velocity_xy_rmse": 0.06545831663534045,
+        "mean_yaw_rate_rmse": 0.07352033699862659,
+        "pure_yaw_profile_rmse": 0.1392325572669506,
+        "stair3cm_support_fraction": 0.1512935039154245,
+        "stair3cm_landing_fraction": 0.23794109843459804,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 68,
+          "pyramid_stairs_inv": 64
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 67,
+          "pyramid_stairs_inv": 64
+        },
+        "common_survivor_count": 156,
+        "common_survivor_means": {
+          "joint_acc_rms": 51.220039648887436,
+          "base_lin_acc_rms": 1.9276600567958293,
+          "base_ang_acc_rms": 18.182320759846615,
+          "actual_torque_rms": 3.9032568641197987,
+          "actual_near90_fraction": 2.083333329676698e-05,
+          "actual_saturation99_fraction": 1.1217948877646659e-05,
+          "target_step_rms_rad": 0.05570808074508722,
+          "target_second_rms_rad": 0.04800674174792874
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 1,
+          "pyramid_stairs_inv": 1
+        }
+      }
+    },
+    "300": {
+      "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+        "trials": 160,
+        "physical_survivors": 159,
+        "guard_free_survivors": 157,
+        "guard_free_crossed_and_survived": 130,
+        "guard_free_crossed_lower_bound": 129,
+        "guard_free_crossed_upper_bound": 130,
+        "guard_violating_trials": 3,
+        "guard_violating_steps": 3,
+        "max_guard_ratio": 1.2950717210769653,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 130,
+        "mean_stall_s": 0.9177505166269839,
+        "mean_velocity_xy_rmse": 0.06569266375154256,
+        "mean_yaw_rate_rmse": 0.07192496708594262,
+        "pure_yaw_profile_rmse": 0.1257294462993741,
+        "stair3cm_support_fraction": 0.14207339822948817,
+        "stair3cm_landing_fraction": 0.23463985883107855,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 66,
+          "pyramid_stairs_inv": 64
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 66,
+          "pyramid_stairs_inv": 64
+        },
+        "common_survivor_count": 158,
+        "common_survivor_means": {
+          "joint_acc_rms": 50.31600050382976,
+          "base_lin_acc_rms": 1.9090914069851743,
+          "base_ang_acc_rms": 18.03210157684133,
+          "actual_torque_rms": 3.8789654472206214,
+          "actual_near90_fraction": 2.6107595347846518e-05,
+          "actual_saturation99_fraction": 1.1867088802848482e-05,
+          "target_step_rms_rad": 0.054814466746830486,
+          "target_second_rms_rad": 0.04718888951819154
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 2,
+          "pyramid_stairs_inv": 1
+        }
+      },
+      "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+        "trials": 160,
+        "physical_survivors": 159,
+        "guard_free_survivors": 158,
+        "guard_free_crossed_and_survived": 130,
+        "guard_free_crossed_lower_bound": 129,
+        "guard_free_crossed_upper_bound": 130,
+        "guard_violating_trials": 1,
+        "guard_violating_steps": 1,
+        "max_guard_ratio": 1.0409948825836182,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 130,
+        "mean_stall_s": 0.5984999526292085,
+        "mean_velocity_xy_rmse": 0.06229896419681609,
+        "mean_yaw_rate_rmse": 0.06862675915472209,
+        "pure_yaw_profile_rmse": 0.11706530023366213,
+        "stair3cm_support_fraction": 0.12871133355994982,
+        "stair3cm_landing_fraction": 0.22454336650989828,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 66,
+          "pyramid_stairs_inv": 64
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 66,
+          "pyramid_stairs_inv": 64
+        },
+        "common_survivor_count": 158,
+        "common_survivor_means": {
+          "joint_acc_rms": 50.04920043221003,
+          "base_lin_acc_rms": 1.8820154810253578,
+          "base_ang_acc_rms": 17.86215975314756,
+          "actual_torque_rms": 3.878628693049467,
+          "actual_near90_fraction": 1.1867088894949212e-05,
+          "actual_saturation99_fraction": 1.5822785561668534e-06,
+          "target_step_rms_rad": 0.054652233749533756,
+          "target_second_rms_rad": 0.04686011100494409
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 0,
+          "pyramid_stairs_inv": 1
+        }
+      }
+    },
+    "330": {
+      "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+        "trials": 160,
+        "physical_survivors": 159,
+        "guard_free_survivors": 158,
+        "guard_free_crossed_and_survived": 129,
+        "guard_free_crossed_lower_bound": 129,
+        "guard_free_crossed_upper_bound": 129,
+        "guard_violating_trials": 1,
+        "guard_violating_steps": 1,
+        "max_guard_ratio": 1.0124256610870361,
+        "max_actual_ratio": 1.0,
+        "crossed_and_survived": 129,
+        "mean_stall_s": 0.8300015699118376,
+        "mean_velocity_xy_rmse": 0.06366171110421419,
+        "mean_yaw_rate_rmse": 0.0678207375574857,
+        "pure_yaw_profile_rmse": 0.11601429525762796,
+        "stair3cm_support_fraction": 0.1294614133804382,
+        "stair3cm_landing_fraction": 0.22063822787586357,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 65,
+          "pyramid_stairs_inv": 64
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 65,
+          "pyramid_stairs_inv": 64
+        },
+        "common_survivor_count": 159,
+        "common_survivor_means": {
+          "joint_acc_rms": 49.51719679922428,
+          "base_lin_acc_rms": 1.8777780806493458,
+          "base_ang_acc_rms": 17.742733811432462,
+          "actual_torque_rms": 3.8621254941952303,
+          "actual_near90_fraction": 7.861635502011942e-06,
+          "actual_saturation99_fraction": 7.861635593533423e-07,
+          "target_step_rms_rad": 0.05397824190978734,
+          "target_second_rms_rad": 0.04625121083508872
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 0,
+          "pyramid_stairs_inv": 1
+        }
+      },
+      "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-13_09-22-48_stair_depth_stratified_v40_remote/model_20500.pt": {
+        "trials": 160,
+        "physical_survivors": 160,
+        "guard_free_survivors": 160,
+        "guard_free_crossed_and_survived": 138,
+        "guard_free_crossed_lower_bound": 138,
+        "guard_free_crossed_upper_bound": 138,
+        "guard_violating_trials": 0,
+        "guard_violating_steps": 0,
+        "max_guard_ratio": 0.9657486081123352,
+        "max_actual_ratio": 0.9657487273216248,
+        "crossed_and_survived": 138,
+        "mean_stall_s": 0.6186249101534486,
+        "mean_velocity_xy_rmse": 0.06125473445281386,
+        "mean_yaw_rate_rmse": 0.0649517432320863,
+        "pure_yaw_profile_rmse": 0.11055238638073206,
+        "stair3cm_support_fraction": 0.12767123791090668,
+        "stair3cm_landing_fraction": 0.20909965480165243,
+        "stairs_crossed_and_survived": {
+          "pyramid_stairs": 72,
+          "pyramid_stairs_inv": 66
+        },
+        "terrain_guard_free_crossed_and_survived": {
+          "pyramid_stairs": 72,
+          "pyramid_stairs_inv": 66
+        },
+        "common_survivor_count": 159,
+        "common_survivor_means": {
+          "joint_acc_rms": 49.085094475896106,
+          "base_lin_acc_rms": 1.8488429158738575,
+          "base_ang_acc_rms": 17.467467457993227,
+          "actual_torque_rms": 3.8624649392733783,
+          "actual_near90_fraction": 9.433962712240106e-06,
+          "actual_saturation99_fraction": 0.0,
+          "target_step_rms_rad": 0.053808653188295336,
+          "target_second_rms_rad": 0.04602946396097072
+        },
+        "terrain_guard_violations": {
+          "pyramid_stairs": 0,
+          "pyramid_stairs_inv": 0
+        }
+      }
+    }
+  },
+  "per_family": {
+    "pyramid_stairs": {
+      "trials": 480,
+      "baseline_survivors": 463,
+      "candidate_survivors": 463
+    },
+    "pyramid_stairs_inv": {
+      "trials": 480,
+      "baseline_survivors": 469,
+      "candidate_survivors": 473
+    }
+  },
+  "hard_narrow_cases": [
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.2649999260902405
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.17999999225139618
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 1.074999451637268
+      },
+      "candidate": {
+        "survived": 3,
+        "crossed": 2,
+        "guardfree_crossed": 2,
+        "stall_s": 9.120144844055176
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 8.745128631591797
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.45499980449676514
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 12.955177307128906
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.7399995923042297
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 3,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 3,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 3,
+        "stall_s": 1.0799992084503174
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.05499999225139618
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.8799996376037598
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.9749995470046997
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 3,
+        "crossed": 0,
+        "guardfree_crossed": 0,
+        "stall_s": 16.33518409729004
+      },
+      "candidate": {
+        "survived": 3,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 4.519996643066406
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 1.5499991178512573
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.9699996709823608
+      }
+    },
+    {
+      "width_m": 0.22,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 1,
+        "guardfree_crossed": 1,
+        "stall_s": 12.830142974853516
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 5.675036430358887
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.3699999451637268
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.17999999225139618
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "slow",
+      "baseline": {
+        "survived": 2,
+        "crossed": 1,
+        "guardfree_crossed": 1,
+        "stall_s": 12.280184745788574
+      },
+      "candidate": {
+        "survived": 3,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 0.39999979734420776
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.2999999523162842
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 2.2549989223480225
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 6.680089473724365
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 8.665135383605957
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.02499999850988388
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.02499999850988388
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.06499999761581421
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 3,
+        "stall_s": 0.014999999664723873
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.125
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.4849996864795685
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.5899996757507324
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.34499987959861755
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 8.195050239562988
+      },
+      "candidate": {
+        "survived": 3,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 4.364996433258057
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 1.544999122619629
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 3.0499978065490723
+      }
+    },
+    {
+      "width_m": 0.225,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 1,
+        "guardfree_crossed": 1,
+        "stall_s": 12.880127906799316
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 5.565011978149414
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.03999999910593033
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.1550000160932541
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 7.115100860595703
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 8.205133438110352
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.34499987959861755
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.26999998092651367
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "slow",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.7399996519088745
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.5899996757507324
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 3,
+        "stall_s": 0.10500000417232513
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "medium",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.09999999403953552
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.019999999552965164
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 1.0099995136260986
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 3.295013427734375
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 3,
+        "crossed": 0,
+        "guardfree_crossed": 0,
+        "stall_s": 13.825139999389648
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 1.724998950958252
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 0.75,
+      "height_m": 0.13999999999999999,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 3,
+        "guardfree_crossed": 3,
+        "stall_s": 5.700071334838867
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 4,
+        "stall_s": 0.9549993276596069
+      }
+    },
+    {
+      "width_m": 0.24,
+      "terrain": "pyramid_stairs_inv",
+      "difficulty": 1.0,
+      "height_m": 0.18,
+      "profile": "stair_stop",
+      "baseline": {
+        "survived": 4,
+        "crossed": 2,
+        "guardfree_crossed": 2,
+        "stall_s": 11.41014289855957
+      },
+      "candidate": {
+        "survived": 4,
+        "crossed": 4,
+        "guardfree_crossed": 3,
+        "stall_s": 1.419999122619629
+      }
+    }
+  ],
+  "matched_cases": 240
+}
