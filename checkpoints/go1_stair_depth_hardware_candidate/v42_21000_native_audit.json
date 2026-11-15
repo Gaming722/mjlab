@@ -1,0 +1,293 @@
+{
+  "passed": true,
+  "scope": "retention",
+  "checks": [
+    {
+      "name": "physical_survival_drop",
+      "value": 0.004464285714285714,
+      "maximum": 0.02,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "guard_trial_fraction_increase",
+      "value": 0.017857142857142856,
+      "maximum": 0.02,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "crossing_ratio",
+      "value": 1.0180722891566265,
+      "maximum": null,
+      "minimum": 0.97,
+      "passed": true
+    },
+    {
+      "name": "mean_velocity_xy_rmse_ratio",
+      "value": 0.983353842997453,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "mean_yaw_rate_rmse_ratio",
+      "value": 1.0166695119686855,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pure_yaw_profile_rmse_ratio",
+      "value": 1.091362842913474,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "joint_acc_rms_ratio",
+      "value": 1.0076346428446923,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "base_lin_acc_rms_ratio",
+      "value": 1.0066277403359725,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "base_ang_acc_rms_ratio",
+      "value": 1.0067060729166903,
+      "maximum": 1.1,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "flat_physical_drop",
+      "value": 0.0,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pyramid_stairs_physical_drop",
+      "value": 0.0,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pyramid_stairs_crossing_ratio",
+      "value": 1.018181818181818,
+      "maximum": null,
+      "minimum": 0.97,
+      "passed": true
+    },
+    {
+      "name": "pyramid_stairs_inv_physical_drop",
+      "value": 0.015625,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "pyramid_stairs_inv_crossing_ratio",
+      "value": 1.0232558139534884,
+      "maximum": null,
+      "minimum": 0.97,
+      "passed": true
+    },
+    {
+      "name": "hf_pyramid_slope_physical_drop",
+      "value": -0.03125,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "hf_pyramid_slope_inv_physical_drop",
+      "value": 0.046875,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "random_rough_physical_drop",
+      "value": 0.0,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    },
+    {
+      "name": "wave_terrain_physical_drop",
+      "value": 0.0,
+      "maximum": 0.05,
+      "minimum": null,
+      "passed": true
+    }
+  ],
+  "statistics": {
+    "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_torque_smooth/selected/model_14500.pt": {
+      "trials": 448,
+      "physical_survivors": 440,
+      "guard_free_survivors": 399,
+      "guard_free_crossed_and_survived": 307,
+      "guard_free_crossed_lower_bound": 301,
+      "guard_free_crossed_upper_bound": 309,
+      "guard_violating_trials": 48,
+      "guard_violating_steps": 160,
+      "max_guard_ratio": 2.0433337688446045,
+      "max_actual_ratio": 1.0,
+      "crossed_and_survived": 332,
+      "mean_stall_s": 1.8296615519128474,
+      "mean_velocity_xy_rmse": 0.0799571287685207,
+      "mean_yaw_rate_rmse": 0.06722429516126535,
+      "pure_yaw_profile_rmse": 0.09207150712609291,
+      "stair3cm_support_fraction": 0.14287461255896863,
+      "stair3cm_landing_fraction": 0.22611956761526583,
+      "stairs_crossed_and_survived": {
+        "pyramid_stairs": 55,
+        "pyramid_stairs_inv": 43
+      },
+      "terrain_guard_free_crossed_and_survived": {
+        "flat": 55,
+        "hf_pyramid_slope": 49,
+        "hf_pyramid_slope_inv": 20,
+        "pyramid_stairs": 55,
+        "pyramid_stairs_inv": 43,
+        "random_rough": 40,
+        "wave_terrain": 45
+      },
+      "common_survivor_count": 434,
+      "common_survivor_means": {
+        "joint_acc_rms": 51.00886283821774,
+        "base_lin_acc_rms": 1.8159792642988917,
+        "base_ang_acc_rms": 17.720876269626178,
+        "actual_torque_rms": 3.8416965244003154,
+        "actual_near90_fraction": 7.603686728862368e-05,
+        "actual_saturation99_fraction": 3.8882488515474815e-05,
+        "target_step_rms_rad": 0.05353778196404332,
+        "target_second_rms_rad": 0.04677001470571152
+      },
+      "terrain_guard_violations": {
+        "flat": 0,
+        "hf_pyramid_slope": 13,
+        "hf_pyramid_slope_inv": 10,
+        "pyramid_stairs": 0,
+        "pyramid_stairs_inv": 1,
+        "random_rough": 17,
+        "wave_terrain": 7
+      }
+    },
+    "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_21000.pt": {
+      "trials": 448,
+      "physical_survivors": 438,
+      "guard_free_survivors": 389,
+      "guard_free_crossed_and_survived": 302,
+      "guard_free_crossed_lower_bound": 295,
+      "guard_free_crossed_upper_bound": 304,
+      "guard_violating_trials": 56,
+      "guard_violating_steps": 153,
+      "max_guard_ratio": 3.395022392272949,
+      "max_actual_ratio": 1.0,
+      "crossed_and_survived": 338,
+      "mean_stall_s": 1.5770232090560188,
+      "mean_velocity_xy_rmse": 0.07862614984956703,
+      "mean_yaw_rate_rmse": 0.06834489135404251,
+      "pure_yaw_profile_rmse": 0.10048342176846095,
+      "stair3cm_support_fraction": 0.13376543767195867,
+      "stair3cm_landing_fraction": 0.23212304961916735,
+      "stairs_crossed_and_survived": {
+        "pyramid_stairs": 56,
+        "pyramid_stairs_inv": 44
+      },
+      "terrain_guard_free_crossed_and_survived": {
+        "flat": 55,
+        "hf_pyramid_slope": 45,
+        "hf_pyramid_slope_inv": 22,
+        "pyramid_stairs": 56,
+        "pyramid_stairs_inv": 44,
+        "random_rough": 34,
+        "wave_terrain": 46
+      },
+      "common_survivor_count": 434,
+      "common_survivor_means": {
+        "joint_acc_rms": 51.39829728790143,
+        "base_lin_acc_rms": 1.8280151033181748,
+        "base_ang_acc_rms": 17.839713758037938,
+        "actual_torque_rms": 3.8342023631944087,
+        "actual_near90_fraction": 7.546083049549322e-05,
+        "actual_saturation99_fraction": 3.91705074317513e-05,
+        "target_step_rms_rad": 0.053972509792632496,
+        "target_second_rms_rad": 0.04731791490079483
+      },
+      "terrain_guard_violations": {
+        "flat": 0,
+        "hf_pyramid_slope": 16,
+        "hf_pyramid_slope_inv": 10,
+        "pyramid_stairs": 0,
+        "pyramid_stairs_inv": 0,
+        "random_rough": 21,
+        "wave_terrain": 9
+      }
+    }
+  },
+  "per_terrain": {
+    "flat": {
+      "trials": 64,
+      "baseline_survivors": 64,
+      "candidate_survivors": 64,
+      "baseline_crossed": 55,
+      "candidate_crossed": 55
+    },
+    "pyramid_stairs": {
+      "trials": 64,
+      "baseline_survivors": 64,
+      "candidate_survivors": 64,
+      "baseline_crossed": 55,
+      "candidate_crossed": 56
+    },
+    "pyramid_stairs_inv": {
+      "trials": 64,
+      "baseline_survivors": 64,
+      "candidate_survivors": 63,
+      "baseline_crossed": 43,
+      "candidate_crossed": 44
+    },
+    "hf_pyramid_slope": {
+      "trials": 64,
+      "baseline_survivors": 56,
+      "candidate_survivors": 58,
+      "baseline_crossed": 55,
+      "candidate_crossed": 56
+    },
+    "hf_pyramid_slope_inv": {
+      "trials": 64,
+      "baseline_survivors": 64,
+      "candidate_survivors": 61,
+      "baseline_crossed": 22,
+      "candidate_crossed": 23
+    },
+    "random_rough": {
+      "trials": 64,
+      "baseline_survivors": 64,
+      "candidate_survivors": 64,
+      "baseline_crossed": 53,
+      "candidate_crossed": 53
+    },
+    "wave_terrain": {
+      "trials": 64,
+      "baseline_survivors": 64,
+      "candidate_survivors": 64,
+      "baseline_crossed": 49,
+      "candidate_crossed": 51
+    }
+  },
+  "hard_narrow_cases": [],
+  "input_files": [
+    "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_stair_depth/v42_21000_retention_paired.json"
+  ]
+}
