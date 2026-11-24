@@ -1,0 +1,676 @@
+{
+  "date": "2026-11-15",
+  "selected": "V40 model_20500.pt",
+  "selection_status": "RETAIN_PREVIOUS_HARDWARE_TEST_CANDIDATE",
+  "new_training_started": false,
+  "remote_training": {
+    "run": "2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote",
+    "completed": true,
+    "exit_code": 0,
+    "new_learning_updates": 2000,
+    "final_checkpoint": "model_22499.pt",
+    "active_own_training_processes": 0
+  },
+  "integrity": {
+    "passed": true,
+    "checkpoints": [
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_20750.pt",
+        "sha256": "39da2ac6a839b7b7b0ef88e47e50165b00e91b01b3a935378573e2e28262adbb",
+        "new_updates_after_v40_20500": 251,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_21000.pt",
+        "sha256": "6a10eeeb5db7037666826140ab41952cf688f7ea1eb10b5e4733d611b88ce251",
+        "new_updates_after_v40_20500": 501,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_21250.pt",
+        "sha256": "889efea631d24022e9626c19d8fa0574db0589eb5faf567ce9e41f2b4bebbf8e",
+        "new_updates_after_v40_20500": 751,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_21500.pt",
+        "sha256": "2c595dd0ffa4c5b1f09f8398534f4fed2cac1e662dafa14e2a67c73ebd123e46",
+        "new_updates_after_v40_20500": 1001,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_21750.pt",
+        "sha256": "b0537e2a3d3977346cb4168f8536d0d20dddbc61553d7f973fdb46d79d3458c2",
+        "new_updates_after_v40_20500": 1251,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_22000.pt",
+        "sha256": "11ad45230a766b597d3084407c72a1e7eeb43225f1790d15161dd1fd5f4dd996",
+        "new_updates_after_v40_20500": 1501,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_22250.pt",
+        "sha256": "0c013804a9200f8c6b780229097ac67f7da525af742f2bc39de18b572e9b803e",
+        "new_updates_after_v40_20500": 1751,
+        "finite": true,
+        "reference_coefficient": 25
+      },
+      {
+        "checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_22499.pt",
+        "sha256": "df753e8770bdd83f7239b9f76be62b0ca042a4d6e1142e71756823aa2380b3c8",
+        "new_updates_after_v40_20500": 2000,
+        "finite": true,
+        "reference_coefficient": 25
+      }
+    ]
+  },
+  "training_configuration_audit": {
+    "passed": true,
+    "training_env": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/params/env.yaml",
+    "only_environment_difference": {
+      "stratify_retention_levels": {
+        "func": "",
+        "params": {
+          "terrain_names": [
+            "pyramid_stairs_native",
+            "pyramid_stairs_inv_native",
+            "hf_pyramid_slope",
+            "hf_pyramid_slope_inv"
+          ]
+        },
+        "mode": "startup",
+        "interval_range_s": "null",
+        "is_global_time": "false",
+        "min_step_count_between_reset": "0"
+      }
+    },
+    "agent_differences": {
+      "load_checkpoint": {
+        "v40": "model_16750.pt",
+        "v42": "model_20500.pt"
+      },
+      "algorithm": {
+        "v40": {
+          "num_learning_epochs": "5",
+          "num_mini_batches": "4",
+          "learning_rate": "2.5e-06",
+          "schedule": "fixed",
+          "gamma": "0.99",
+          "lam": "0.95",
+          "entropy_coef": "0.01",
+          "desired_kl": "0.01",
+          "max_grad_norm": "1.0",
+          "value_loss_coef": "1.0",
+          "use_clipped_value_loss": "true",
+          "clip_param": "0.2",
+          "normalize_advantage_per_mini_batch": "false",
+          "optimizer": "adam",
+          "share_cnn_encoders": "false",
+          "class_name": "mjlab.tasks.velocity.rl.reference_ppo:ReferencePolicyPPO",
+          "reference_coefficient": "25.0",
+          "reference_checkpoint": "checkpoints/go1_stair_depth_reference/model_14500.pt",
+          "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+          "reference_mask_key": "reference_mask"
+        },
+        "v42": {
+          "num_learning_epochs": "5",
+          "num_mini_batches": "4",
+          "learning_rate": "2.5e-06",
+          "schedule": "fixed",
+          "gamma": "0.99",
+          "lam": "0.95",
+          "entropy_coef": "0.01",
+          "desired_kl": "0.01",
+          "max_grad_norm": "1.0",
+          "value_loss_coef": "1.0",
+          "use_clipped_value_loss": "true",
+          "clip_param": "0.2",
+          "normalize_advantage_per_mini_batch": "false",
+          "optimizer": "adam",
+          "share_cnn_encoders": "false",
+          "class_name": "mjlab.tasks.velocity.rl.reference_ppo:ReferencePolicyPPO",
+          "reference_coefficient": "25.0",
+          "reference_resume_coefficient": "null",
+          "reference_checkpoint": "checkpoints/go1_stair_depth_reference/model_14500.pt",
+          "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+          "reference_mask_key": "reference_mask"
+        }
+      },
+      "run_name": {
+        "v40": "stair_depth_stratified_v40_remote",
+        "v42": "stair_depth_hard_replay_v42_remote"
+      },
+      "load_run": {
+        "v40": "2026-11-13_05-45-52_stair_depth_stratified_v39_remote",
+        "v42": "2026-11-13_09-22-48_stair_depth_stratified_v40_remote"
+      },
+      "save_interval": {
+        "v40": "500",
+        "v42": "250"
+      },
+      "max_iterations": {
+        "v40": "6000",
+        "v42": "2000"
+      }
+    },
+    "remote_job_exit": 0,
+    "remote_training_completed": true,
+    "new_learning_updates": 2000,
+    "all_remote_local_checkpoint_sha256_matched": true,
+    "training_restarted": false
+  },
+  "hard_only_screening": {
+    "V40 model_20500": {
+      "trials": 24,
+      "crossed_and_survived": 19,
+      "survivors": 23,
+      "guard_violating_trials": 1,
+      "guard_free_crossed_survivors": 18,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 1,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_20750": {
+      "trials": 24,
+      "crossed_and_survived": 21,
+      "survivors": 23,
+      "guard_violating_trials": 0,
+      "guard_free_crossed_survivors": 21,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_21000": {
+      "trials": 24,
+      "crossed_and_survived": 16,
+      "survivors": 23,
+      "guard_violating_trials": 3,
+      "guard_free_crossed_survivors": 14,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_21250": {
+      "trials": 24,
+      "crossed_and_survived": 18,
+      "survivors": 20,
+      "guard_violating_trials": 5,
+      "guard_free_crossed_survivors": 14,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 2,
+          "survivors": 2,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_21500": {
+      "trials": 24,
+      "crossed_and_survived": 16,
+      "survivors": 21,
+      "guard_violating_trials": 0,
+      "guard_free_crossed_survivors": 16,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 2,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_21750": {
+      "trials": 24,
+      "crossed_and_survived": 17,
+      "survivors": 22,
+      "guard_violating_trials": 1,
+      "guard_free_crossed_survivors": 17,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_22000": {
+      "trials": 24,
+      "crossed_and_survived": 18,
+      "survivors": 23,
+      "guard_violating_trials": 1,
+      "guard_free_crossed_survivors": 17,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_22250": {
+      "trials": 24,
+      "crossed_and_survived": 16,
+      "survivors": 22,
+      "guard_violating_trials": 1,
+      "guard_free_crossed_survivors": 15,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 2,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 2,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    },
+    "V42 model_22499": {
+      "trials": 24,
+      "crossed_and_survived": 17,
+      "survivors": 20,
+      "guard_violating_trials": 3,
+      "guard_free_crossed_survivors": 15,
+      "cases": [
+        {
+          "width_cm": 22.0,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 3,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.0,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "descent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 22.5,
+          "direction": "ascent",
+          "crossed_and_survived": 3,
+          "survivors": 4,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "descent",
+          "crossed_and_survived": 1,
+          "survivors": 1,
+          "trials": 4
+        },
+        {
+          "width_cm": 24.0,
+          "direction": "ascent",
+          "crossed_and_survived": 4,
+          "survivors": 4,
+          "trials": 4
+        }
+      ]
+    }
+  },
+  "screening_protocol": {
+    "widths_cm": [
+      22,
+      22.5,
+      24
+    ],
+    "height_cm": 18,
+    "profile": "stair_stop",
+    "duration_s": 40,
+    "trials_per_case": 4,
+    "seed": 43,
+    "friction": 1,
+    "platform_width_m": 1,
+    "scope": "Single difficulty geometry; distinct scene layout from full four-difficulty protocol. Screening scores cannot replace full-protocol acceptance."
+  },
+  "v42_20750": {
+    "native_retention_passed": true,
+    "complete_22cm_width_passed": false,
+    "complete_width_hard_ascent_crossed": 0,
+    "complete_width_hard_ascent_trials": 4,
+    "full_other_widths_continuous_holdout": "not run after decisive hard-case failure"
+  },
+  "v42_21000": {
+    "native_retention_passed": true
+  },
+  "reason": "Retain the most extensively validated existing candidate. No V42 checkpoint demonstrates a reliable overall advantage; strongest hard-only screening candidate20750 failed complete-width hard ascent. Other V42 checkpoints received screening, not exhaustive full acceptance; no claim of mathematical global optimality.",
+  "existing_v40_evidence": {
+    "native_retention_passed": true,
+    "six_width_960_passed": true,
+    "physical_survivors": 936,
+    "crossed_and_survived": 762,
+    "trials": 960,
+    "hard_narrow_stop_success": "20/24",
+    "continuous_120s_passed": false,
+    "holdout": "not assessed",
+    "physical_robot_tested": false
+  },
+  "raw_results_sha256": {
+    "artifacts/go1_stair_depth/v40_matched_hard_w220.json": "5d8194842851aa88a578ac87114ef06bd4752210fe8162fb0af18f49f2ee7dbd",
+    "artifacts/go1_stair_depth/v40_matched_hard_w225.json": "14dad9955417d38eab325ce746225376d406f7a8dbdedda78522682a20733865",
+    "artifacts/go1_stair_depth/v40_matched_hard_w240.json": "eafda3ed3c8ae2474b94dbdd4d351a6b4aaaf2d114b2b8d9260dcb279a294944",
+    "artifacts/go1_stair_depth/v42_all_hard_w220.json": "1d493132a5f6d8d496fab3f1cbc628c9caea56dd1803bf59485f5155065c6c73",
+    "artifacts/go1_stair_depth/v42_all_hard_w225.json": "0f2eadc767243dfa89ca544f54b1f4bb98169a7a0bdf44893c70a37118ed4ca4",
+    "artifacts/go1_stair_depth/v42_all_hard_w240.json": "25cae828b5ab0a4f6b9cd899d427eccffb35d368ca197baf0ab80ae9a0bd9e8a"
+  }
+}

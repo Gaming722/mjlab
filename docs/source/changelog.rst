@@ -8,6 +8,10 @@ Upcoming version (not yet released)
 Added
 ^^^^^
 
+- Added a Git-maintained Go1 checkpoint catalog with historical deployment,
+  torque-refinement baseline, stair-depth ancestor and final V42 weights,
+  saved configurations and SHA256 verification. The catalog identifies V40 as
+  the current hardware-test candidate separately from the latest experiment.
 - Added an opt-in Go1 stair-depth retention task with more high-difficulty native
   stair and slope replay, preserving narrow-stair practice and safety rewards.
 - Added an explicit previous reference coefficient for PPO fine-tuning resumes,

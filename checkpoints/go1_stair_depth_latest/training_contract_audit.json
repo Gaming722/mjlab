@@ -1,0 +1,95 @@
+{
+  "passed": true,
+  "training_env": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/params/env.yaml",
+  "only_environment_difference": {
+    "stratify_retention_levels": {
+      "func": "",
+      "params": {
+        "terrain_names": [
+          "pyramid_stairs_native",
+          "pyramid_stairs_inv_native",
+          "hf_pyramid_slope",
+          "hf_pyramid_slope_inv"
+        ]
+      },
+      "mode": "startup",
+      "interval_range_s": "null",
+      "is_global_time": "false",
+      "min_step_count_between_reset": "0"
+    }
+  },
+  "agent_differences": {
+    "load_checkpoint": {
+      "v40": "model_16750.pt",
+      "v42": "model_20500.pt"
+    },
+    "algorithm": {
+      "v40": {
+        "num_learning_epochs": "5",
+        "num_mini_batches": "4",
+        "learning_rate": "2.5e-06",
+        "schedule": "fixed",
+        "gamma": "0.99",
+        "lam": "0.95",
+        "entropy_coef": "0.01",
+        "desired_kl": "0.01",
+        "max_grad_norm": "1.0",
+        "value_loss_coef": "1.0",
+        "use_clipped_value_loss": "true",
+        "clip_param": "0.2",
+        "normalize_advantage_per_mini_batch": "false",
+        "optimizer": "adam",
+        "share_cnn_encoders": "false",
+        "class_name": "mjlab.tasks.velocity.rl.reference_ppo:ReferencePolicyPPO",
+        "reference_coefficient": "25.0",
+        "reference_checkpoint": "checkpoints/go1_stair_depth_reference/model_14500.pt",
+        "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+        "reference_mask_key": "reference_mask"
+      },
+      "v42": {
+        "num_learning_epochs": "5",
+        "num_mini_batches": "4",
+        "learning_rate": "2.5e-06",
+        "schedule": "fixed",
+        "gamma": "0.99",
+        "lam": "0.95",
+        "entropy_coef": "0.01",
+        "desired_kl": "0.01",
+        "max_grad_norm": "1.0",
+        "value_loss_coef": "1.0",
+        "use_clipped_value_loss": "true",
+        "clip_param": "0.2",
+        "normalize_advantage_per_mini_batch": "false",
+        "optimizer": "adam",
+        "share_cnn_encoders": "false",
+        "class_name": "mjlab.tasks.velocity.rl.reference_ppo:ReferencePolicyPPO",
+        "reference_coefficient": "25.0",
+        "reference_resume_coefficient": "null",
+        "reference_checkpoint": "checkpoints/go1_stair_depth_reference/model_14500.pt",
+        "reference_sha256": "82696d39a39bfaa033983f1e953c0c95c584d1b8c904b3c6ee097b884cb86ded",
+        "reference_mask_key": "reference_mask"
+      }
+    },
+    "run_name": {
+      "v40": "stair_depth_stratified_v40_remote",
+      "v42": "stair_depth_hard_replay_v42_remote"
+    },
+    "load_run": {
+      "v40": "2026-11-13_05-45-52_stair_depth_stratified_v39_remote",
+      "v42": "2026-11-13_09-22-48_stair_depth_stratified_v40_remote"
+    },
+    "save_interval": {
+      "v40": "500",
+      "v42": "250"
+    },
+    "max_iterations": {
+      "v40": "6000",
+      "v42": "2000"
+    }
+  },
+  "remote_job_exit": 0,
+  "remote_training_completed": true,
+  "new_learning_updates": 2000,
+  "all_remote_local_checkpoint_sha256_matched": true,
+  "training_restarted": false
+}

@@ -1,0 +1,15 @@
+{
+  "purpose": "V30b depth-adaptation ancestor; not selected for deployment.",
+  "source_checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-10_15-57-27_stair_depth_v30b/model_15000.pt",
+  "source_run": "2026-11-10_15-57-27_stair_depth_v30b",
+  "iteration": 15000,
+  "common_step_counter": 360672,
+  "parent_run": "2026-11-09_13-33-15_motor_convergence_v29",
+  "parent_checkpoint": "model_14500.pt",
+  "files_sha256": {
+    "agent.yaml": "9cc4d96d1bfafdabf965bf47a5c9bc906111b972c0ca5e427ed037677aae41f9",
+    "env.yaml": "58ea507779e3e88dbe87a79a60e962cf255e0b3e544f132e464fc3416e2de70a",
+    "lineage.json": "a36b459b6efb4585a97bb6b636b51173562b6d49ed310ba9b3af742298b98dce",
+    "model_15000.pt": "a8c36a90b27ac8df3a64ef222546713609ca71f7686fb9727639f7230ca8b786"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "purpose": "Final V42 experiment; not selected for deployment.",
+  "source_checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote/model_22499.pt",
+  "source_run": "2026-11-14_09-19-32_stair_depth_hard_replay_v42_remote",
+  "iteration": 22499,
+  "common_step_counter": 540768,
+  "parent_run": "2026-11-13_09-22-48_stair_depth_stratified_v40_remote",
+  "parent_checkpoint": "model_20500.pt",
+  "files_sha256": {
+    "agent.yaml": "e45a925b2498c90f7c6bb9586a7837f3f1decf8d58385f7a6f1c3044cf17d66c",
+    "env.yaml": "83cebe1e4ca10348fd0541cbecb04ab705e09bc8795518359cb44dcb05923a63",
+    "evaluation_summary.json": "1c0277b9ca1a15d90b56da12d32eab1bfdfa09369233c995c7ff4ba4a9ac7727",
+    "lineage.json": "a80a83232c675a22ce4a4010807b68a16143f6f3fbaa8f953246dd1cd4ed8e8d",
+    "model_22499.pt": "df753e8770bdd83f7239b9f76be62b0ca042a4d6e1142e71756823aa2380b3c8",
+    "training_contract_audit.json": "d6d7f673ebd0430a4770dcf157efa772694fb98767d5ce7f6af23b6b7714a93b"
+  }
+}

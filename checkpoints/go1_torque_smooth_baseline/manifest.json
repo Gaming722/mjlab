@@ -1,0 +1,15 @@
+{
+  "purpose": "Frozen starting point before torque/smoothness refinement.",
+  "source_checkpoint": "artifacts/go1_torque_smooth/baseline/model_9200.pt",
+  "source_run": "margin_stability_v16",
+  "iteration": 9200,
+  "common_step_counter": 221184,
+  "parent_run": "2026-11-04_11-32-29_precise_edge_critic_v15",
+  "parent_checkpoint": "model_8899.pt",
+  "files_sha256": {
+    "agent.yaml": "ef153cf4a10cca777c4f3d2da971bd8b8526838d61badf72d5d3465e8fc4e46f",
+    "env.yaml": "4e6207589ac689789707b4712dc55b256f0e515ae99ac852c954286dc7046168",
+    "lineage.json": "f277aaef4c30b22610cc6c98437cb3b8d8d07cd2c60f2109cd4eee5d97916cd2",
+    "model_9200.pt": "c2b8ca26a40bc9a418b1f9e1ea7615b0cc5a147f5bc8c23ede194ca13d4d7e57"
+  }
+}

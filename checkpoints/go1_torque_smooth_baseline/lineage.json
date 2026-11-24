@@ -1,0 +1,106 @@
+{
+  "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_12-49-44_margin_stability_v16/model_9200.pt",
+  "baseline": "/home/lrl/Documents/Code/mjlab_fork/artifacts/go1_locomotion/selected/model_6800.pt",
+  "baseline_sha256": "c43f2da85bcc01ba8ee5247e0d250e44ff6bc250cfc6231bbdb6ed5e8fa11418",
+  "newest_to_oldest": [
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_12-49-44_margin_stability_v16/model_9200.pt",
+      "sha256": "c2b8ca26a40bc9a418b1f9e1ea7615b0cc5a147f5bc8c23ede194ca13d4d7e57",
+      "iteration": 9200,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_11-32-29_precise_edge_critic_v15/model_8899.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_12-49-44_margin_stability_v16/params/agent.yaml",
+      "resume_parameters_sha256": "ef153cf4a10cca777c4f3d2da971bd8b8526838d61badf72d5d3465e8fc4e46f",
+      "operation": "training",
+      "training_iterations_from_parent": 302
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_11-32-29_precise_edge_critic_v15/model_8899.pt",
+      "sha256": "7347670441d82aa6e302a129970f813d1b7a867bc2f7b86bb08fea53d94d7b16",
+      "iteration": 8899,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/edge_critic_warmstart_v15_from_v14_8300/model_8300.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_11-32-29_precise_edge_critic_v15/params/agent.yaml",
+      "resume_parameters_sha256": "7bb41111544474aaf1d6ff3136ab2f279d000882d4ec893e204c9c266be4ed1d",
+      "operation": "training",
+      "training_iterations_from_parent": 600
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/edge_critic_warmstart_v15_from_v14_8300/model_8300.pt",
+      "sha256": "808b08fb83597bbef822c0fd3fe1f1087ab07e4a134e49dd6cabba00ecbb106b",
+      "iteration": 8300,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_03-24-58_balanced_edge_recovery_v14/model_8300.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/edge_critic_warmstart_v15_from_v14_8300/params/agent.yaml",
+      "resume_parameters_sha256": "83d325b206217f2582f04fb82006a8221654e76f92e9e439b4ed9b1e4a38aa9a",
+      "operation": "checkpoint input expansion only; not a training run",
+      "migration_verification": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/edge_critic_warmstart_v15_from_v14_8300/migration.json",
+      "training_iterations_from_parent": 0
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_03-24-58_balanced_edge_recovery_v14/model_8300.pt",
+      "sha256": "0e58250085dac20f6a821bd1c65ac305f9eb597437ef297d0e37a4433421ea3d",
+      "iteration": 8300,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_02-12-23_edge_support_pressure_v12/model_7999.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_03-24-58_balanced_edge_recovery_v14/params/agent.yaml",
+      "resume_parameters_sha256": "fe9e9bc716b49c7c3d4e42178ead25ceae101453c3ca362705247c0486cadabd",
+      "operation": "training",
+      "training_iterations_from_parent": 302
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_02-12-23_edge_support_pressure_v12/model_7999.pt",
+      "sha256": "c6ee274528cdce15d95972eacf7f4a3f1e7ff8a502d3fb23f1eff3305f20fc28",
+      "iteration": 7999,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_01-40-24_edge_exposure_v11/model_7600.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_02-12-23_edge_support_pressure_v12/params/agent.yaml",
+      "resume_parameters_sha256": "f0c95a3a557ca7a9ad7d4e9ef061782f91f0dee6561ad7e07bcb3bd7095dcdda",
+      "operation": "training",
+      "training_iterations_from_parent": 400
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_01-40-24_edge_exposure_v11/model_7600.pt",
+      "sha256": "bd95f45345a7f89fd2708462a58a16a5ec165c80a3addad49183f711c2d80fa1",
+      "iteration": 7600,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_22-28-22_fine_scandot_edge_v10/model_7500.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-04_01-40-24_edge_exposure_v11/params/agent.yaml",
+      "resume_parameters_sha256": "6f3a362a2657f2bf7b46af08e4b7dc6825f82523ec2717eea418651d25c68cbd",
+      "operation": "training",
+      "training_iterations_from_parent": 101
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_22-28-22_fine_scandot_edge_v10/model_7500.pt",
+      "sha256": "240f249d9f2c2946936b78b58059bb74921ca1ed69024b1bf82601d7166eb242",
+      "iteration": 7500,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_21-58-46_smooth_edge_landings_v9/model_7200.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_22-28-22_fine_scandot_edge_v10/params/agent.yaml",
+      "resume_parameters_sha256": "365afccf67664b458e34fcb5627c6b0ea95fe9bbe6a49237ba9040a557d2171c",
+      "operation": "training",
+      "training_iterations_from_parent": 301
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_21-58-46_smooth_edge_landings_v9/model_7200.pt",
+      "sha256": "4754429d6dec197aada41052235f61518af8a61759d8984ae6ed25fca280b29b",
+      "iteration": 7200,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_21-33-10_scandot_feet_edge_v8/model_6900.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_21-58-46_smooth_edge_landings_v9/params/agent.yaml",
+      "resume_parameters_sha256": "29e4516a4b184bdf2de01e44f8796419879640e2db08e8a62e31bd5c25d34d97",
+      "operation": "training",
+      "training_iterations_from_parent": 301
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_21-33-10_scandot_feet_edge_v8/model_6900.pt",
+      "sha256": "0dcc612570ccf48946be4389190ca8101a46a23eccf954f1696278b92f3b7e37",
+      "iteration": 6900,
+      "parent": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_19-49-46_rough_turn_support_v7/model_6800.pt",
+      "resume_parameters": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_21-33-10_scandot_feet_edge_v8/params/agent.yaml",
+      "resume_parameters_sha256": "352eb00f54924a52024359b6085f6436f9952b419a55b05fa7fcbdee4d2e9404",
+      "operation": "training",
+      "training_iterations_from_parent": 101
+    },
+    {
+      "checkpoint": "/home/lrl/Documents/Code/mjlab_fork/logs/rsl_rl/go1_perceptive_velocity/2026-11-03_19-49-46_rough_turn_support_v7/model_6800.pt",
+      "sha256": "c43f2da85bcc01ba8ee5247e0d250e44ff6bc250cfc6231bbdb6ed5e8fa11418",
+      "iteration": 6800,
+      "preserved_baseline_match": true
+    }
+  ],
+  "training_iterations_along_this_branch": 2408,
+  "iteration_count_definition": "Resumed runner starts again at saved iteration; includes both endpoints; conversions add zero"
+}

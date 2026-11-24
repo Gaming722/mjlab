@@ -1,0 +1,14 @@
+{
+  "purpose": "Historical stairs policy previously deployed to NX; not the current candidate.",
+  "source_checkpoint": "logs/rsl_rl/go1_perceptive_velocity/2026-10-30_01-46-33_stairs_finetune/model_19998.pt",
+  "source_run": "2026-10-30_01-46-33_stairs_finetune",
+  "iteration": 19998,
+  "common_step_counter": 480000,
+  "parent_run": "2026-10-29_11-46-54",
+  "parent_checkpoint": "model_9999.pt",
+  "files_sha256": {
+    "agent.yaml": "77fe580ba560e2298cd7dbc4d1ffc91787dbff1ab30b2f763cfc1cc991c0c17a",
+    "env.yaml": "f74363cad537745fe987305b3bd6049888bcb7da2f50165eb82940c2707b32f7",
+    "model_19998.pt": "e172b468d35b30296421f7583faa48c2450115e6dcb4ac3cb852ab9acbdee96d"
+  }
+}
